@@ -1,0 +1,1079 @@
+# MASTER AI IMPLEMENTATION PROMPT
+## SHRI DWARKADHISH MANDIR — FINAL COMMITTEE PRESENTATION REFINEMENT
+
+### EXECUTION MODE
+`EXISTING_APPLICATION_REFACTOR`
+
+### PROJECT
+Shri Dwarkadhish Mandir, Shirgaon, Virar East, Maharashtra.
+
+### DESIGN STANDARD
+Apple-Level Motion Engineering × Luxury Indian Heritage UI/UX × Museum-Quality Editorial Design × Responsive Frontend Architecture.
+
+### TECHNOLOGY
+React + TypeScript + Tailwind CSS + Vite + existing `motion/react` animation architecture.
+
+---
+
+# 00 — ROLE AND PRIMARY MISSION
+
+Act as an elite team consisting of:
+
+- Principal React Engineer
+- Award-Winning UI/UX Designer
+- Senior Creative Director
+- Cinematic Motion Graphics Engineer
+- Indian Heritage Art Director
+- Responsive Layout Architect
+- Typography Specialist
+- Accessibility Engineer
+- Quality-Assurance Engineer
+
+Your task is to refine the EXISTING Shri Dwarkadhish Mandir website to make it exceptionally professional and ready for a presentation to the temple committee.
+
+Do not rebuild the entire application.
+
+Do not unnecessarily change its established appearance.
+
+Improve its visual balance, navigation, photographic presentation, typography, motion precision and usability.
+
+**IMPORTANT: THE NEW INSTRUCTIONS IN THIS DOCUMENT OVERRIDE CONTRADICTORY REQUIREMENTS FROM EARLIER PROMPTS.**
+
+In particular, do not preserve sections that this prompt now explicitly orders you to remove.
+
+The final website should look like a carefully art-directed premium institutional experience, not a collection of unrelated UI cards.
+
+---
+
+# 01 — REQUIRED REMOVALS
+
+## 1.1 Remove the Large Concept Demonstration Banner
+
+Locate and remove the prominent interface block containing:
+
+"INDEPENDENT CONCEPT DEMONSTRATION — NOT OFFICIAL"
+
+Also remove the accompanying prominent warning:
+
+"Important: This temple is Shri Dwarkadhish Mandir in Shirgaon, Virar (Maharashtra), NOT the historical temple in Dwarka, Gujarat."
+
+Remove these large, repetitive warnings from the hero and other prominent website sections.
+
+They currently consume valuable screen space and interfere with the premium design.
+
+However:
+
+- Preserve the correct temple location in the visitor-information section.
+- Preserve the accurate temple name.
+- Do not imply that the independent demo is officially authorized.
+- Retain one discreet, readable footer disclosure indicating that the site is an independent proposal pending temple approval.
+- Do not use unsupported "official website" claims.
+
+The intention is to eliminate repetitive warning banners, not misrepresent the website's affiliation.
+
+## 1.2 Remove the Visible "Animation: Active" Label
+
+Locate:
+
+"Animation: Active"
+
+Remove this visible technical status from the public-facing layout.
+
+The visitor should experience the animations without being shown developer-oriented labels.
+
+Preserve all functioning animations.
+
+If animation preferences need a control, use an accessible, unobtrusive motion-settings control rather than an always-visible technical status badge.
+
+Support `prefers-reduced-motion`.
+
+Do not disable the animation system simply because the label is being removed.
+
+## 1.3 Remove Visible Curtain Status Text
+
+Remove public-facing text such as:
+
+- Curtains Opening
+- Curtains Closing
+- Curtains Fully Open
+- Curtain Progress
+- Opening Percentage
+- Scroll Progress
+- Any similar technical animation-state indicators
+
+Do not replace them with another large status box.
+
+Preserve the original curtain operation.
+
+The actual cinematic sequence must continue:
+
+Curtains open → Shri Dwarkadhish revealed → Flower shower → Golden warmth → Petals recede → Curtains close.
+
+The animation should communicate visually.
+
+Do not display developer-oriented progress indicators to ordinary visitors.
+
+Preserve accessible controls and useful screen-reader descriptions where needed.
+
+---
+
+# 02 — COMPLETELY REMOVE THE HISTORICAL CONSECRATION CHAPTER
+
+This instruction supersedes the earlier requirement to retain or redesign this chapter.
+
+Locate the standalone section titled:
+
+"THE TEMPLE'S CONSECRATION"
+
+Also locate any related chapter named:
+
+- Historic Consecration
+- Pran Pratishtha History
+- Historic Opening
+- Temple Consecration Chapter
+
+Remove the ENTIRE standalone section from the homepage.
+
+This includes:
+
+1. Chapter heading.
+2. Golden-hour banner used exclusively by this chapter.
+3. Historical information cards.
+4. Inauguration timeline.
+5. Shankaracharya-related photo cards belonging exclusively to this section.
+6. Event descriptions.
+7. Decorative backgrounds.
+8. Section dividers belonging exclusively to it.
+9. Expandable historical archive within the removed chapter.
+10. Related buttons.
+11. Dedicated scroll-animation triggers.
+12. Navigation links pointing to this section.
+13. Empty wrapper containers.
+14. Section-specific spacing.
+15. Obsolete section IDs.
+
+DO NOT leave an empty cream-colored area where this section previously existed.
+
+Remove its layout footprint completely.
+
+If the same source photographs or historical facts are used elsewhere, preserve those shared assets and legitimate references.
+
+Do not delete shared images from the repository merely because the standalone section is removed.
+
+## Preserve Essential History Within the Pravina Section
+
+The temple's founding and inauguration may still be mentioned briefly within the Pravina H. Thakur story where historically relevant.
+
+However:
+
+DO NOT recreate the removed consecration chapter under another title.
+
+DO NOT build a second large event timeline.
+
+DO NOT repeat the old event gallery.
+
+A short, verified historical milestone within the Pravina section is sufficient.
+
+---
+
+# 03 — COMPLETELY REMOVE COMMUNITY & VOLUNTARY PARTICIPATION
+
+This instruction supersedes the earlier requirement to preserve the restored volunteering section.
+
+Locate the section titled:
+
+"COMMUNITY & VOLUNTARY PARTICIPATION"
+
+Including the heading:
+
+"Seva Volunteer Opportunities & Patron Stewardship"
+
+Remove this entire section.
+
+Delete the following public-facing content and associated UI.
+
+## Remove Volunteer Opportunities
+
+- Seva Volunteer Roles
+- Pilgrim Hospitality
+- Festival Crowd Assistance & Pilgrim Care
+- Sanctum Kitchen & Dining
+- Anna Daan & Mahaprasad Seva volunteer card
+- Sanctum Adornment
+- Flower Seva & Floral Sanctum Decoration volunteer card
+- Devotional Guidelines
+- Volunteer time commitments
+- Express Volunteer Interest buttons
+
+## Remove Patron Programmes
+
+- Patron Upkeep & Sanctuary Stewardship
+- Monthly Recurring ₹501
+- Nitya Deepam & Fragrance Patron
+- Monthly Recurring ₹1,100
+- Mandir Shuchita support programme
+- Supporting notes and recurring subscription claims
+
+Also remove:
+
+- Any forms exclusive to this section.
+- Unused translation keys.
+- Dead navigation references.
+- Associated decorative UI.
+- Dedicated section-height rules.
+- Empty containers.
+- Unused animation observers.
+
+## Important Scope Protection
+
+This removal applies to the specified Community & Voluntary Participation section.
+
+Do not automatically remove the separate general Seva offerings section, temple visitor information, or any unrelated approved content.
+
+Do not remove the donation section merely because the removed community section discussed financial contributions.
+
+After removal, reconnect the adjacent sections naturally.
+
+There must be no empty screen-sized gap.
+
+---
+
+# 04 — CLEAN THE DONATION SECTION COMPLETELY
+
+The current donation presentation contains excessive technical, administrative and verbose content.
+
+Redesign it into an elegant, concise, professional contribution interface.
+
+## Remove These Exact Elements
+
+Remove:
+
+"AUTHORIZED TEMPLE SEVA PORTAL"
+
+Remove the public button or toggle:
+
+"Return to Pending Verification"
+
+Remove:
+
+"OFFICIAL UPI SEVA PORTAL"
+
+Remove the text:
+
+"Scan the official QR code using any UPI-compliant mobile application (Google Pay, PhonePe, BHIM, Paytm)."
+
+Remove the entire subsection:
+
+"Sanctioned Seva Pillars"
+
+Including:
+
+- Daily Mahaprasad & Anna Daan
+- Nitya Pushpa & Akhanda Deepams
+- Mandir Shuchita & Cleanliness
+- Utsavs & Vedic Yajnas
+- All descriptions belonging to these promotional cards
+
+Remove the entire subsection:
+
+"Receipt & Accounting Governance"
+
+Including the long administrative paragraphs about printed receipts and income-tax deductions.
+
+Remove the label:
+
+"Direct QR Code"
+
+Remove developer-oriented status labels and authorization controls from the public interface.
+
+## Do Not Remove Payment Safety
+
+Deleting verbose wording does not mean deleting necessary safeguards.
+
+The website is currently a proposal.
+
+An unverified QR code must not be presented as an authorized temple collection method.
+
+Any real public donation facility must require management approval and verification of the actual recipient account.
+
+Do not use a frontend toggle to simulate official authorization.
+
+Do not fabricate successful transactions or receipts.
+
+For the presentation, provide a clean visual demonstration of the proposed donation experience.
+
+---
+
+# 05 — NEW DONATION SECTION DESIGN
+
+## Section Heading
+
+Use:
+
+SUPPORT THE TEMPLE
+
+Main heading:
+
+**Devotional Contributions**
+
+Suggested subtitle:
+
+"A simple and respectful way for devotees to support temple activities, when approved by temple management."
+
+All wording must be available in four languages.
+
+## Visual Layout
+
+Create one refined, visually balanced section.
+
+DESKTOP:
+
+Left column: approximately 50–55%.
+
+Right column: approximately 45–50%.
+
+### LEFT COLUMN
+
+Display:
+
+- Small devotional icon.
+- Main heading.
+- One concise explanation.
+- A short instruction describing the approved contribution process when active.
+- Clear information about the receiving organization when verified.
+- One subtle authorization/status note if needed.
+
+Avoid lengthy paragraphs.
+
+Avoid excessive information cards.
+
+### RIGHT COLUMN
+
+Create a premium QR presentation card.
+
+Use:
+
+- Warm ivory card background.
+- White QR scanning surface.
+- Thin antique-gold border.
+- Restrained shadow.
+- Small lotus ornament.
+- Clear recipient information when verified.
+- Simple payment instructions.
+
+Keep the QR image perfectly square.
+
+No cropping.
+
+No perspective distortion.
+
+No animated QR pattern.
+
+No decorative overlay covering the scanning area.
+
+## Demonstration State
+
+If payment authorization is not verified, display a professional non-transactional preview with a concise note that activation requires temple approval.
+
+Do not expose the unverified QR as an active public payment destination.
+
+## Authorized State
+
+After actual institutional authorization and beneficiary verification, support the approved QR and payment process.
+
+Use proper payment reconciliation if displaying a successful payment confirmation.
+
+Do not claim that opening a UPI app proves successful payment.
+
+## Donation Motion Design
+
+Use:
+
+- Subtle heading fade.
+- Gentle QR-card entrance.
+- Fine gold-border illumination.
+- Soft pointer-responsive background reflection.
+- Restrained button hover.
+
+Do not animate the QR itself.
+
+No flashing payment indicators.
+
+No fake transaction celebration.
+
+The result must feel institutionally credible and peaceful.
+
+---
+
+# 06 — COMPLETELY UPGRADE THE PILGRIM NAVIGATION SECTION
+
+Current wording:
+
+"PILGRIM NAVIGATION & HOLY SITE ENTRANCE"
+
+Main heading:
+
+"Visit Shri Dwarkadhish Mandir"
+
+The underlying feature is useful, but its visual presentation needs significant improvement.
+
+## New Visual Direction
+
+Create a premium visitor-information section using an elegant map-and-information composition.
+
+Suggested section eyebrow:
+
+PLAN YOUR VISIT
+
+Suggested heading:
+
+Visit Shri Dwarkadhish Mandir
+
+Supporting text:
+
+A short, welcoming explanation of the temple's location and practical information for devotees.
+
+Do not use overly long introductions.
+
+## Desktop Layout
+
+Create a balanced two-column composition.
+
+LEFT:
+
+Large interactive map.
+
+RIGHT:
+
+Visitor information panel.
+
+The map should be one of the main visual elements, not a small embedded rectangle surrounded by excessive blank space.
+
+Use approximately:
+
+Map: 55–60%.
+
+Information: 40–45%.
+
+Adjust for actual content and viewport width.
+
+## Map Requirements
+
+- Correct temple location.
+- Reliable embedded map.
+- Prominent Get Directions link.
+- Proper loading state.
+- Graceful error fallback.
+- No duplicate coordinate labels.
+- Responsive map sizing.
+- Clear focus and keyboard interaction.
+
+Do not invent map coordinates.
+
+Use management-confirmed location information.
+
+## Visitor Information
+
+Include only confirmed details such as:
+
+- Temple address.
+- Nearest railway station.
+- Route guidance.
+- Opening hours.
+- Parking information, if verified.
+- Accessibility facilities, if verified.
+- Contact details, if approved.
+
+Do not invent facilities.
+
+If an item is unverified, omit it or clearly identify it as pending confirmation.
+
+## Apple-Level Interaction
+
+On section entry:
+
+1. Heading fades in.
+2. Map appears with a small upward reveal.
+3. Information cards appear with gentle stagger.
+4. Directions button becomes visually prominent.
+5. Decorative border lighting settles.
+
+No excessive parallax.
+
+No floating map.
+
+No forced scroll locking.
+
+## Mobile Layout
+
+Show:
+
+1. Heading.
+2. Short location description.
+3. Map.
+4. Directions button.
+5. Verified visitor information.
+
+Keep the directions action prominent and easy to tap.
+
+No unnecessary horizontal scrolling.
+
+---
+
+# 07 — PRAVINA H. THAKUR: SIGNATURE SECTION REDESIGN
+
+THIS IS ONE OF THE MOST IMPORTANT REQUIREMENTS.
+
+The section must become the website's signature historical storytelling chapter.
+
+It should feel more impressive than ordinary informational sections without compromising authenticity.
+
+## Existing Heading
+
+THE VISION BEHIND SHREE DWARKADHISH DHAM
+
+Pravina H. Thakur
+
+Former Mayor of Vasai–Virar • Trustee of Late Shri Vishnu Waman Thakur Charitable Trust • Associated with the Vision Behind Shri Dwarkadhish Mandir
+
+## Required Improvement
+
+The current heading and subtitle are too administrative and lengthy.
+
+Create a more elegant visual hierarchy.
+
+### Centered Eyebrow
+
+THE VISION BEHIND SHREE DWARKADHISH DHAM
+
+### Large Centered Title
+
+PRAVINA H. THAKUR
+
+### Short Supporting Descriptor
+
+Former Mayor of Vasai–Virar
+
+Keep the full, verified charitable-trust affiliation within the supporting biography rather than crowding the main subtitle.
+
+Do not imply that her charitable-trust position automatically establishes a temple-administration role.
+
+The heading should have:
+
+- Premium serif typography.
+- Deep maroon color.
+- Fine antique-gold flourishes.
+- A small lotus ornament.
+- Balanced center alignment.
+- Generous but controlled breathing room.
+
+## Main Visual Composition
+
+Use the original uploaded transparent portrait of Pravina H. Thakur.
+
+The portrait must become the clear focal point.
+
+Use the actual source asset from the repository.
+
+Do not guess filenames.
+
+Preserve:
+
+- Full head.
+- Hair.
+- Face.
+- Bindi.
+- Folded hands.
+- Sari.
+- Source-visible shoulders and arms.
+- Original facial proportions.
+
+No face modification.
+
+No destructive cropping.
+
+No overlapping paragraphs.
+
+## Visual Geometry
+
+The primary image composition should use actual layout space.
+
+Do not place the portrait inside an arbitrarily small fixed-height frame.
+
+Do not clip the portrait using a decorative mask.
+
+Use intrinsic aspect-ratio-aware sizing.
+
+If the temple photograph is used behind the portrait, keep important architectural details recognizable.
+
+Avoid a crowded composite in which both the temple and portrait compete.
+
+Use one dominant human portrait and one supporting architectural image.
+
+## Biography Layout
+
+Use:
+
+- One concise opening paragraph.
+- One carefully sourced historical explanation.
+- Three compact facts.
+- Two authentic devotional photographs.
+
+Avoid repeated text cards stating the same idea.
+
+## Historical Highlight Cards
+
+Suggested categories:
+
+PUBLIC LIFE
+
+TEMPLE VISION
+
+DOCUMENTED HISTORICAL MILESTONE
+
+Include only supported information.
+
+Avoid unsupported titles, political claims, family narratives or direct quotations.
+
+## Photography
+
+Use the original devotional images.
+
+Do not crop faces.
+
+Do not crop meaningful hand gestures.
+
+Use a proper CSS Grid.
+
+No overlapping photograph frames.
+
+No broken captions.
+
+## Motion Choreography
+
+### Scene A — Heading
+
+The gold ornament reveals gently.
+
+The eyebrow appears.
+
+The name rises approximately 14–20px.
+
+The subtitle fades in.
+
+### Scene B — Temple Architecture
+
+Temple photograph reveals through a soft mask.
+
+A small amount of warm reflected light appears.
+
+Avoid aggressive image scaling.
+
+### Scene C — Pravina Portrait
+
+The full transparent portrait appears gracefully.
+
+Use:
+
+- Opacity interpolation.
+- Approximately 12–18px vertical movement.
+- Very subtle background illumination.
+- No perspective distortion.
+
+Do not animate her face independently.
+
+### Scene D — Editorial Information
+
+Biography and historical cards reveal with small staggered transitions.
+
+Keep all text readable.
+
+### Scene E — Supporting Photos
+
+Both devotional photographs reveal smoothly.
+
+No photo clipping.
+
+No exaggerated hover zoom.
+
+## Final Design Goal
+
+The section should feel like a premium museum exhibition documenting an important contribution to the creation of the temple.
+
+Not a political campaign banner.
+
+Not a repetitive card grid.
+
+Not an oversized collage.
+
+Use dignity, restrained grandeur, authenticity and elegant motion.
+
+---
+
+# 08 — REMOVE ALL UNNECESSARY SPACE CREATED BY SECTION DELETION
+
+After removing the consecration and community chapters, audit the complete page.
+
+Inspect:
+
+- Section IDs.
+- Wrappers.
+- Vertical margins.
+- Min-heights.
+- Sticky stages.
+- Scroll observers.
+- Decorative backgrounds.
+- Navigation anchors.
+- Section indexes.
+- Scroll progress calculations.
+- Empty containers.
+
+Remove all obsolete layout space.
+
+Do not leave `min-height: 100vh` on an empty wrapper.
+
+Do not leave old scroll tracks from the removed sections.
+
+Do not use blank cream backgrounds to artificially separate content.
+
+Use one coherent section-spacing system.
+
+Suggested starting tokens:
+
+```css
+:root {
+  --page-gutter: clamp(18px, 3.5vw, 80px);
+  --content-max: 1600px;
+  --section-gap: clamp(56px, 5.5vw, 104px);
+  --content-gap: clamp(24px, 3vw, 56px);
+}
+```
+
+Adjust these values through actual visual testing.
+
+Preserve intentional breathing room.
+
+Do not fill gaps with random invented content.
+
+---
+
+# 09 — APPLE-QUALITY MOTION THROUGHOUT THE WEBSITE
+
+Use a unified motion system.
+
+The website should feel polished, fluid and precise.
+
+## Suggested Motion Tokens
+
+```typescript
+const motionSystem = {
+  durations: {
+    micro: 0.18,
+    standard: 0.55,
+    editorial: 0.78
+  },
+  offsets: {
+    subtle: 12,
+    standard: 20,
+    featured: 28
+  },
+  easing: [0.22, 1, 0.36, 1]
+};
+```
+
+Tune values based on actual visual performance.
+
+## Editorial Sections
+
+Use gentle fade and vertical translation.
+
+Avoid excessive stagger.
+
+Do not hide information for prolonged periods.
+
+## Photographs
+
+Use restrained reveal masks or opacity transitions.
+
+Never animate images in a way that crops faces or temple architecture.
+
+## Buttons
+
+Use subtle hover lighting, short transitions and clear focus states.
+
+## Social Media
+
+Preserve the WhatsApp and Instagram card motion.
+
+Keep QR codes stable.
+
+## Divine Darshan
+
+Preserve the complete existing ceremonial sequence.
+
+Do not remove curtain functionality when removing status text.
+
+Use one authoritative scroll-progress source.
+
+Scrolling upward must reverse the sequence correctly.
+
+Do not introduce scroll-jacking.
+
+## Reduced Motion
+
+Honor `prefers-reduced-motion`.
+
+Ensure all essential content remains accessible without animation.
+
+---
+
+# 10 — FOUR-LANGUAGE SUPPORT
+
+Preserve and complete:
+
+English — `en`
+
+Hindi — `hi`
+
+Marathi — `mr`
+
+Gujarati — `gu`
+
+Every newly changed interface string must use the centralized translation system.
+
+This includes:
+
+- Main headings.
+- Biographies.
+- Visitor information.
+- Donation explanation.
+- Buttons.
+- Forms.
+- Map descriptions.
+- Navigation.
+- Tooltips.
+- Accessibility text.
+- Footer.
+- Error messages.
+
+Remove unused translation keys belonging exclusively to deleted sections only after confirming they are not shared elsewhere.
+
+No incomplete translations.
+
+No silent fallback to English in production.
+
+Language changes must not reset the Darshan animation or page scroll position.
+
+Support natural text wrapping for all four scripts.
+
+---
+
+# 11 — UPDATED WEBSITE INFORMATION ARCHITECTURE
+
+After the removals, rebuild the section order around a cleaner devotional journey.
+
+Recommended sequence:
+
+1. Homepage Hero
+2. Divine Darshan
+3. Pravina H. Thakur — The Temple Vision
+4. Darshan & Aarti Timings
+5. Plan Your Visit / Google Maps
+6. Festivals & Celebrations
+7. Seva Offerings, if still part of the approved scope
+8. Devotional Contributions / Donation Preview
+9. Photo Gallery
+10. Spiritual Learning
+11. Stay Connected — WhatsApp & Instagram
+12. Footer
+
+Do not recreate:
+
+- The standalone consecration chapter.
+- The Community & Voluntary Participation section.
+
+Preserve other existing functionality unless explicitly removed here.
+
+Update navigation to match the new section structure.
+
+Remove dead links.
+
+Ensure active-section tracking and scroll offsets remain correct.
+
+---
+
+# 12 — PRESENTATION-READY QUALITY ASSURANCE
+
+Test actual browser behavior.
+
+Required viewports:
+
+- 360px
+- 390px
+- 430px
+- 768px
+- 1024px
+- 1440px
+- 1920px
+- 2560px
+- 2880px
+
+## Deletion Tests
+
+PASS only if:
+
+- Large concept-warning banner is removed.
+- Repeated Gujarat distinction warning is removed.
+- "Animation: Active" label is removed.
+- Visible curtain debug/status text is removed.
+- Entire consecration chapter is removed.
+- Entire community/volunteer section is removed.
+- Removed chapters leave no empty space.
+- Navigation has no dead anchors.
+- No unintended shared imagery or components are deleted.
+
+## Donation Tests
+
+PASS only if:
+
+- "Authorized Temple Seva Portal" wording is removed.
+- "Return to Pending Verification" is not a public control.
+- "Sanctioned Seva Pillars" content is removed.
+- Receipt-governance essay is removed.
+- "Direct QR Code" technical wording is removed.
+- Donation layout is concise and professional.
+- Unverified payments remain inactive.
+- QR image remains clear and undistorted in authorized use.
+- No fake transactions or official claims are displayed.
+
+## Pravina Section Tests
+
+PASS only if:
+
+- Heading is centered.
+- Subtitle is concise.
+- Actual portrait is used.
+- Face remains unchanged.
+- Folded hands remain visible.
+- No image clipping.
+- No overlap.
+- Biography remains factually grounded.
+- Supporting photographs are correctly positioned.
+- Motion feels refined and responsive.
+
+## Navigation Tests
+
+PASS only if:
+
+- Map loads or shows a useful fallback.
+- Directions button works.
+- Correct address is displayed.
+- Text is readable.
+- All four languages work.
+- No excessive empty space.
+- Mobile layout is functional.
+
+## Animation Tests
+
+PASS only if:
+
+- Curtains still open.
+- Flowers appear.
+- Golden warmth works.
+- Curtains still close.
+- Reverse scrolling works.
+- No debug text appears.
+- Page scrolling remains natural.
+- Reduced-motion support is functional.
+
+## General Tests
+
+PASS only if:
+
+- No console errors.
+- No broken images.
+- No horizontal overflow.
+- No clipped headings.
+- No tiny unreadable text.
+- No overlapping cards.
+- No dead buttons.
+- No incorrect section numbering.
+- No unexplained blank page regions.
+
+---
+
+# 13 — FINAL DELIVERY REPORT
+
+After implementation, provide:
+
+### Removed Components
+List the actual components, sections and content blocks removed.
+
+### Modified Components
+List every actual file changed.
+
+### Preserved Features
+Confirm that unrelated website sections and working animations remain intact.
+
+### Visual Improvements
+Summarize the improvements to:
+
+- Pravina H. Thakur section.
+- Navigation and visitor information.
+- Donation presentation.
+- Typography and spacing.
+- Section transitions.
+
+### Validation
+Report which screen sizes and interactions were actually tested.
+
+### Remaining Dependencies
+Identify any information awaiting confirmation or authorization.
+
+Do not invent successful test results.
+
+Do not claim implementation is complete if critical issues remain.
+
+---
+
+# FINAL CREATIVE AND ENGINEERING COMMAND
+
+The finished website must have:
+
+**A grand, clean homepage.**
+
+**A beautiful, uninterrupted Divine Darshan experience.**
+
+**A distinguished and authentic Pravina H. Thakur feature.**
+
+**Clear, practical temple visitor information.**
+
+**An elegant, honest donation presentation.**
+
+**Complete four-language support.**
+
+**Smooth Apple-quality motion.**
+
+**No redundant chapters.**
+
+**No visible developer/debug labels.**
+
+**No unnecessary empty section space.**
+
+**No cropped faces or broken photographic compositions.**
+
+**No unsupported authorization claims.**
+
+The website should feel like a thoughtfully designed premium institutional experience.
+
+Preserve the best of the existing application while removing the specific content and interface elements identified in this prompt.
+
+IMPLEMENT THE CHANGES DIRECTLY.
+
+VERIFY THE RENDERED WEBSITE.
+
+TEST ALL IMPORTANT INTERACTIONS.
+
+REPORT WHAT WAS ACTUALLY COMPLETED.
+
+DO NOT DECLARE SUCCESS UNTIL THE UPDATED WEBSITE HAS BEEN REVIEWED IN THE BROWSER.

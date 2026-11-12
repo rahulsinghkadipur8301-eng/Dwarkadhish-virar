@@ -1,0 +1,1690 @@
+# SYSTEM DIRECTIVE: PRINCIPAL WEB EXPERIENCE ENGINEER
+
+## PROJECT
+SHRI DWARKADHISH MANDIR — SHIRGAON, VIRAR EAST, MAHARASHTRA
+
+## EXECUTION TYPE
+EXISTING_APPLICATION_REFACTOR + CINEMATIC_EXPERIENCE_UPGRADE + VERIFIED_EDITORIAL_CONTENT + AUTHORIZED_DONATION_INTERFACE
+
+## DESIGN STANDARD
+APPLE-LEVEL MOTION PRECISION × PREMIUM INDIAN HERITAGE DESIGN × MUSEUM-QUALITY EDITORIAL STORYTELLING
+
+## TECHNOLOGY
+React + TypeScript + Tailwind CSS + existing `motion/react` integration.
+
+Use the application's actual installed dependencies and architecture. Do not introduce a new animation framework unnecessarily.
+
+---
+
+# 00. MISSION AND NON-NEGOTIABLE RULES
+
+You are acting simultaneously as:
+
+- Principal frontend architect.
+- Senior React and TypeScript engineer.
+- Award-winning UI/UX designer.
+- Creative motion director.
+- Indian heritage art director.
+- Editorial information architect.
+- Responsive image-composition specialist.
+- Website accessibility engineer.
+- Historical content researcher.
+- Payment security and integration reviewer.
+- Production quality-assurance engineer.
+
+Your assignment is to improve the EXISTING Shri Dwarkadhish Mandir website.
+
+The most important deliverable is an extraordinary, visually distinguished, historically responsible section featuring **Pravina H. Thakur and the vision behind Shri Dwarkadhish Mandir**.
+
+This should become the signature editorial storytelling section of the entire website.
+
+It must look carefully art-directed rather than automatically assembled from generic cards.
+
+You must also:
+
+1. Correct image cropping and overlapping.
+2. Use the supplied transparent Pravina H. Thakur portrait.
+3. Restore the previously removed useful helping/supporting section.
+4. Improve the historical consecration chapter.
+5. Use the existing golden-hour temple photograph as the opening visual of that chapter.
+6. Incorporate authentic, correctly identified Shankaracharya event photographs.
+7. Create a sophisticated temple donation interface with strict payment authorization requirements.
+8. Remove unintended empty space across the site.
+9. Preserve the complete four-language system.
+10. Introduce coherent, premium Apple-quality section transitions.
+11. Maintain the functionality of existing curtains, flowers, bells, maps, galleries and navigation.
+12. Perform real visual and functional testing.
+
+## STRICT CHANGE-CONTROL POLICY
+
+DO NOT:
+- Rebuild the entire website.
+- Replace existing photographs without authorization.
+- Generate a new face for Pravina H. Thakur.
+- Crop her face, hands, head or meaningful visible clothing.
+- Remove working sections without explicit authorization.
+- Introduce fake historical claims or quotations.
+- Introduce fictitious photographs or identities.
+- Create fake payment confirmations.
+- Publish an unverified donation QR as an official temple payment method.
+- Add giant blank spacer sections.
+- Use excessive blur or unnecessary neon effects.
+- Add scroll-jacking, forced snapping or animation lockups.
+- Claim that the implementation is complete without validating it.
+
+## IMPLEMENTATION PRIORITY
+
+P0 — Payment safety, correct source imagery, preservation of existing sections.
+
+P1 — Pravina H. Thakur section composition, image visibility, historical accuracy.
+
+P2 — Consecration history and authentic event imagery.
+
+P3 — Fluid layout, typography, section spacing and scroll transitions.
+
+P4 — Mobile, multilingual, accessibility and performance testing.
+
+If instructions conflict, follow this priority order:
+
+1. Historical accuracy and payment safety.
+2. Preservation of authentic image content.
+3. Accessibility and functional correctness.
+4. Responsive usability.
+5. Visual elegance and animation.
+6. Optional decorative effects.
+
+Never sacrifice a higher-priority requirement to achieve a lower-priority visual effect.
+
+---
+
+# 01. FIRST AUDIT THE REAL CODEBASE
+
+Before changing the application:
+
+Inspect the actual React component tree.
+
+Identify:
+
+- Homepage sections and their ordering.
+- Existing Pravina H. Thakur section.
+- Existing inauguration/consecration chapter.
+- The previously removed helping/supporting section.
+- Current donation and Seva components.
+- Localization system.
+- Global CSS and spacing tokens.
+- Scroll animation architecture.
+- Existing image assets.
+- Navigation anchors.
+- Existing section reveal animations.
+- Admin or CMS features.
+- Any source-backed historical content.
+
+Create an internal change inventory.
+
+For each requested change, determine:
+
+- Existing implementation.
+- Required modification.
+- Dependencies.
+- Assets needed.
+- Potential regressions.
+- Acceptance conditions.
+
+DO NOT blindly replace existing components with simplified versions.
+
+DO NOT interpret an absent file as permission to invent an asset.
+
+DO NOT guess image filenames.
+
+Find the correct files through the actual asset directory and visually confirm their contents.
+
+If an image or historical record is unavailable, mark it as a required asset or verification dependency rather than fabricating it.
+
+Preserve all existing successful design work.
+
+---
+
+# 02. ASSET MANIFEST AND IMAGE INTEGRITY
+
+## A. PRIMARY PRAVINA H. THAKUR PORTRAIT
+
+Use the most recently uploaded transparent-background cutout of Pravina H. Thakur.
+
+Uploaded filename:
+
+`image(1).png`
+
+Verify visually that this asset is the intended transparent-background portrait showing:
+
+- Full visible head.
+- Original natural face.
+- Red bindi.
+- Original hairstyle.
+- Folded hands in namaste.
+- Red traditional clothing.
+- Visible arms and shoulders.
+- Natural skin texture.
+- The complete person silhouette available in the source image.
+
+If the application imports assets with generated names, determine the final asset path from the actual repository.
+
+Do not create an imaginary source path.
+
+This portrait replaces the older background-based portrait as the primary featured person image.
+
+## B. GOLDEN-HOUR TEMPLE PHOTO
+
+Find the existing actual golden-hour photograph of Shri Dwarkadhish Mandir already used in the application.
+
+Use it in the main temple-history and consecration visual composition.
+
+Do not use a generic temple photograph.
+
+Do not substitute Gujarat's Dwarkadhish temple for the actual Shirgaon temple.
+
+Find the actual asset path and preserve the temple's distinctive architecture.
+
+## C. DEVOTIONAL PHOTOGRAPHS
+
+Reuse the existing genuine photographs showing Pravina H. Thakur performing temple-related devotional activities.
+
+Preserve the original faces, people, deity images and gestures.
+
+## D. SHANKARACHARYA EVENT PHOTOGRAPHS
+
+Find authentic existing event photographs featuring Jagadguru Shankaracharya Swami Avimukteshwaranand Saraswati at the Shirgaon temple inauguration.
+
+Before using any:
+
+- Verify the depicted person.
+- Verify the event.
+- Confirm the image depicts the relevant temple or ceremony.
+- Record the source or photographer.
+- Confirm usage permission.
+- Use accurate captions.
+
+Do not generate fictitious photographs of the event.
+
+If verified event images are unavailable, leave an editorial placeholder or source request in the private development view, not a misleading fabricated public photograph.
+
+## E. DONATION QR ASSET
+
+Uploaded filename:
+
+`Crisp monochrome QR code(1).png`
+
+Treat this as an unverified payment asset until the receiving organization and destination are independently confirmed and authorization is documented.
+
+A QR image alone does not establish an official payment account.
+
+Do not add the QR to a live public payment interface until the donation activation requirements in Section 10 are satisfied.
+
+---
+
+# 03. ABSOLUTE IMAGE-PRESERVATION RULES
+
+THIS IS A HARD REQUIREMENT.
+
+## NO CROP OF THE PRIMARY PORTRAIT
+
+The full source-visible portrait must remain intact.
+
+Never cut:
+
+- Forehead.
+- Hair.
+- Bindi.
+- Face edges.
+- Chin.
+- Folded hands.
+- Forearms.
+- Shoulders.
+- Main sari drape.
+
+Do not change the original image aspect ratio.
+
+Do not enlarge beyond the available layout bounds and allow the browser to clip it.
+
+Do not use a fixed aspect-ratio container with `object-cover` for the primary portrait.
+
+Do not apply decorative clip-path masks to the person's silhouette.
+
+Do not use `overflow: hidden` on an ancestor if it cuts meaningful portrait content.
+
+Use the original intrinsic proportions.
+
+Suggested safe implementation:
+
+```tsx
+<img
+  src={pravinaCutoutAsset}
+  alt={translatedPortraitAlt}
+  className="pravina-portrait"
+  loading="eager"
+  decoding="async"
+/>
+```
+
+```css
+.pravina-portrait {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform-origin: center bottom;
+}
+```
+
+The parent must reserve sufficient real layout space.
+
+Do not solve a cropped image problem merely by applying `overflow: visible` if doing so causes the image to overlap another section.
+
+Instead, fix the grid dimensions and content placement.
+
+## SAFE PORTRAIT ANIMATION
+
+Animate a containing layout layer with:
+
+- Opacity.
+- Small vertical translation.
+- Subtle lighting behind the portrait.
+
+Do not independently deform the person's image.
+
+Avoid:
+
+- Strong zoom.
+- Perspective warping.
+- Facial morphing.
+- Background-removal artifacts.
+- Image interpolation that changes facial detail.
+
+Use only the original uploaded image pixels for her identity.
+
+## TEMPLE PHOTO CROP POLICY
+
+Preserve important architectural features:
+
+- Shikhara.
+- Temple entrance.
+- Flag.
+- Main facade.
+- Important carvings.
+
+For full-width banners, determine a composition-aware crop.
+
+If the complete photograph cannot fit the requested aspect ratio without losing important architecture, use a contained image with carefully matched background extension or framing.
+
+Do not force `object-cover` indiscriminately.
+
+---
+
+# 04. REBUILD THE PRAVINA H. THAKUR SECTION AS THE WEBSITE'S SIGNATURE EDITORIAL CHAPTER
+
+## SECTION ID
+
+`pravina-vision`
+
+## SECTION COMPONENT
+
+Use or refactor the existing component.
+
+Suggested name:
+
+`PravinaVisionSection.tsx`
+
+Create supporting components only when they improve maintainability.
+
+## PRIMARY OBJECTIVE
+
+Design a museum-quality editorial chapter focused on the documented vision behind the Shirgaon Shri Dwarkadhish temple.
+
+The scene should combine:
+
+- Grand temple imagery.
+- Authentic portrait.
+- Beautiful Indian heritage ornamentation.
+- Clear historical narrative.
+- Warm light.
+- Elegant typography.
+- Responsive geometry.
+- Sophisticated but restrained motion.
+
+The experience must feel ceremonial and important.
+
+It must not feel like a political campaign poster.
+
+It must not exaggerate titles or introduce unsupported family history.
+
+The human story must respectfully support the temple's spiritual identity.
+
+---
+
+# 05. EXACT PRAVINA SECTION VISUAL HIERARCHY
+
+## LAYER 1 — CENTERED HEADER
+
+The heading must be centered across the FULL SECTION WIDTH.
+
+Use:
+
+Eyebrow:
+THE VISION BEHIND SHREE DWARKADHISH DHAM
+
+Main title:
+Pravina H. Thakur
+
+Supporting descriptor:
+Former Mayor of Vasai–Virar • Trustee of Late Shri Vishnu Waman Thakur Charitable Trust • Associated with the Vision Behind Shri Dwarkadhish Mandir
+
+Use the precise trustee designation only where it is supported by the trust's public documentation.
+
+Do not imply an official temple trustee role without separate authorization.
+
+Use a premium visual hierarchy:
+
+Eyebrow:
+14–16px desktop.
+
+Main title:
+52–76px desktop.
+
+Subtitle:
+17–21px desktop.
+
+Scale responsively.
+
+Center all three.
+
+Decorative elements:
+
+- Fine antique-gold horizontal rules.
+- Small lotus motif.
+- Delicate symmetrical ornament.
+- Subtle maroon accents.
+
+No large decorative element should obscure the text.
+
+## LAYER 2 — EDITORIAL IMAGE STAGE
+
+Below the heading, create the main image-and-story layout.
+
+DESKTOP:
+
+Use a fluid two-column structure.
+
+Suggested proportions:
+
+VISUAL COMPOSITION: 55–58%.
+
+EDITORIAL CONTENT: 42–45%.
+
+Adjust after testing actual image dimensions.
+
+Use a shared container width consistent with the rest of the website.
+
+### LEFT — ARCHITECTURAL AND PORTRAIT COMPOSITION
+
+Construct a sophisticated editorial composition:
+
+BASE:
+Actual golden-hour temple photograph.
+
+FOREGROUND:
+Pravina H. Thakur transparent portrait.
+
+DECORATION:
+Subtle antique-gold border details and restrained background light.
+
+The portrait should occupy a prominent visual position.
+
+She should be large enough to become the human focus, while the temple remains recognizable.
+
+Do not place her portrait directly on top of significant temple architectural features if this makes the temple difficult to identify.
+
+Use a dedicated compositional region for the portrait, rather than unrestricted absolute positioning.
+
+Define explicit safe zones for the portrait and temple.
+
+The full silhouette must remain inside the available visual region.
+
+Use responsive dimensions derived from intrinsic image aspect ratios.
+
+Do not set arbitrary heights that cut the portrait.
+
+### RIGHT — EDITORIAL STORY
+
+Use:
+
+1. One powerful introductory paragraph.
+2. A short verified historical explanation.
+3. Three concise historical cards.
+4. One elegant editorial statement.
+
+Avoid repeated paragraphs communicating the same idea.
+
+The content should read like a museum exhibition panel.
+
+Do not overcrowd it.
+
+No paragraph should span excessively long lines.
+
+## LAYER 3 — THREE HISTORICAL HIGHLIGHT CARDS
+
+Use:
+
+PUBLIC LIFE
+
+Former Mayor of Vasai–Virar.
+
+TEMPLE VISION
+
+A temple project publicly associated with her initiative and devotion.
+
+HISTORIC CONSECRATION
+
+26 November 2025, with the broader ceremonial programme documented separately.
+
+Each card must have:
+
+- One clear icon.
+- Short heading.
+- One or two useful sentences.
+- Consistent padding.
+- Subtle gold frame.
+- Strong readable typography.
+- Responsive natural height.
+
+Do not add unsupported awards, dates, political achievements or trust responsibilities.
+
+## LAYER 4 — DEVOTIONAL PHOTOGRAPHY
+
+Below the main editorial stage, create a balanced two-image gallery using the existing authentic devotional photographs.
+
+Use dedicated CSS Grid rows.
+
+No negative margins.
+
+No floating overlapping photographs.
+
+No concealed captions.
+
+Use source-aware framing.
+
+Preserve important people and devotional gestures.
+
+Each image should have:
+
+- Carefully proportioned frame.
+- Small genuine caption.
+- Optional date or event label only if verified.
+- Subtle image-hover lighting.
+- Smooth image-viewing interaction.
+
+Do not crop faces or deity images.
+
+---
+
+# 06. RESEARCH-VERIFIED EDITORIAL CONTENT
+
+Do not invent historical material.
+
+Use a source registry.
+
+## VERIFIED SOURCE MATERIAL
+
+Source A — Loksatta:
+https://www.loksatta.com/vasaivirar/virar-shirgaon-dwarkadhish-temple-inauguration-event-shankaracharya-avimukteshwaranand-reaction-vsd-99-5538105/
+
+Supports:
+
+- Temple location in Shirgaon, Virar.
+- Public reporting of Pravina Thakur's initiative.
+- 26 November 2025 inauguration and consecration.
+- Shankaracharya Swami Avimukteshwaranand's role.
+- Reported architectural details.
+
+Source B — Free Press Journal:
+https://www.freepressjournal.in/mumbai/mini-dwarka-in-virar-a-grand-replica-of-the-dwarkadhish-temple-unveiled
+
+Supports:
+
+- Temple project under the initiative of former Mayor Pravina Thakur.
+- 26 November 2025 inauguration.
+- 26–30 November 2025 festivities.
+- Reported construction history and temple architecture.
+
+Source C — Hindusthan Samachar:
+https://www.hindusthansamachar.in/Encyc/2025/11/25/Pran-Pratishtha-Mahotsav-of-Shri-Dwarkadhish-Templ.php
+
+Supports the published inauguration programme and ceremonial schedule.
+
+Source D — VIVA Trust:
+https://vivatrust.in/About-Trustees.aspx
+
+Supports Pravina H. Thakur's trustee position in the named charitable trust.
+
+## CONTENT INTEGRITY REQUIREMENTS
+
+Distinguish:
+
+- Confirmed date.
+- Reported fact.
+- Approved temple statement.
+- Editorial description.
+- Unverified claim.
+- Future proposal.
+
+Do not conflate them.
+
+For every historical claim, maintain source metadata.
+
+Do not turn editorial wording into an attributed quotation.
+
+Do not state that Pravina ji personally made a statement unless its wording is documented.
+
+Do not use fictitious interviews, invented speeches or unsupported spiritual anecdotes.
+
+Do not assume a charitable trust's governance structure is identical to that of the temple.
+
+## WRITING STYLE
+
+Respectful.
+
+Warm.
+
+Dignified.
+
+Historically grounded.
+
+Not exaggerated.
+
+Not politically promotional.
+
+Write concise, informative prose.
+
+Avoid repetitive phrases such as:
+
+- visionary leadership
+- historic greatness
+- extraordinary legacy
+- unmatched contribution
+
+unless clearly supported or used in appropriate attributed commentary.
+
+The section's visual design should create the emotional impact; the text should establish credibility.
+
+---
+
+# 07. APPLE-QUALITY CINEMATIC MOTION SYSTEM
+
+## ENGINEERING PRINCIPLE
+
+Motion must be smooth, purposeful, reversible when scroll-bound, and consistent with natural browsing.
+
+Do not add animation merely because an element exists.
+
+Use a centralized motion-token system.
+
+Suggested motion definitions:
+
+```ts
+const motionTokens = {
+  duration: {
+    micro: 0.18,
+    short: 0.32,
+    medium: 0.55,
+    long: 0.78
+  },
+  distance: {
+    subtle: 12,
+    standard: 20,
+    editorial: 28
+  },
+  stagger: {
+    fast: 0.06,
+    normal: 0.12
+  },
+  easing: [0.22, 1, 0.36, 1]
+};
+```
+
+Tune these values using actual visual testing.
+
+Do not apply the same animation indiscriminately to every element.
+
+## ANIMATION A — SECTION ARRIVAL
+
+As the section enters the viewport:
+
+- Eyebrow becomes visible.
+- Decorative rules extend softly from the center.
+- Main title rises approximately 16px.
+- Subtitle follows with restrained delay.
+- The final typography settles without overshoot.
+
+Do not hide readable text for an unnecessarily long duration.
+
+## ANIMATION B — TEMPLE ARCHITECTURE REVEAL
+
+The main temple photograph reveals with:
+
+- Opacity interpolation.
+- Very subtle background scale normalization.
+- Soft directional light.
+- Gentle gold-frame illumination.
+
+The image must not shift enough to crop architectural details.
+
+## ANIMATION C — PRAVINA PORTRAIT REVEAL
+
+This is the most important animation in the section.
+
+Sequence:
+
+1. Architectural image is established.
+2. Soft champagne-gold warmth appears behind the portrait.
+3. The transparent portrait fades in.
+4. The portrait rises approximately 12–18px into its final reserved position.
+5. Ornamental gold details become visible.
+6. Motion settles.
+
+Use approximately 650–900ms of perceptual transition for the full staged entrance, calibrated to feel responsive.
+
+Do not animate the face independently.
+
+Do not zoom into the face.
+
+Do not apply face-changing filters.
+
+The portrait must be completely visible throughout the final state.
+
+## ANIMATION D — HISTORICAL CONTENT
+
+The editorial paragraphs and cards reveal smoothly.
+
+Use a restrained stagger.
+
+Only animate on relevant section entry.
+
+Do not animate each word.
+
+Do not force the user to stop scrolling.
+
+## ANIMATION E — SUPPORTING PHOTOGRAPHS
+
+Reveal the two supporting photographs in sequence.
+
+Use:
+
+- Opacity.
+- Small vertical movement.
+- Subtle frame highlight.
+
+No exaggerated rotation.
+
+No large scale transitions.
+
+No destructive image cropping.
+
+## ANIMATION F — CURSOR-RESPONSIVE FRAME LIGHT
+
+On hover-capable devices:
+
+- Add a subtle warm-gold radial reflection.
+- Track cursor position within decorative frame surfaces.
+- Smoothly interpolate lighting position.
+- Keep the portrait and text stationary.
+- Fade lighting out when the cursor leaves.
+
+Do not apply heavy 3D tilt to the primary portrait.
+
+## ANIMATION G — SECTION EXIT
+
+Allow the section to leave naturally during scrolling.
+
+Do not collapse the layout.
+
+Do not animate text into unreadability while it remains visible.
+
+Do not pin the section for multiple unnecessary viewport lengths.
+
+No scroll lock.
+
+No forced waiting period.
+
+## SCROLL BEHAVIOR
+
+Use browser-native scrolling.
+
+Prefer entrance-triggered transitions for ordinary editorial sections.
+
+Use deterministic scroll-scrubbed motion only where the visual concept genuinely benefits from it.
+
+Preserve the existing dedicated scroll-driven Darshan system.
+
+Do not create a global animation controller that conflicts with the curtain scene.
+
+Respect `prefers-reduced-motion`.
+
+---
+
+# 08. RESPONSIVE PRAVINA SECTION GEOMETRY
+
+## DESKTOP >= 1280px
+
+Heading occupies the full container width.
+
+Below:
+
+```text
++-----------------------------------------------------------+
+|                   CENTERED EYEBROW                        |
+|                  PRAVINA H. THAKUR                        |
+|                    CENTERED SUBTITLE                      |
++-----------------------------------------------------------+
+|                                 |                         |
+|  TEMPLE PHOTOGRAPH              |  BIOGRAPHICAL STORY     |
+|  + FULL UNCROPPED PORTRAIT      |                         |
+|                                 |  HISTORICAL HIGHLIGHTS  |
+|                                 |                         |
++-----------------------------------------------------------+
+|       DEVOTIONAL PHOTO 1       |     DEVOTIONAL PHOTO 2  |
++-----------------------------------------------------------+
+```
+
+The diagram defines structure, not rigid pixel sizes.
+
+The entire arrangement must be visually balanced.
+
+## TABLET 768–1279px
+
+Allow the columns to rebalance.
+
+If portrait visibility becomes compromised, switch to a stacked layout.
+
+Do not preserve two columns merely for visual symmetry.
+
+## MOBILE < 768px
+
+Use:
+
+1. Centered heading.
+2. Subtitle.
+3. Full portrait in a dedicated visual panel.
+4. Actual temple image.
+5. Biography.
+6. Historical highlights.
+7. Devotional photographs.
+
+Mobile must never show the portrait as a tiny cropped floating image.
+
+Use actual intrinsic image ratios.
+
+All text must remain readable.
+
+No horizontal overflow.
+
+No accidental image stacking.
+
+---
+
+# 09. THE TEMPLE'S CONSECRATION — HISTORICAL CHAPTER
+
+## COMPONENT
+
+`TempleConsecrationSection.tsx`
+
+Use the current component if one exists.
+
+## EDITORIAL OBJECTIVE
+
+Preserve the historical importance of the temple's consecration without allowing a past event to dominate an unnecessarily long section.
+
+## SECTION HEADING
+
+THE TEMPLE'S CONSECRATION
+
+Subtitle:
+
+Pran Pratishtha • Sacred Dedication • Historic Opening
+
+## SECTION STRUCTURE
+
+### A. GOLDEN-HOUR TEMPLE BANNER
+
+The first visual MUST be the existing golden-hour Shri Dwarkadhish temple photograph.
+
+Use a premium wide banner.
+
+Do not replace it with an unrelated generic photograph.
+
+Keep the actual temple visible.
+
+Use careful gradient treatment so the heading is readable.
+
+Do not crop away the shikhara or temple entrance.
+
+If the source image cannot fill the banner safely, use a layered contained-image presentation.
+
+### B. FEATURED DATE
+
+26 NOVEMBER 2025
+
+Identify this as the consecration and inauguration date, subject to final temple-side confirmation.
+
+### C. COMPACT CEREMONY STORY
+
+Below the banner, show a concise historically grounded paragraph.
+
+Mention that published accounts identify Jagadguru Shankaracharya Swami Avimukteshwaranand Saraswati with the inauguration and consecration.
+
+Use careful, sourced wording.
+
+### D. SHANKARACHARYA PHOTO EDITORIAL
+
+Use verified images of the actual inauguration.
+
+Suggested layout:
+
+- One featured ceremony image.
+- One supporting documentary photograph.
+- Short factual captions.
+- Publication/source reference where appropriate.
+
+Maintain natural proportions.
+
+Do not digitally insert people into an event scene.
+
+Do not use composite imagery as evidence of historical attendance.
+
+### E. HISTORICAL MILESTONE STRIP
+
+Use three or four compact milestones:
+
+- 26 November 2025 — Consecration and inauguration.
+- Shankaracharya's documented participation.
+- Temple opening to devotees.
+- 26–30 November 2025 — Published festival programme.
+
+Do not describe the entire five-day programme as occurring only on inauguration day.
+
+Do not create incorrect timing claims.
+
+### F. OPTIONAL ARCHIVE
+
+Use an expandable “Explore the Inauguration” element for:
+
+- Longer historical descriptions.
+- Event programme.
+- Additional original photographs.
+- Source links.
+
+The default visible section should remain compact.
+
+### G. SECTION HEIGHT
+
+Use content-driven height.
+
+Do not create a compulsory 100vh or 200vh section.
+
+Do not insert arbitrary spacers.
+
+Keep enough room for the banner and important historical imagery, but do not make visitors scroll through empty background.
+
+---
+
+# 10. PROFESSIONAL DONATION INTERFACE — STRICT AUTHORIZATION GATE
+
+## COMPONENT
+
+`TempleDonationSection.tsx`
+
+## OBJECTIVE
+
+Create a professional, reverent, accessible donation interface suitable for an authorized temple website.
+
+A beautiful interface alone does not establish legitimacy.
+
+The ability to accept real donations must be gated behind institutional approval.
+
+## PAYMENT ACTIVATION REQUIREMENTS
+
+Before the actual payment QR may become public, obtain:
+
+1. Written authorization from the temple's responsible management or authorized legal entity.
+2. The exact legal name of the receiving organization.
+3. The receiving bank or approved payment provider details.
+4. Confirmation that the uploaded QR resolves to the approved recipient.
+5. Confirmation of the UPI beneficiary displayed by the payment application.
+6. Confirmation of authorized use of the temple name and identity.
+7. The organization-approved donation purpose and public wording.
+8. The approved receipt, support and refund/dispute handling processes.
+
+If ANY requirement is missing:
+
+`donationStatus = "pending_verification"`
+
+In this state:
+
+- Render the full professional layout in the private development preview.
+- Do not expose the unverified functional QR on the public website.
+- Do not activate a live payment link.
+- Do not show “Official Donation Account” or “Verified Recipient” badges.
+- Do not generate payment confirmation screens.
+- Display a neutral message that online contributions will become available after authorization.
+
+If all requirements are satisfied:
+
+`donationStatus = "authorized"`
+
+Only then enable the actual payment interface.
+
+## PAYMENT UI STRUCTURE
+
+Section eyebrow:
+
+DEVOTIONAL OFFERINGS
+
+Title:
+
+Support Shri Dwarkadhish Mandir
+
+Subtitle:
+
+A respectful invitation to contribute toward temple activities, where authorized by temple management.
+
+### DESKTOP LAYOUT
+
+Left panel:
+
+- Devotional explanation.
+- Management-approved purposes of contribution.
+- Approved recipient name.
+- Clear instructions.
+- Receipt and assistance information.
+- Concise privacy and support links.
+
+Right panel:
+
+- Premium framed QR presentation.
+- Original unaltered QR.
+- Verified beneficiary information.
+- Scan-and-pay instructions.
+- Appropriate mobile payment alternatives.
+- Clear safety notice.
+
+Use a refined two-column layout.
+
+Approximate proportions:
+
+LEFT: 54%.
+
+RIGHT: 46%.
+
+Adjust based on actual available space.
+
+### VISUAL STYLE
+
+Use:
+
+- Warm ivory background.
+- Antique-gold border accents.
+- Deep-brown typography.
+- Small traditional lotus ornament.
+- Restrained maroon highlights.
+- White QR scanning surface.
+- Subtle nonintrusive lighting.
+
+The donation section must feel calm and trustworthy.
+
+Avoid:
+
+- Flashing donation buttons.
+- False urgency.
+- Countdown timers.
+- Unsupported claims of guaranteed blessings.
+- Misleading tax-benefit claims.
+- Fake security seals.
+- Fake transaction counters.
+
+## QR IMAGE INTEGRITY
+
+Use the uploaded QR asset only after recipient verification.
+
+Do not:
+
+- Recreate the QR by visual approximation.
+- Alter the encoded content.
+- Add logos in its center.
+- Blur it.
+- Rotate it.
+- Apply perspective transforms.
+- Place moving shadows over it.
+- Change its aspect ratio.
+- Crop its quiet zone.
+
+Keep the scan area plain white.
+
+QR render size should be suitable for desktop scanning, approximately 240–320px in the available card width, with responsive scaling as needed.
+
+Maintain an adequate quiet zone.
+
+Verify real scan functionality using multiple UPI-capable devices or apps.
+
+## PAYMENT STATUS HONESTY
+
+A static QR does NOT allow the website to know whether a user paid successfully.
+
+Never show “Payment Successful” merely because:
+
+- The QR was displayed.
+- The visitor clicked a button.
+- A UPI app was opened.
+- The visitor returned to the browser.
+- The visitor entered a transaction reference.
+
+A verified successful state requires confirmation from an authorized payment gateway, acquiring bank or equivalent trusted server-side reconciliation process.
+
+If that integration does not exist, explain that payment acknowledgment must be obtained from the authorized temple office.
+
+Do not invent receipts.
+
+## MOBILE PAYMENT EXPERIENCE
+
+A user viewing the website on the same phone may not be able to scan a QR displayed on that phone.
+
+Therefore:
+
+- Prefer an authorized UPI deep link or supported payment-provider checkout on mobile.
+- Activate it only after verification.
+- Provide a copyable approved UPI ID where appropriate.
+- Optionally allow saving the QR image for use in a compatible payment app.
+- Do not pretend every UPI application supports every deep-link flow.
+- Provide a clear fallback.
+
+Do not collect UPI PINs, bank passwords, card PINs or OTPs on the temple website.
+
+## RECEIPTS AND DONOR PRIVACY
+
+If the temple authorizes receipt generation:
+
+- Use approved receipt numbering.
+- Maintain server-side transaction records.
+- Include the legally correct recipient entity.
+- Avoid collecting unnecessary personal data.
+- Publish an appropriate privacy notice.
+- Secure donor information.
+- Verify applicable tax rules and the entity's actual tax approvals before advertising any deduction.
+
+Do not automatically describe a donation as eligible for tax deduction.
+
+Do not display an 80G or similar tax-benefit claim unless the receiving organization confirms current eligibility and the applicable legal conditions.
+
+---
+
+# 11. DONATION SECTION ANIMATIONS
+
+The donation interface should be sophisticated but restrained.
+
+## ENTRANCE
+
+- Section heading fades in.
+- Left content rises approximately 12px.
+- QR card enters with soft opacity and slight vertical movement.
+- Fine gold border gently becomes visible.
+
+## CARD LIGHTING
+
+Use a very subtle gold radial reflection around the outer frame.
+
+The glow may respond to pointer position on desktop.
+
+Never animate the QR pattern.
+
+Never place lighting on top of the scan surface.
+
+## MICROINTERACTIONS
+
+- Smooth button hover.
+- Clear keyboard focus.
+- Delicate icon movement.
+- Responsive copy-to-clipboard feedback.
+- Calm instructional transitions.
+
+Do not automatically play audio.
+
+Do not use confetti, celebratory payment effects or simulated transaction confirmations.
+
+The public payment interface must remain stable and distraction-free.
+
+---
+
+# 12. RESTORE THE PREVIOUSLY REMOVED HELPING SECTION
+
+This requirement must not be ignored.
+
+The existing website previously contained a helping/supporting section that the user wants restored.
+
+Audit:
+
+- Earlier project versions.
+- Git history, if available.
+- Previously exported components.
+- Earlier screen-recording implementation.
+- Existing section navigation entries.
+
+Identify the exact removed section.
+
+Restore its functionality and meaningful content.
+
+Preserve its original useful purpose.
+
+Update only:
+
+- Visual layout.
+- Spacing.
+- Typography.
+- Responsiveness.
+- Accessibility.
+- Animation consistency.
+
+Do not replace the original useful functionality with generic decorative cards.
+
+If several previously removed sections could match the description, preserve the current application and report the ambiguity rather than silently restoring or deleting an unrelated section.
+
+Do not reintroduce a section that the user explicitly requested to remove earlier unless it is confirmed to be the intended helping section.
+
+Do not remove an existing useful section to make room for donations.
+
+---
+
+# 13. REMOVE UNNECESSARY EMPTY SPACE
+
+Perform a website-wide layout audit.
+
+## PROBLEM
+
+Some existing sections contain excessive blank space caused by:
+
+- Narrow fixed max-width containers.
+- Large top or bottom margins.
+- Oversized section min-heights.
+- Absolute-positioned elements removed from normal flow.
+- Empty reserved columns.
+- Fixed-height image cards.
+- Artificial scroll spacer elements.
+- Hidden or removed content leaving unused containers.
+
+Correct these problems at their source.
+
+## IMPORTANT DESIGN DISTINCTION
+
+Whitespace is not automatically a defect.
+
+Preserve intentional breathing room.
+
+Remove only space that serves no compositional, readability or interaction purpose.
+
+Do not fill every empty region with random decorations.
+
+Do not create visual clutter to satisfy a zero-empty-space instruction.
+
+## GLOBAL LAYOUT TOKENS
+
+Suggested starting values:
+
+```css
+:root {
+  --page-gutter: clamp(18px, 3.5vw, 80px);
+  --content-max: 1600px;
+  --section-gap: clamp(56px, 5.5vw, 104px);
+  --content-gap: clamp(24px, 3vw, 56px);
+  --card-gap: clamp(16px, 1.8vw, 28px);
+}
+```
+
+Use one consistent container architecture.
+
+Allow intentional full-width photographic sections.
+
+Keep paragraphs comfortably readable.
+
+Rebalance image/text grids on wide monitors.
+
+Do not stretch text across the entire viewport.
+
+## NO DEAD-SPACE RULE
+
+For each section, inspect:
+
+- Top spacing.
+- Bottom spacing.
+- Left and right gutters.
+- Image area.
+- Text area.
+- Grid alignment.
+- Decorative elements.
+- Actual content density.
+
+If large unused space remains, first correct layout geometry.
+
+Only then consider subtle ornamentation.
+
+Do not use unrelated text or invented information to fill the space.
+
+---
+
+# 14. PREMIUM TYPOGRAPHY SYSTEM
+
+The website's text must be comfortable to read on all screen sizes.
+
+Establish the following desktop starting targets:
+
+| Type | Suggested size |
+|---|---|
+| Homepage hero heading | 56–80px |
+| Major section title | 42–60px |
+| Pravina H. Thakur title | 52–76px |
+| Historical chapter heading | 36–52px |
+| Card heading | 21–27px |
+| Body copy | 17–19px |
+| Navigation | 16–18px |
+| Button text | 15–17px |
+| Supporting captions | 14–16px |
+
+Use fluid scaling with `clamp()`.
+
+Do not use tiny text simply to fit excessive content.
+
+Reduce content length or change the layout when necessary.
+
+Use:
+
+- Elegant premium serif typography for English headings.
+- Readable body typography.
+- Proper Devanagari support.
+- Proper Gujarati support.
+- Correct font weights.
+- Appropriate line heights.
+- Comfortable letter spacing.
+- Strong color contrast.
+
+No cut-off ascenders, conjuncts or diacritics.
+
+---
+
+# 15. FOUR-LANGUAGE LOCALIZATION
+
+Support:
+
+`en` — English.
+
+`hi` — Hindi.
+
+`mr` — Marathi.
+
+`gu` — Gujarati.
+
+The language selector must remain available beside the Plan Your Visit action on suitable desktop layouts.
+
+On mobile, place it in the accessible navigation controls.
+
+Every website-controlled visible string must be localized.
+
+This includes:
+
+- Section headings.
+- Biographies.
+- Historical milestones.
+- Photo captions.
+- Buttons.
+- Donation explanations.
+- QR instructions.
+- Verification notices.
+- Forms.
+- Tooltips.
+- Validation errors.
+- Footers.
+- Modals.
+- Accessibility labels.
+- Success and failure messages.
+
+Use a centralized typed translation dictionary.
+
+No silent English fallback for missing production translations.
+
+Use complete sentence translations rather than concatenated fragments.
+
+Keep translations semantically equivalent.
+
+Do not change dates, numerical claims or historical meaning between languages.
+
+Use locale-aware formatting where appropriate.
+
+Language switching must not reset:
+
+- Current page position.
+- Darshan animation progress.
+- Open modal state unnecessarily.
+- User-entered information.
+
+---
+
+# 16. WEBSITE-WIDE APPLE-QUALITY SECTION TRANSITIONS
+
+Establish one cohesive motion language.
+
+Suggested default editorial entrance:
+
+```ts
+const editorialReveal = {
+  initial: {
+    opacity: 0,
+    y: 20
+  },
+  animate: {
+    opacity: 1,
+    y: 0
+  },
+  transition: {
+    duration: 0.65,
+    ease: [0.22, 1, 0.36, 1]
+  }
+};
+```
+
+Adapt the implementation to the existing motion library.
+
+Do not simply paste this configuration into every component.
+
+Use different animation treatments for:
+
+- Headings.
+- Photographs.
+- Editorial text.
+- Cards.
+- Historical milestones.
+- Donation information.
+
+Keep animations consistent in speed and visual character.
+
+## REVEAL BEHAVIOR
+
+The first reveal may be viewport-triggered.
+
+It should not replay annoyingly every time an element briefly leaves and re-enters the screen.
+
+Use appropriate once/replay behavior.
+
+Do not leave content invisible if JavaScript animation fails.
+
+## PERFORMANCE
+
+Use compositor-friendly properties.
+
+Avoid layout thrashing.
+
+Avoid excessive blur filters.
+
+Use optimized source images.
+
+Clean up observers and animation frames.
+
+Respect reduced-motion preferences.
+
+Avoid long artificial scroll durations.
+
+The user must always remain in control of the page.
+
+---
+
+# 17. STRICT SECTION PRESERVATION
+
+Preserve all unrelated functional sections.
+
+These include, where currently implemented:
+
+- Homepage hero.
+- Main Divine Darshan.
+- Scroll-driven curtains.
+- Flower shower.
+- Golden lighting.
+- Temple bells.
+- Darshan timings.
+- Visitor directions.
+- Google Maps.
+- Festivals.
+- Approved Seva information.
+- Existing helping/supporting content.
+- Gallery.
+- Spiritual learning.
+- Instagram and WhatsApp.
+- Footer.
+- Language toggle.
+- Search and navigation.
+- Working admin features.
+
+If a feature was previously removed by explicit request, do not automatically recreate it unless needed to fulfill the current restoration requirement.
+
+Do not introduce duplicate sections.
+
+Do not reintroduce the long, unwanted standalone architecture chapter.
+
+Keep concise verified architectural facts within appropriate historical context only if relevant.
+
+---
+
+# 18. RESPONSIVE TEST MATRIX
+
+Test actual rendered pages at:
+
+- 360px.
+- 390px.
+- 430px.
+- 768px.
+- 1024px.
+- 1280px.
+- 1440px.
+- 1920px.
+- 2560px.
+
+At each size, inspect the Pravina section, consecration chapter and donation section.
+
+## PRAVINA IMAGE ACCEPTANCE
+
+PASS only if:
+
+- Face fully visible.
+- Forehead fully visible.
+- Bindi fully visible.
+- Folded hands fully visible.
+- Source-visible sari and arms preserved.
+- No facial distortion.
+- No stretched proportions.
+- No accidental clipping.
+- No overlap with text.
+- No overlap with devotional photo cards.
+- No accidental clipping during animation.
+- No portrait displacement after fonts load.
+
+## CONSECRATION ACCEPTANCE
+
+PASS only if:
+
+- Golden-hour temple photograph is first.
+- Important temple architecture remains visible.
+- Event dates are accurately distinguished.
+- Shankaracharya imagery is authentic and appropriately credited.
+- Historical captions are factual.
+- No invented ceremonial details are present.
+- Past events are not presented as upcoming.
+- Section height remains proportional to its content.
+
+## DONATION ACCEPTANCE
+
+PASS only if:
+
+- Payment status is correctly gated.
+- An unverified QR is not publicly active.
+- Beneficiary identity has been checked before activation.
+- QR remains unmodified and scannable.
+- Mobile payment alternatives are functional where supported.
+- No false success confirmation is displayed.
+- No unsupported tax-benefit claim is made.
+- The site does not collect payment PINs or OTPs.
+- Relevant data is handled securely.
+- The payment interface is accessible in all four languages.
+
+## SPACING ACCEPTANCE
+
+PASS only if:
+
+- No accidental blank spacer sections.
+- No excessive unused side margins.
+- No hidden content leaving dead space.
+- No overlapping image cards.
+- No horizontal overflow.
+- No excessively small text.
+- No abrupt background transitions.
+- All major section headings align consistently.
+
+## MOTION ACCEPTANCE
+
+PASS only if:
+
+- Entrance transitions feel smooth.
+- No unnatural overshoot.
+- No forced scroll locking.
+- No prolonged invisible content.
+- No animation-induced cropping.
+- No unnecessary repeated reveals.
+- Reduced-motion behavior is correct.
+- Existing Darshan effects remain functional.
+
+---
+
+# 19. AUTOMATED AND MANUAL QA
+
+Run the existing project's build and TypeScript validation.
+
+Add or update tests where practical for:
+
+- Asset resolution.
+- Language dictionary completeness.
+- Section-preservation expectations.
+- Historical content data mapping.
+- Payment authorization state.
+- Navigation targets.
+- Responsive visibility.
+- Reduced-motion behavior.
+
+Perform real browser visual inspections.
+
+Capture before-and-after screenshots of:
+
+1. Pravina section on desktop.
+2. Pravina section on mobile.
+3. Consecration chapter.
+4. Donation section in pending state.
+5. Donation section in authorized state using approved test data only.
+6. Restored helping section.
+7. Full homepage scroll sequence.
+
+Compare screenshots for cropping, alignment, text readability and blank space.
+
+Do not claim the website passed testing unless it was actually tested.
+
+---
+
+# 20. REQUIRED FINAL DELIVERABLES
+
+Return a concise implementation report containing:
+
+## CODE CHANGES
+
+- Files modified.
+- Components created.
+- Components preserved.
+- Sections restored.
+- Unused components removed.
+- Translation keys added.
+- Motion architecture changes.
+
+## IMAGE REPORT
+
+- Actual portrait asset path.
+- Actual temple banner asset path.
+- Event photo source paths.
+- Image-fitting and cropping strategy.
+- Confirmation of full image visibility.
+
+## HISTORICAL CONTENT REPORT
+
+- Verified claims.
+- Source URLs.
+- Claims requiring temple confirmation.
+- Correct event dates.
+- Exact trustee designation used.
+
+## DONATION REPORT
+
+- Current authorization state.
+- QR verification status.
+- Beneficiary confirmation status.
+- Whether public payments are enabled.
+- Available receipt and reconciliation functionality.
+- Remaining requirements before activation.
+
+## VISUAL QA
+
+- Desktop findings.
+- Tablet findings.
+- Mobile findings.
+- Multilingual findings.
+- Accessibility findings.
+- Remaining problems.
+
+Do not mark any unverified feature as complete.
+
+---
+
+# FINAL QUALITY BAR
+
+The final Pravina H. Thakur section must feel like the signature editorial chapter of a premium Indian temple website.
+
+It must combine:
+
+**Authentic photography.**
+
+**A fully visible original portrait.**
+
+**Magnificent but restrained temple architecture.**
+
+**Clear historical storytelling.**
+
+**Sophisticated Indian heritage typography.**
+
+**Apple-quality motion precision.**
+
+**Strong visual composition.**
+
+**Perfectly controlled responsive spacing.**
+
+The consecration chapter must feel historically significant without being unnecessarily long.
+
+The donation section must feel institutionally credible and must never misrepresent the authenticity or status of a payment destination.
+
+The restored helping section must retain its practical usefulness.
+
+The website must remain readable and coherent in all four supported languages.
+
+## THE FINAL RULE
+
+**DO NOT OPTIMIZE FOR VISUAL FLASHINESS. OPTIMIZE FOR A BEAUTIFUL, AUTHENTIC, RESPONSIVE, MAINTAINABLE AND TRUSTWORTHY TEMPLE EXPERIENCE.**
+
+IMPLEMENT THE REQUESTED WORK DIRECTLY IN THE EXISTING APPLICATION, THEN VERIFY THE REAL RENDERED RESULT.
+
+Do not declare completion based only on generated code.

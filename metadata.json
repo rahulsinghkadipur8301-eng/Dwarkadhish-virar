@@ -1,0 +1,6 @@
+{
+  "name": "Shri Dwarkadhish Mandir — Shirgaon, Virar",
+  "description": "The digital spiritual destination and architectural pilgrimage platform for Shri Dwarkadhish Mandir, Shirgaon, Virar East, Palghar, Maharashtra.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

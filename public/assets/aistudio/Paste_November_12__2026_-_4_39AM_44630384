@@ -1,0 +1,968 @@
+# SHRI DWARKADHISH MANDIR — THE VISION BEHIND THE TEMPLE
+
+## PREMIUM EDITORIAL REDESIGN, CINEMATIC MOTION & CHAPTER RESTRUCTURING
+
+### ROLE
+
+Act as an award-winning Creative Director, Principal React Engineer, Senior UI/UX Architect, Cinematic Motion Graphics Designer, Art Director, Editorial Designer, and Responsive Frontend Specialist.
+
+You are refining an existing premium website for:
+
+**Shri Dwarkadhish Mandir, Shirgaon, Virar East, Maharashtra.**
+
+The task is to redesign the existing **“The Vision Behind Shree Dwarkadhish Dham — Pravina H. Thakur”** section to a significantly higher visual standard.
+
+The final experience must combine:
+
+- Premium Apple-style motion precision.
+- Royal Indian heritage aesthetics.
+- Museum-quality historical storytelling.
+- Exceptional photographic composition.
+- Authentic devotional atmosphere.
+- Editorial typography and excellent readability.
+- Carefully balanced space.
+- High-quality motion graphics.
+- Fully responsive layouts.
+- Complete four-language compatibility.
+
+This is a real implementation task in the existing React application, not a request for another mockup.
+
+**Do not rebuild the entire website. Preserve everything outside the requested scope unless a supporting layout adjustment is necessary.**
+
+---
+
+# PART 1 — STUDY THE THREE UPLOADED REFERENCES
+
+Three reference images have been supplied.
+
+## Reference 1 — Current Broken Website
+
+File:
+
+`Screenshot 2026-11-12 at 4.26.14 AM.png`
+
+This shows the CURRENT layout and the problems requiring correction.
+
+Problems to identify:
+
+1. The section heading is positioned toward the right instead of being centered across the section.
+2. The main image composition is disproportionately tall.
+3. The bottom photographs overlap the main image and caption area.
+4. The gallery photographs feel disconnected from the main content.
+5. The main photograph dominates vertically without establishing a clear balanced composition.
+6. The cards on the right are repetitive and text-heavy.
+7. The overall visual hierarchy is weak.
+8. The section has inconsistent vertical density.
+9. Some photo boundaries and ornamental borders overlap awkwardly.
+10. The composition lacks a clear primary portrait of Pravina H. Thakur.
+
+Do not preserve these problems.
+
+## Reference 2 — Desired Visual Direction
+
+File:
+
+`Screenshot 2026-11-12 at 4.27.24 AM.png`
+
+This is the principal ART DIRECTION reference.
+
+Study its:
+
+- Centered royal heading.
+- Warm ivory background.
+- Maroon title typography.
+- Elegant carved-gold decorative corners.
+- Large architectural photograph.
+- Prominent photograph of Pravina H. Thakur.
+- Two supporting devotional photographs.
+- Carefully organized historical facts.
+- Gold-framed information panels.
+- Traditional Indian cultural details.
+- Premium editorial composition.
+
+Create a BETTER and more refined version of this reference.
+
+Do not reproduce its overly dense text blocks or small typography.
+
+Retain the royal identity but improve spacing, responsiveness, visual clarity and image quality.
+
+## Reference 3 — Primary Portrait Asset
+
+**EXACT FILE NAME:**
+
+`Namaste Portrait in a Red Sari(1).png`
+
+This is the primary portrait asset of Pravina H. Thakur.
+
+Use this supplied original photograph as the main identifiable portrait in the redesigned section.
+
+DO NOT generate a replacement face.
+
+DO NOT alter facial features.
+
+DO NOT change age, skin tone, expression, hairstyle, forehead bindi, jewelry or clothing.
+
+DO NOT artificially beautify or reshape her.
+
+DO NOT crop her forehead, chin, face, folded hands, or meaningful visible body area.
+
+Preserve natural skin details and authentic proportions.
+
+Use appropriate image sizing and contain behavior to maintain the complete photograph.
+
+If a clean background cutout is necessary for the art direction, create it only with a high-quality mask that preserves every important facial, clothing and hand detail. Inspect the result at 100% zoom. If a clean cutout is not possible, use the intact photograph in an elegantly framed portrait panel instead.
+
+Never introduce an inaccurate AI-generated likeness.
+
+IMPORTANT:
+
+The first two screenshots are DESIGN REFERENCES.
+
+Do not use the screenshots themselves as website images.
+
+Use actual existing temple photographs and the supplied portrait asset.
+
+---
+
+# PART 2 — RESTRUCTURE THE COMPLETE SECTION
+
+## New Editorial Hierarchy
+
+The redesigned section should follow this exact order:
+
+1. Centered section eyebrow.
+2. Centered main title.
+3. Centered subtitle.
+4. Subtle ornamental divider.
+5. Main premium image-and-story composition.
+6. Short, well-organized biography.
+7. Three supporting historical facts or milestones.
+8. Two authentic devotional photographs.
+9. A natural transition to the next website section.
+
+Do not position the main heading exclusively inside the right-hand column.
+
+The heading must belong to the entire section.
+
+---
+
+# PART 3 — CENTERED ROYAL HEADING
+
+## Section Heading
+
+Display:
+
+THE VISION BEHIND SHREE DWARKADHISH DHAM
+
+Under this:
+
+# Pravina H. Thakur
+
+Under the name:
+
+Former Mayor of Vasai–Virar • Trustee • Devotee of Bhagwan Dwarkadhish
+
+Before publishing, verify the exact trust affiliation and whether “Trustee” is an appropriately supported designation. If not verified, omit or replace that part rather than implying an official temple office.
+
+## Heading Alignment
+
+The entire heading must be:
+
+- Horizontally centered relative to the full section.
+- Visually balanced.
+- Clearly separated from the image composition.
+- Consistent with the heading alignment of other major sections.
+- Fully responsive.
+
+Suggested styling:
+
+Eyebrow:
+Antique gold, approximately 13–16px desktop.
+
+Primary name:
+Elegant premium serif typography, approximately 52–76px desktop.
+
+Subtitle:
+Maroon or deep brown, approximately 17–21px desktop.
+
+Use fluid typography rather than rigid pixel sizes.
+
+On mobile, the name should scale to approximately 34–44px depending on available width.
+
+Do not let the heading overflow.
+
+Add delicate decorative elements:
+
+- Fine antique-gold horizontal rules.
+- A small lotus motif.
+- Subtle ornamental flourishes.
+- Very restrained gold highlights.
+
+Avoid excessive decorative symbols.
+
+The primary name should remain the most visually prominent text.
+
+---
+
+# PART 4 — PREMIUM MAIN VISUAL COMPOSITION
+
+## The Main Editorial Hero
+
+Below the centered heading, construct a premium photographic composition.
+
+Use a desktop grid, approximately:
+
+LEFT VISUAL AREA: 54–58%
+
+RIGHT CONTENT AREA: 42–46%
+
+This should be adjusted based on the actual aspect ratios and content.
+
+### LEFT AREA — TEMPLE AND PRAVINA JI
+
+The left side must visually unite:
+
+- The authentic Shri Dwarkadhish Mandir photograph.
+- The supplied Pravina H. Thakur portrait.
+- Two supporting photographs of her performing devotional rituals.
+
+The design should take inspiration from the second reference image without repeating the broken overlapping layout from the first screenshot.
+
+### Photographic Arrangement
+
+Create one integrated visual composition with clear hierarchy:
+
+**Background architectural image**
+
+Use the existing high-resolution Shri Dwarkadhish temple photograph.
+
+Preserve important temple architecture.
+
+Do not crop away the main shikhara, entrance, or significant structural features.
+
+Use a composition-aware frame and object positioning.
+
+If the source photograph cannot fill the frame without losing important architecture, use an aesthetically matched background extension or neutral frame rather than destructive cropping.
+
+**Primary portrait**
+
+Use:
+
+`Namaste Portrait in a Red Sari(1).png`
+
+Make Pravina H. Thakur visually prominent.
+
+Use the complete portrait as supplied, preserving her face and folded hands.
+
+Position the portrait within a dedicated visual region or carefully composed foreground layer.
+
+The portrait must not cover the temple's most important architectural details.
+
+It must never overlap body text or other controls.
+
+Do not stretch the portrait.
+
+Do not crop it simply to fill a fixed-height card.
+
+Ensure the figure is fully visible within the chosen portrait composition.
+
+### IMPORTANT — ACCIDENTAL IMAGE OVERLAP
+
+The current implementation shows the smaller devotional photographs overlapping the main temple photograph's lower caption region.
+
+Fix this completely.
+
+The two smaller photographs must have dedicated layout space.
+
+Use actual CSS Grid or Flexbox rows rather than uncontrolled absolute positioning or negative margins.
+
+If any intentional ornamental overlap is used, it must be limited to decorative borders and must not obscure meaningful image content.
+
+The final composition must have:
+
+- No cropped faces.
+- No clipped hands.
+- No overlapping photograph captions.
+- No broken image borders.
+- No image extending outside its parent.
+- No content collision.
+- No accidental stacking artifacts.
+
+---
+
+# PART 5 — SUPPORTING DEVOTIONAL PHOTOGRAPHS
+
+Use the two existing authentic photographs showing Pravina H. Thakur in temple-related devotional moments.
+
+Their current visible subjects include:
+
+1. A temple offering or prayer in front of the deity.
+2. A devotional ritual involving the deity.
+
+Keep both photographs.
+
+Present them as two balanced editorial photo tiles.
+
+Suggested desktop arrangement:
+
+Two photographs side by side beneath the primary visual composition.
+
+Suggested aspect ratio:
+Approximately 4:3 or an intrinsic ratio appropriate to the source.
+
+Use:
+
+- Uniform visual heights where possible without destructive cropping.
+- Elegant ivory margins.
+- Delicate antique-gold frames.
+- Subtle shadowing.
+- Consistent corner radii.
+- Small readable captions.
+- Correct image-specific alt text.
+
+Do not create captions asserting events or identities that have not been confirmed.
+
+Do not create new images when suitable authentic photographs already exist.
+
+On mobile:
+
+Stack or grid the photographs based on width.
+
+Maintain their full important content.
+
+Never crop faces or ritual gestures.
+
+---
+
+# PART 6 — REBUILD THE INFORMATION CONTENT
+
+## Remove the Three Repetitive Paragraph Cards
+
+The current section contains three similarly styled rectangular text cards.
+
+This makes the story feel repetitive and visually monotonous.
+
+Replace this with a cleaner editorial structure.
+
+### Section A — Main Biography
+
+Use one beautifully typeset editorial introduction.
+
+Approximately 100–140 words.
+
+Focus on:
+
+- Pravina H. Thakur's documented public background.
+- Her publicly reported association with the vision behind the Shirgaon temple.
+- The spiritual significance of the temple's creation.
+- The culmination of the temple project.
+
+Do not repeat the same idea three times.
+
+Use natural, respectful, source-backed writing.
+
+### Section B — Three Historical Highlights
+
+Below the biography, create three compact premium cards.
+
+Suggested headings:
+
+**Public Service**
+
+Former Mayor of Vasai–Virar.
+
+**Temple Vision**
+
+Publicly reported association with the creation of Shri Dwarkadhish Mandir in Shirgaon.
+
+**Temple Consecration**
+
+A major inauguration milestone in November 2025, with the precise date and event programme verified against records.
+
+These cards should have:
+
+- Subtle antique-gold icons.
+- Clear headings.
+- Short descriptions.
+- Equal spacing.
+- Lightweight borders.
+- Restrained hover effects.
+
+Do not repeat long paragraphs inside the cards.
+
+### Section C — Historical Statement
+
+A short ceremonial statement may appear as part of the editorial design.
+
+Suggested text:
+
+“A sacred vision, shaped by devotion, brought Dwarkadhish Dham to Virar.”
+
+IMPORTANT:
+
+Do not present this as a direct quotation from Pravina H. Thakur unless the exact words are supported by a reliable source.
+
+If it is editorial copy, do not add quotation marks or an attribution implying she said it.
+
+Render it as an elegant editorial statement or section tagline.
+
+---
+
+# PART 7 — APPLE-LEVEL MOTION GRAPHICS
+
+The animation must feel sophisticated, natural and responsive.
+
+Think of a premium editorial product reveal combined with Indian heritage styling.
+
+Use the existing React motion library where appropriate, preferably `motion/react`.
+
+Do not create competing animation systems or unnecessary heavy dependencies.
+
+## Animation 1 — Centered Heading Reveal
+
+When the section enters the viewport:
+
+- Eyebrow fades in first.
+- Fine decorative lines expand gently from the center.
+- The name appears with a restrained upward fade.
+- The subtitle follows.
+- A small lotus flourish becomes visible.
+
+Suggested movement:
+
+Vertical travel: 12–24px.
+
+Suggested duration: approximately 500–800ms.
+
+Use polished easing with no bouncy overshoot.
+
+No jumping.
+
+No dramatic zoom.
+
+## Animation 2 — Temple Photograph Reveal
+
+The temple photograph should appear with:
+
+- A soft reveal mask.
+- Gentle opacity increase.
+- Very subtle scale transition toward its final position.
+- Fine gold-frame illumination.
+
+Avoid heavy blur.
+
+Avoid repeated zooming.
+
+Do not create a scroll effect that requires a visitor to wait for the image to become visible.
+
+## Animation 3 — Pravina Ji Portrait Reveal
+
+The primary portrait should receive a special, respectful reveal.
+
+Suggested choreography:
+
+1. The temple photograph becomes visible.
+2. A soft ivory-gold light subtly forms behind the portrait frame.
+3. The portrait gently fades into place.
+4. The gold decorative border becomes fully visible.
+5. The portrait settles into a stationary composition.
+
+Use approximately 12–20px of entrance movement.
+
+Avoid spinning, dramatic zooming, or exaggerated 3D rotations.
+
+The portrait should feel dignified rather than theatrical.
+
+Do not animate the face or alter facial expression.
+
+## Animation 4 — Subtle Image Depth
+
+Implement very slight depth between the architectural background and portrait presentation.
+
+If using parallax:
+
+- Maximum movement approximately 8–16px.
+- Never cause image cropping.
+- Never alter the person's proportions.
+- Never move the portrait over text.
+- Never create a noticeable gap between adjacent images.
+
+Do not create persistent scroll-jacking.
+
+Keep the section part of the natural page flow.
+
+## Animation 5 — Supporting Photo Cards
+
+The two devotional images should appear with a gentle staggered reveal.
+
+Left photograph:
+
+Small upward fade.
+
+Right photograph:
+
+Same effect, delayed by approximately 100–140ms.
+
+Use subtle hover depth and border reflection.
+
+Do not continuously float them.
+
+Keep the image content stationary enough to appreciate.
+
+## Animation 6 — Editorial Content
+
+Reveal the biography and three milestone cards in a controlled sequence.
+
+Use a small upward movement and smooth fade.
+
+Keep the paragraph readable from the moment it enters the viewport.
+
+Do not animate every word individually.
+
+Do not create letter-by-letter effects throughout the biography.
+
+Premium editorial animation should support reading, not compete with it.
+
+## Animation 7 — Golden Ambient Lighting
+
+Introduce a restrained ambient gold highlight around the portrait and temple frames.
+
+The effect must resemble soft reflected light.
+
+Avoid:
+
+- Bright neon.
+- Glitter explosions.
+- Excessive sparkles.
+- Large lens flares.
+- Cartoon effects.
+- Strong continuously moving backgrounds.
+
+Keep lighting elegant and subtle.
+
+## Animation 8 — Mouse-Responsive Effects
+
+On desktop, introduce a small amount of pointer-responsive lighting around decorative frames.
+
+Allow a very faint highlight to follow the cursor across the outer card surface.
+
+Do not tilt the actual portrait heavily.
+
+Do not move facial features.
+
+Do not transform the QR-like ornamental elements or text unnecessarily.
+
+Any hover effect must return smoothly to its initial position.
+
+On mobile, remove cursor-dependent effects entirely.
+
+---
+
+# PART 8 — CHAPTER 03: REDUCE THE PAST INAUGURATION EVENT
+
+This is an important structural requirement.
+
+The current Chapter 03 occupies too much visual space.
+
+The inauguration was an important historical event, but it is now in the past.
+
+It should no longer consume as much screen space as a primary ongoing website feature.
+
+Find the existing Chapter 03, associated with the temple's inauguration, opening or Pran Pratishtha ceremonies.
+
+Convert it into a compact historical milestone.
+
+## Suggested New Structure
+
+Small chapter eyebrow:
+
+**03 — A Historic Milestone**
+
+Main heading:
+
+**The Temple's Consecration**
+
+Featured date:
+
+**26 November 2025**
+
+Use that date as the principal date only after verifying the historical record.
+
+Include:
+
+- One short factual paragraph.
+- One authentic event photograph, if available.
+- Two or three concise historical facts.
+- An optional “Explore Inauguration History” disclosure.
+
+### Layout
+
+Desktop:
+
+Compact horizontal editorial band.
+
+Image on one side.
+
+Date and description on the other.
+
+Target a natural height around 240–380px, depending on the content and image.
+
+Do not force a full-screen layout.
+
+Mobile:
+
+Stack image and text.
+
+Avoid unnecessary blank space.
+
+### Expandable Historical Details
+
+If the original Chapter 03 contains several event details, move them into an optional expanded history panel.
+
+The detailed programme can remain available for visitors who want to study the historical record.
+
+Do not present the past event as upcoming.
+
+Do not show an event registration CTA for a completed ceremony.
+
+Do not claim the event ran from 26–29 November unless that precise range is confirmed. Reconcile any conflicting source reports about the final event date.
+
+Use neutral labels such as:
+
+- Historic Inauguration
+- Consecration Ceremony
+- Archive
+- Event Highlights
+
+The primary purpose is to preserve history without unnecessarily lengthening the homepage.
+
+---
+
+# PART 9 — REMOVE CHAPTER 05 COMPLETELY
+
+Remove the existing Chapter 05 from the homepage.
+
+If Chapter 05 corresponds to the Architecture, Stone Craft & Sacred Geometry / Temple Architecture section, remove that standalone chapter, as previously requested.
+
+This includes:
+
+- Chapter 05 heading.
+- Its standalone descriptive text.
+- Associated content cards.
+- Decorative backgrounds belonging exclusively to that chapter.
+- Any unnecessary photographs belonging exclusively to the removed section.
+- Its dedicated navigation item, if present.
+- Dead anchor links.
+- Empty containers.
+- Artificial scroll spacing.
+- Obsolete scroll-animation triggers.
+
+Do not leave an empty cream-colored section.
+
+Do not leave a huge gap between Chapter 04 and the next remaining section.
+
+Do not break the homepage's navigation or section-tracking logic.
+
+If Chapter 05 refers to a different section in the actual current code, inspect its real heading before deleting it; use the chapter numbering and user-requested scope to identify the intended section rather than deleting an unrelated component blindly.
+
+Keep any independently necessary temple-history facts in the appropriate historical context, but do not silently recreate the removed full section elsewhere.
+
+After removal, renumber visible chapters or section indexes consistently, if the existing editorial numbering system requires it.
+
+---
+
+# PART 10 — COMPLETE RESPONSIVE REDESIGN
+
+## Desktop
+
+At 1440px, 1920px and 2560px:
+
+- Center the full-width section heading.
+- Use a balanced main visual/content composition.
+- Make the portrait prominent.
+- Present temple architecture clearly.
+- Keep the main biography readable.
+- Give supporting photographs their own dedicated grid.
+- Maintain generous but controlled breathing room.
+- Avoid large unused horizontal margins.
+
+Do not squeeze the section into a narrow maximum-width container when ample screen width is available.
+
+Use a fluid content width suited to the website's global layout system.
+
+## Tablet
+
+At 768px–1024px:
+
+- Reduce column imbalance.
+- Allow heading wrapping.
+- Prevent portrait cropping.
+- Maintain readable information cards.
+- Adjust photo grid based on available width.
+
+Switch to stacked layout when the two-column composition becomes uncomfortable.
+
+## Mobile
+
+At 360px–430px:
+
+Use this order:
+
+1. Centered heading.
+2. Subtitle.
+3. Primary portrait.
+4. Temple photograph.
+5. Short biography.
+6. Three historical facts.
+7. Supporting devotional photographs.
+8. Natural transition to the next section.
+
+Keep the portrait intact.
+
+Preserve the face and folded hands.
+
+Use comfortable side padding.
+
+Avoid negative margins and horizontal overflow.
+
+Do not make the portrait so large that important information is pushed through unnecessary vertical empty space.
+
+---
+
+# PART 11 — COMPLETE FOUR-LANGUAGE SUPPORT
+
+The website uses:
+
+- English
+- Hindi
+- Marathi
+- Gujarati
+
+All new text must be translated into the active language.
+
+This includes:
+
+- Centered heading.
+- Subtitle.
+- Biography.
+- Historical fact cards.
+- Photo captions.
+- Inauguration archive.
+- Buttons.
+- Tooltips.
+- Accessibility labels.
+- Expanded content.
+- Status messages.
+
+Never leave English sentences inside the Hindi, Marathi or Gujarati version.
+
+Proper names must use suitable script conventions where appropriate.
+
+Ensure high-quality Devanagari and Gujarati font rendering.
+
+Do not reset the animation or scroll position when the language changes.
+
+Translation expansion must never cause text clipping or overlapping photographs.
+
+---
+
+# PART 12 — FIX THE GLOBAL SECTION FLOW
+
+The existing website sometimes uses excessive vertical and horizontal spacing.
+
+The redesigned Pravina H. Thakur section must integrate naturally into the site's overall layout.
+
+Use shared container and spacing tokens.
+
+Suggested foundation:
+
+- Fluid main container.
+- Desktop section padding around 72–104px.
+- Tablet section padding around 56–80px.
+- Mobile section padding around 40–64px.
+- Readable paragraph widths.
+- Responsive card gaps.
+- Consistent section-heading rhythm.
+
+Do not make every section 100vh.
+
+Do not use oversized spacer elements merely for visual decoration.
+
+Do not add unnecessary cream-colored gaps before or after the new section.
+
+Keep the main content visually substantial.
+
+The section should feel spacious without appearing empty.
+
+---
+
+# PART 13 — PRESERVE THE REMAINING WEBSITE
+
+Do not damage existing functionality.
+
+Preserve:
+
+- Homepage hero.
+- Temple photographs.
+- Shri Dwarkadhish Divine Darshan animation.
+- Scroll-driven curtain opening and closing.
+- Flower shower.
+- Golden warmth.
+- Temple bells.
+- Darshan timings.
+- Location and Google Maps.
+- Festivals.
+- Approved Seva information.
+- Gallery.
+- Spiritual learning.
+- WhatsApp and Instagram integration.
+- Footer.
+- Language selection.
+- Existing functional modals and interactions.
+
+Modify only what is necessary to complete the requested redesign and chapter restructuring.
+
+---
+
+# PART 14 — COMPONENT ARCHITECTURE
+
+Use the existing React + TypeScript + Tailwind CSS + motion/react environment.
+
+Build or refactor appropriate components such as:
+
+`PravinaVisionSection.tsx`
+
+`PravinaPortraitComposition.tsx`
+
+`TempleHistoricalMilestones.tsx`
+
+`DevotionalPhotoGallery.tsx`
+
+`CompactInaugurationArchive.tsx`
+
+Adapt the names to the existing project structure.
+
+Avoid duplicate components and animation systems.
+
+Use optimized image loading.
+
+Use appropriate intrinsic image sizing.
+
+Do not animate layout properties continuously when transforms and opacity can achieve the desired effect.
+
+Ensure any smooth scrolling or animation library does not conflict with the existing Darshan system.
+
+---
+
+# PART 15 — CRITICAL QA TESTING
+
+Before declaring completion, verify all the following.
+
+### Photographic Tests
+
+1. The main portrait is the actual supplied asset.
+2. Pravina ji's face remains unchanged.
+3. Her forehead and hair are not cropped.
+4. Her folded hands remain visible.
+5. The portrait retains natural proportions.
+6. The main temple photograph retains important architectural details.
+7. Supporting photos do not overlap the main photograph.
+8. Photo captions remain visible.
+9. Image frames align correctly.
+10. No accidental image overflow occurs.
+
+### Layout Tests
+
+1. Main heading is centered.
+2. The name is visually prominent.
+3. Biography is readable.
+4. Historical cards fit correctly.
+5. No excessive blank space remains.
+6. Desktop layout uses available width intelligently.
+7. Tablet layout remains balanced.
+8. Mobile layout does not overflow.
+9. Chapter 03 is compact.
+10. Chapter 05 is removed.
+11. No empty section remains after Chapter 05 removal.
+12. Navigation and section numbering remain correct.
+
+### Animation Tests
+
+1. Heading reveal is smooth.
+2. Main image reveal is smooth.
+3. Portrait entrance is elegant.
+4. Supporting images animate subtly.
+5. No overlapping elements during animation.
+6. No scroll snapping or stuck sections.
+7. No excessive performance cost.
+8. Reduced-motion users receive a stable, readable layout.
+9. Animation remains smooth when scrolling in reverse.
+10. The section works after resizing or changing languages.
+
+### Language Tests
+
+Check all four languages at desktop and mobile sizes.
+
+No untranslated website-controlled text.
+
+No broken characters.
+
+No clipped headlines.
+
+No layout shifts caused by language switching.
+
+---
+
+# FINAL EXPECTED RESULT
+
+The redesigned section must have the dignity of a premium heritage exhibition.
+
+The visitor should first see the beautifully centered heading:
+
+**THE VISION BEHIND SHREE DWARKADHISH DHAM**
+
+**Pravina H. Thakur**
+
+Then the visitor should encounter a balanced architectural-and-portrait presentation, where the supplied authentic photograph of Pravina ji becomes the clear human focus.
+
+Below and alongside it, the website should communicate her documented connection to the temple through concise, readable historical content.
+
+Two devotional photographs should reinforce the story without overlapping any other elements.
+
+The past inauguration event should remain accessible as a compact historical milestone.
+
+Chapter 05 must be removed as requested.
+
+Animations should feel precise, elegant, responsive and exceptionally refined.
+
+The final result must not resemble a crowded political poster, generic image collage, or basic two-column template.
+
+It must feel like **a beautiful museum-quality editorial chapter within a premium Indian spiritual website**.
+
+## FINAL COMMAND
+
+Implement the redesign directly in the existing website.
+
+Use the exact supplied portrait filename:
+
+`Namaste Portrait in a Red Sari(1).png`
+
+Use the first screenshot to identify layout defects.
+
+Use the second screenshot as the principal visual reference.
+
+Preserve authentic images without cropping important details.
+
+Center the heading.
+
+Eliminate accidental overlaps.
+
+Reduce Chapter 03.
+
+Remove Chapter 05.
+
+Preserve the rest of the website.
+
+Verify the result at all major responsive sizes.
+
+Do not claim completion until the rendered layout, animations, photographs and multilingual content have been checked.

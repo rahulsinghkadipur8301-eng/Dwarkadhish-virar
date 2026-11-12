@@ -1,0 +1,864 @@
+# ROLE AND ENGINEERING STANDARD
+
+Act as a principal frontend engineer, senior motion graphics developer, creative director, internationalization architect, and senior quality-assurance engineer.
+
+You are upgrading an existing premium React + TypeScript temple website for **Shri Dwarkadhish Mandir, Shirgaon, Virar East, Maharashtra**.
+
+Your responsibility is to implement the following two major enhancements correctly, completely, and together:
+
+1. A cinematic, scroll-controlled spiritual Darshan experience with realistic falling flowers, golden illumination, and seamless reversible curtain animations.
+2. Complete four-language localization covering **English, Hindi, Marathi, and Gujarati**, where every user-facing word, sentence, button, label, notification, and interaction appears in the visitor's selected language.
+
+**IMPORTANT: Implement both features. Do not return a conceptual demonstration or incomplete sample. Modify the real existing application and verify the actual functionality.**
+
+---
+
+# PART 1 — CINEMATIC DIVINE DARSHAN EXPERIENCE
+
+## 1. Desired Visual Experience
+
+Create this exact animation sequence:
+
+**Curtains open → Shri Dwarkadhish revealed → flowers descend from above → subtle golden warmth surrounds the sanctum → petals travel into the background and gradually lose color and opacity → curtains gently close.**
+
+This must resemble an elaborate, sacred, ceremonial temple Darshan experience.
+
+The artistic direction should be inspired by:
+
+- Traditional Indian Vaishnav temple ceremonies.
+- Realistic Pushpa Varsha flower offerings.
+- Premium cinematic motion graphics.
+- Beautiful scroll-linked storytelling similar in smoothness and responsiveness to Apple's premium product webpages.
+- A restrained, respectful, spiritually immersive visual atmosphere.
+
+The animation must feel graceful, physical, realistic, and emotionally meaningful.
+
+Avoid cartoon effects, generic confetti, distracting particles, or exaggerated flashes.
+
+## 2. Preserve the Existing Website
+
+The existing website contains:
+
+- A cinematic temple hero section.
+- A divine Darshan section.
+- Shri Dwarkadhish's actual devotional photograph.
+- A temple-shaped golden sanctum frame.
+- Two burgundy/red velvet curtains.
+- A decorative brass temple bell.
+- Devotional storytelling cards.
+- A Bhagavad Gita section.
+- Darshan timings.
+- Temple location.
+- Architecture.
+- Festivals.
+- Seva.
+- Community.
+- Gallery.
+- Other devotional sections.
+
+Preserve the existing visual identity.
+
+Use the existing color palette:
+
+- Background cream: `#FBF6ED`
+- Ivory: `#FFFDF8`
+- Royal dark brown: `#3C2A20`
+- Antique gold: `#B68A45`
+- Champagne gold: `#C59B56`
+- Sacred maroon: `#921B2C`
+
+**Do not alter, distort, recolor, or replace Shri Dwarkadhish's photograph.**
+
+The deity's face, hands, crown, feet, jewelry, and original appearance must remain authentic and unobstructed.
+
+---
+
+# PART 2 — EXACT SCROLL-CONTROLLED ANIMATION
+
+## 3. One Authoritative Scroll Controller
+
+Inspect and use the existing project's actual scroll architecture, including:
+
+- `ScrollDrivenDarshan.tsx`
+- `DarshanScrollController.tsx`
+- `DivineDarshanCurtains.tsx`
+- `TempleSanctumFrame.tsx`
+- Existing realistic curtain components.
+
+Do not create competing scroll listeners, separate animation timelines with inconsistent progress calculations, or multiple conflicting state controllers.
+
+Use one authoritative normalized scroll progress value.
+
+Every visual animation must be derived deterministically from this same value.
+
+**Fundamental requirement: Animation position must be determined by scroll position, not elapsed time.**
+
+Expected behavior:
+
+- Scroll slowly downward: curtains and flowers move slowly.
+- Scroll quickly downward: the sequence advances quickly.
+- Stop scrolling: the animation stops at its current scroll-controlled position.
+- Scroll upward: all effects accurately reverse.
+- Scroll down again: the sequence resumes from the corresponding scroll position.
+
+The relationship between scroll position and visual state must remain consistent regardless of scroll speed or direction.
+
+No unexpected jumping, scroll locking, sticky freezing, forced snapping, or laggy movement.
+
+Keep native browser scrolling fully operational.
+
+## 4. Correct Cinematic Timeline
+
+Inspect the existing curtain-opening and closing thresholds before changing them.
+
+Let:
+
+- `A` = the position where curtains become fully open.
+- `B` = the position where curtains begin closing.
+
+Derive a normalized ceremonial timeline within that fully open interval:
+
+`ceremonyProgress = clamp((scrollProgress - A) / (B - A), 0, 1)`
+
+All flower and golden-light animations should use this ceremonial progress.
+
+Use the following initial visual timing:
+
+| Ceremonial progress | Visual behavior |
+|---|---|
+| 0–15% | Curtains fully open; deity revealed clearly |
+| 15–40% | Flower shower begins and increases gradually |
+| 40–65% | Beautiful flower shower and subtle golden warmth |
+| 65–85% | Petals drift farther into the background, becoming smaller and less saturated |
+| 85–100% | Petals dissolve completely; golden glow gently disappears |
+| After the open interval | Curtains begin closing smoothly |
+
+These percentages are relative to the fully open ceremonial interval, not the entire page.
+
+Adjust the section's scroll travel if needed so the complete experience is visible naturally.
+
+Do not compress the entire flower shower into an imperceptibly short scrolling distance.
+
+Do not force the user to scroll through an excessively long blank section either.
+
+---
+
+# PART 3 — REALISTIC FLOWER SHOWER
+
+## 5. Flower Selection
+
+Use realistic Indian temple-offering flower petals.
+
+Recommended composition:
+
+- 55% saffron and orange marigold petals.
+- 30% yellow marigold petals.
+- 15% soft red, rose, or pink rose petals.
+
+Every petal should have subtle natural differences in shape, size, color, rotation, and trajectory.
+
+They must resemble authentic flower petals, not circles or pieces of paper.
+
+Use optimized transparent petal assets, an efficient canvas renderer, or GPU-friendly transforms.
+
+Avoid heavy, unnecessary dependencies.
+
+## 6. Flower Motion
+
+The petals should originate organically near the upper edges of the sanctum scene.
+
+Simulate:
+
+- Gravity.
+- Gentle sideways drift.
+- Natural rotation.
+- Depth variation.
+- Slight variation in falling speed.
+- Soft air resistance.
+- Different foreground and background trajectories.
+
+Create three depth layers:
+
+**Foreground:** A few larger, detailed petals moving past the outer temple frame.
+
+**Midground:** The main ceremonial shower in front of the shrine.
+
+**Background:** Smaller, quieter petals moving within the sanctuary imagery without interfering with the photograph.
+
+Keep the most important devotional features clearly visible at all times.
+
+Do not cover Shri Dwarkadhish's face with a dense shower of petals.
+
+## 7. Golden Illumination
+
+At the peak of the ceremony, introduce a soft golden warmth emanating from the temple sanctum.
+
+Use:
+
+- Restrained radial illumination.
+- Warm golden highlights.
+- Soft, feathered gradients.
+- Very subtle bloom.
+- Delicate ambient reflections along the golden frame.
+
+Suggested peak overlay opacity: approximately `0.10–0.16`, calibrated visually.
+
+The effect must not make the image unnaturally yellow.
+
+It should feel like the warm glow of sacred temple lamps.
+
+## 8. Petals Receding Into the Background
+
+As the visitor continues scrolling downward:
+
+1. Petals gradually decrease in size.
+2. Their colors become less saturated.
+3. Their opacity decreases.
+4. A small amount of controlled blur creates depth.
+5. Their visible motion moves farther into the background.
+6. The petals dissolve naturally before the curtains start closing.
+
+The result should feel like the flower offering is gently becoming a sacred memory.
+
+Use continuous interpolation.
+
+Do not abruptly remove petals or toggle them with sudden CSS visibility changes.
+
+## 9. Reversibility
+
+If a visitor scrolls backward:
+
+- Faded petals become visible again.
+- Petals return along their original trajectories.
+- Golden illumination returns.
+- The flower shower resumes.
+- Curtains reverse their current movement.
+
+Use deterministic seeded petal paths so the scene is reproducible at every scroll position.
+
+Do not generate random new petals on every render.
+
+Do not use independently running animation timers for the primary scroll-controlled sequence.
+
+---
+
+# PART 4 — COMPLETE FOUR-LANGUAGE WEBSITE
+
+## 10. THIS IS A CRITICAL, NON-NEGOTIABLE REQUIREMENT
+
+The entire website must support exactly four languages:
+
+1. **English**
+2. **Hindi — हिन्दी**
+3. **Marathi — मराठी**
+4. **Gujarati — ગુજરાતી**
+
+When the visitor selects a language, **every single piece of text controlled by the website must change to that selected language.**
+
+I REPEAT:
+
+**EVERY HEADING, EVERY LETTER, EVERY WORD, EVERY SENTENCE, EVERY BUTTON, EVERY DESCRIPTION, EVERY LABEL, EVERY TOOLTIP, EVERY STATUS MESSAGE, AND EVERY WEBSITE-GENERATED NOTIFICATION MUST USE THE SELECTED LANGUAGE.**
+
+Do not implement partial translations.
+
+Do not translate only the homepage.
+
+Do not leave English text inside cards or popups when the selected language is Hindi, Marathi, or Gujarati.
+
+Do not use English as a silent fallback for missing translations in production.
+
+The selected language must be consistent across the entire application.
+
+## 11. Localization Coverage
+
+Audit and translate ALL user-facing content.
+
+### Header and Navigation
+
+Include:
+
+- Website name.
+- Navigation headings.
+- All dropdown options.
+- Plan Your Visit.
+- Language selector.
+- Accessibility controls.
+- Animation settings.
+- Mobile menu.
+- All interactive navigation labels.
+
+### Homepage
+
+Include:
+
+- Main heading.
+- Subtitle.
+- Hero description.
+- Devotional phrases.
+- Navigation buttons.
+- Temple details.
+- Visitor-information strip.
+- Location and timing labels.
+- Any animated text.
+
+### Divine Darshan Section
+
+Include:
+
+- In the Presence of Shri Dwarkadhish.
+- The Divine Sanctum Darshan.
+- Main descriptions.
+- Curtain-opening status.
+- Curtain-closing status.
+- Divine Darshan status.
+- Manual curtain controls.
+- Flower-shower status.
+- Golden illumination messages.
+- Scroll instructions.
+- Sacred commentary.
+- Bhagavad Gita card.
+- All buttons and expandable content.
+
+### Other Website Sections
+
+Translate every element in:
+
+- Darshan and Aarti timings.
+- Temple location and directions.
+- Architecture.
+- Festivals.
+- Seva offerings.
+- Community.
+- Gallery.
+- Spiritual learning.
+- History.
+- Temple committee or administration pages.
+- Visitor planner.
+- Contact.
+- Footer.
+- Every modal, submenu, tab, accordion, and secondary page.
+
+### Forms and Notifications
+
+Translate:
+
+- Input labels.
+- Placeholders.
+- Required-field messages.
+- Validation errors.
+- Success messages.
+- Error messages.
+- Loading states.
+- Empty states.
+- Confirmation dialogs.
+- Tooltips.
+- Accessibility descriptions.
+- Toast messages.
+
+### Administrative Pages
+
+Where appropriate, localize all visible content inside the existing Admin Dashboard as well.
+
+Preserve the underlying administrative functionality.
+
+### Metadata and Accessibility
+
+Also localize:
+
+- Document title.
+- Meta description.
+- Image alt text.
+- ARIA labels.
+- Screen-reader instructions.
+- Date and time formatting.
+- Relevant downloadable or printable website-generated content.
+
+For third-party interfaces whose language cannot be directly controlled, configure the provider's supported locale where possible. Never claim to translate text that is exclusively controlled by an external service.
+
+---
+
+# PART 5 — CORRECT TRANSLATION ARCHITECTURE
+
+## 12. Replace Hard-Coded Strings
+
+Inspect the existing `App.tsx`.
+
+It currently holds language state similar to:
+
+`useState<Language>('en')`
+
+However, several existing components contain hard-coded text or do not receive the language prop.
+
+For example, the existing `DevotionalPresenceSection` is rendered without a language prop, and `ScrollDrivenDarshan.tsx` contains fixed English and Marathi strings.
+
+Correct this architectural problem across the whole application.
+
+All content-bearing components must have access to the active language, preferably through a well-structured application-wide internationalization context or equivalent existing architecture.
+
+Do not maintain separate, conflicting language states across components.
+
+Use standardized locale identifiers:
+
+```typescript
+type Language = 'en' | 'hi' | 'mr' | 'gu';
+```
+
+Organize translations with one consistent key structure:
+
+```text
+src/
+  i18n/
+    en.ts
+    hi.ts
+    mr.ts
+    gu.ts
+    index.ts
+    I18nProvider.tsx
+```
+
+Equivalent organization is acceptable if it fits the actual project.
+
+Provide strict TypeScript translation-key checking.
+
+Ensure that all four languages use identical translation keys.
+
+Use meaningful keys such as:
+
+```typescript
+nav.overview
+nav.divinePresence
+nav.darshanTimings
+nav.location
+nav.planVisit
+
+hero.title
+hero.subtitle
+hero.description
+
+darshan.title
+darshan.subtitle
+darshan.curta​insClosed
+darshan.curtainsOpening
+darshan.divineRevealed
+darshan.flowerShower
+darshan.curtainsClosing
+
+planner.submit
+planner.confirmation
+
+form.required
+form.invalidEmail
+```
+
+Use consistently spelled key names in the real implementation.
+
+Do not concatenate translated fragments to form complete sentences when grammar differs between languages.
+
+Translate complete sentences with interpolation support.
+
+---
+
+# PART 6 — LANGUAGE SELECTOR USER EXPERIENCE
+
+## 13. Language Toggle Design
+
+Create a premium, elegant language selector matching the website's existing cream, gold, and brown visual system.
+
+Support all four languages.
+
+The selector should be:
+
+- Clearly visible in the desktop navigation.
+- Available within the mobile navigation.
+- Keyboard accessible.
+- Screen-reader friendly.
+- Responsive.
+- Smoothly animated.
+- Easy for older temple visitors to operate.
+
+Its labels and explanatory text must also respect the current selected language.
+
+The four choices may be displayed using translated language names in the current language, with their native-script names provided where genuinely helpful for recognition.
+
+Do not leave an unexplained English label in an otherwise Gujarati or Hindi interface.
+
+## 14. Instantly Update the Entire Website
+
+When a visitor chooses Gujarati:
+
+- Every homepage heading becomes Gujarati.
+- The navigation becomes Gujarati.
+- The Darshan section becomes Gujarati.
+- The flower-shower messages become Gujarati.
+- The devotional cards become Gujarati.
+- Every button becomes Gujarati.
+- The timing and location descriptions become Gujarati.
+- Every modal becomes Gujarati.
+- The footer becomes Gujarati.
+
+The same rule applies to Hindi, Marathi, and English.
+
+**No full-page refresh should be necessary.**
+
+Language switching must not:
+
+- Restart the curtain ceremony.
+- Reset the page scroll position.
+- Close an unrelated open modal.
+- Remove user-entered form information.
+- Interrupt normal animations.
+- Break navigation.
+- Cause major layout shifts.
+
+Persist the visitor's selection using an appropriate local preference mechanism, such as `localStorage`.
+
+Apply the saved language before the initial visible render where practical to prevent flashing English text.
+
+Default to English only when no supported saved or intentionally selected language exists.
+
+---
+
+# PART 7 — SCRIPT ACCURACY AND RELIGIOUS CONTENT
+
+## 15. Correct Writing Systems
+
+English must use natural, grammatically correct English.
+
+Hindi must use correct Hindi written in Devanagari.
+
+Marathi must use natural Maharashtra Marathi written in Devanagari.
+
+Gujarati must use natural Gujarati written in Gujarati script.
+
+Do not assume Hindi and Marathi are interchangeable just because they use Devanagari.
+
+Do not provide Hindi vocabulary disguised as Marathi.
+
+Do not use Latin-script transliteration as a replacement for Hindi, Marathi, or Gujarati translations.
+
+Proper temple names should be written in the selected language's script.
+
+For example:
+
+| Language | Temple heading |
+|---|---|
+| English | Shri Dwarkadhish Mandir |
+| Hindi | श्री द्वारकाधीश मंदिर |
+| Marathi | श्री द्वारकाधीश मंदिर |
+| Gujarati | શ્રી દ્વારકાધીશ મંદિર |
+
+## 16. Bhagavad Gita and Sacred Verses
+
+Religious content deserves special care.
+
+Preserve the original meaning, scripture reference, devotional significance, and reverence.
+
+For the selected language:
+
+- Translate explanations and commentary fully.
+- Use the selected language's script for any displayed transliteration of a sacred verse where a suitable form is available.
+- Where the original Sanskrit verse is necessary for devotional accuracy, offer it through a clearly identified original-text option rather than accidentally mixing scripts into the localized reading experience.
+- Allow devotees to access the authentic original verse without sacrificing the fully localized default interface.
+
+Avoid inventing scripture or altering the meaning of existing verses.
+
+Use professionally appropriate Hindu devotional terminology in each language.
+
+---
+
+# PART 8 — LANGUAGE-AWARE CINEMATIC DARSHAN
+
+## 17. Translate Every Animation Status
+
+The live Darshan progress badge, curtain controls, and ceremonial messages must change according to the active language.
+
+Example status labels:
+
+| Animation event | English | Hindi | Marathi | Gujarati |
+|---|---|---|---|---|
+| Closed | Curtains Closed | कपाट बंद हैं | कपाट बंद आहेत | કપાટ બંધ છે |
+| Opening | Curtains Opening | कपाट खुल रहे हैं | कपाट उघडत आहेत | કપાટ ખુલી રહ્યા છે |
+| Revealed | Divine Darshan | दिव्य दर्शन | दिव्य दर्शन | દિવ્ય દર્શન |
+| Flowers | Flower Offering | पुष्प वर्षा | पुष्पवृष्टी | પુષ્પવર્ષા |
+| Closing | Curtains Closing | कपाट बंद हो रहे हैं | कपाट बंद होत आहेत | કપાટ બંધ થઈ રહ્યા છે |
+
+These are starting examples. Review the translations for natural, reverent language before finalizing.
+
+When the user changes language during the flower shower, update only the textual presentation.
+
+The flowers, curtains, and golden illumination must remain at the exact current scroll-controlled state.
+
+Never restart the animation because of a locale update.
+
+---
+
+# PART 9 — RESPONSIVE DESIGN AND TYPOGRAPHY
+
+## 18. Language-Specific Typography
+
+Provide proper font support for:
+
+- Latin.
+- Devanagari.
+- Gujarati.
+
+Choose premium, readable fonts that complement the website's royal Indian temple aesthetic.
+
+Ensure correct character shaping, especially for conjunct consonants, diacritics, and devotional symbols.
+
+Avoid:
+
+- Missing glyphs.
+- Broken script rendering.
+- Overlapping letters.
+- Cut-off headings.
+- Text escaping cards.
+- Buttons becoming unreadable.
+- Navigation items overlapping.
+
+Translations have different lengths.
+
+Allow layouts to grow gracefully.
+
+Never solve translation overflow by making important text extremely small.
+
+Use flexible layouts, responsive wrapping, sensible line heights, and appropriate spacing.
+
+## 19. Preserve Full-Width Alignment
+
+The existing website has previously suffered from excessive blank space along the left and right edges.
+
+Do not reintroduce this problem.
+
+Maintain the improved responsive layout:
+
+- Balanced horizontal gutters.
+- Fluid content containers.
+- Properly proportioned temple frame and devotional information panels.
+- Full-width backgrounds where intended.
+- Readable line lengths.
+- Correct mobile stacking.
+- No horizontal overflow.
+
+Every language must remain visually balanced on desktop, tablet, and mobile.
+
+---
+
+# PART 10 — PERFORMANCE AND ACCESSIBILITY
+
+## 20. High-Performance Animation
+
+Prioritize smooth animation on desktop and mobile devices.
+
+Use:
+
+- GPU-friendly transforms.
+- `requestAnimationFrame` where appropriate.
+- Efficient rendering.
+- Stable deterministic particle data.
+- Appropriate memoization.
+- Proper event-listener cleanup.
+- Limited particle counts on mobile.
+- Performance-aware responsive effects.
+
+Do not trigger React state updates for every individual petal on every animation frame.
+
+Avoid expensive layout calculations inside scroll handlers.
+
+Do not animate heavy blur filters across dozens of large elements if they cause dropped frames.
+
+Target smooth perceived motion, ideally around 60 FPS on capable devices, without compromising native scrolling.
+
+## 21. Reduced-Motion Support
+
+Respect `prefers-reduced-motion`.
+
+For reduced-motion visitors:
+
+- Display the deity accessibly.
+- Minimize or disable falling petals.
+- Avoid continuous camera-like movement.
+- Maintain readable content.
+- Keep interactive controls functional.
+- Preserve all language options.
+
+Reduced motion must never prevent devotional content from being accessed.
+
+---
+
+# PART 11 — STRICT ANIMATION SCOPE
+
+## 22. Do Not Confuse the Two Bell and Flower Systems
+
+The website has two different visual experiences:
+
+**Homepage Hero:**
+
+The previously requested animated brass-bell background belongs exclusively to the homepage hero section.
+
+**Divine Presence:**
+
+The flower shower, sanctum curtains, and golden illumination belong exclusively to the Divine Presence / Darshan section.
+
+Do not place the flower shower throughout the website.
+
+Do not accidentally render the hero's multi-bell background over the Divine Presence section.
+
+Do not create overlapping full-screen animation layers that obscure navigation or content.
+
+Keep both systems independently scoped while maintaining one cohesive visual identity.
+
+---
+
+# PART 12 — TESTING AND COMPLETION REQUIREMENTS
+
+## 23. Language Acceptance Tests
+
+Build a comprehensive localization test suite.
+
+Verify all four languages on every route and page.
+
+Test the following:
+
+1. Select English: every website-controlled text element appears in English.
+2. Select Hindi: every website-controlled text element appears in Hindi.
+3. Select Marathi: every website-controlled text element appears in Marathi.
+4. Select Gujarati: every website-controlled text element appears in Gujarati.
+5. Open every dropdown in each language.
+6. Open every modal in each language.
+7. Submit forms with valid and invalid inputs.
+8. Expand devotional content.
+9. Inspect every card and gallery label.
+10. Verify the complete footer.
+11. Refresh the browser and confirm language persistence.
+12. Switch language midway through the flower shower.
+13. Switch language while curtains are partially open.
+14. Verify no animation resets or scroll jumps occur.
+15. Verify language-specific typography and text wrapping.
+16. Verify the website has no missing translation keys.
+
+Add development diagnostics that report untranslated or missing translation keys.
+
+**A missing translation must cause a clear test or development failure, not silently display English.**
+
+Audit runtime-generated text and any content loaded from data files or backend services.
+
+## 24. Scroll Animation Acceptance Tests
+
+Test:
+
+- Slow downward scrolling.
+- Fast downward scrolling.
+- Slow upward scrolling.
+- Fast upward scrolling.
+- Repeated rapid direction reversals.
+- Stopping midway through an animation.
+- Browser refresh at a deep scroll position.
+- Resizing the browser during Darshan.
+- Switching language during the ceremony.
+- Touch scrolling on mobile.
+- Trackpad scrolling on MacBook.
+- Mouse-wheel scrolling on Windows.
+- Navigation directly to the Divine Presence section.
+
+Every step of the ceremonial timeline must be reversible and deterministic.
+
+No sudden curtain snaps.
+
+No teleporting petals.
+
+No ghost flowers lingering after the section.
+
+No animation continuing to play after scrolling stops.
+
+No stuck scroll positions.
+
+## 25. Visual Quality Assurance
+
+Inspect the complete website at representative viewport widths:
+
+- 375px.
+- 768px.
+- 1024px.
+- 1440px.
+- 1920px and above.
+
+Check all four languages.
+
+Verify:
+
+- The deity remains clearly visible.
+- The temple frame remains aligned.
+- Curtains fit the architectural opening.
+- Petals look natural.
+- Golden lighting remains subtle.
+- Text does not overlap.
+- Cards remain aligned.
+- Buttons remain accessible.
+- The animation does not bleed into neighboring sections.
+
+---
+
+# PART 13 — FINAL REQUIRED DELIVERABLE
+
+Implement the solution in the existing application.
+
+Provide:
+
+1. Updated scroll and curtain-controller code.
+2. A reusable, optimized `DivineFlowerShower` implementation.
+3. Integration with the actual temple frame and Divine Presence section.
+4. A fully working four-language localization architecture.
+5. Complete English translations.
+6. Complete Hindi translations.
+7. Complete Marathi translations.
+8. Complete Gujarati translations.
+9. Updated language selector.
+10. Updated components with all hard-coded strings localized.
+11. Correct responsive typography.
+12. Automated tests for scroll reversibility.
+13. Automated tests for missing translations.
+14. Verified browser behavior in all four languages.
+15. A brief summary of modified files and test results.
+
+Do not claim completion unless the features have been implemented and tested.
+
+Do not leave placeholders such as "translate later."
+
+Do not provide an English-only version with a decorative four-language selector.
+
+Do not generate fake translations.
+
+Do not redesign unrelated website sections.
+
+Do not sacrifice performance for decorative effects.
+
+# FINAL DEFINITION OF SUCCESS
+
+The visitor enters the Shri Dwarkadhish Mandir website.
+
+They select their preferred language:
+
+**English / हिन्दी / मराठी / ગુજરાતી**
+
+Immediately, the entire website communicates in that language.
+
+As they scroll into the Divine Presence section, the velvet curtains gradually open in perfect synchronization with the scroll.
+
+Shri Dwarkadhish is beautifully revealed.
+
+A realistic ceremonial flower shower begins.
+
+Soft golden illumination fills the sanctuary.
+
+The petals gracefully recede into the background, losing color and opacity.
+
+The curtains gently close as scrolling continues.
+
+Scrolling upward accurately reverses the entire experience.
+
+Changing the language at any point updates every visible website-controlled word without interrupting the ceremony.
+
+**The final website must feel like a premium, authentic, multilingual digital temple Darshan experience—not an experimental animation demo.**
+
+Execute this specification completely and verify that it works.
