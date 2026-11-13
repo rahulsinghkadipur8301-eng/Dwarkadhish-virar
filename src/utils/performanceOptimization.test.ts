@@ -3,11 +3,21 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-test('Mobile Hero Image Visibility: enlarged viewport height and responsive desktop/mobile gating', () => {
+test('Hero Temple Image Visibility: borderless full-screen hero framing and responsive desktop/mobile gating', () => {
   const heroCode = fs.readFileSync('src/components/HeroSection.tsx', 'utf-8');
   assert.ok(
-    heroCode.includes('h-[50svh] min-h-[320px]'),
-    'Mobile hero image showcase must use generous h-[50svh] min-h-[320px] sizing so the temple facade is clearly visible'
+    heroCode.includes('Golden_Temple_at_Sunrise_deacf4d9.png') &&
+      heroCode.includes('Golden_Temple_at_Sunrise_deacf4d9.webp'),
+    'HeroSection must use the uploaded Golden_Temple_at_Sunrise_deacf4d9 background and its WebP companion'
+  );
+  assert.ok(
+    heroCode.includes('min-h-[calc(100svh-5rem)]') && heroCode.includes('object-cover'),
+    'Hero temple image must borderlessly fill 100% of the first section viewport'
+  );
+  assert.strictEqual(
+    heroCode.includes('border-b border-[#B68A45]/30'),
+    false,
+    'HeroSection must not render outer or divider brown/gold borders around the hero image'
   );
   assert.ok(
     heroCode.includes('matchMedia'),
@@ -57,10 +67,16 @@ test('CPU/GPU & Loop Optimization: zero 60fps bell setState and viewport/visibil
   const heroBellsCode = fs.readFileSync('src/components/HeroBellAtmosphere.tsx', 'utf-8');
   assert.ok(heroBellsCode.includes('visibilitychange'), 'HeroBellAtmosphere must pause RAF when tab is hidden');
   assert.ok(heroBellsCode.includes('IntersectionObserver'), 'HeroBellAtmosphere must gate physics behind IntersectionObserver');
+  assert.ok(heroBellsCode.includes('heroBellChainGrad'), 'HeroBellAtmosphere must reuse a shared chain gradient');
 
-  const donationAtmosCode = fs.readFileSync('src/components/DonationSacredAtmosphere.tsx', 'utf-8');
-  assert.ok(donationAtmosCode.includes('visibilitychange'), 'DonationSacredAtmosphere must pause RAF when tab is hidden');
-  assert.ok(donationAtmosCode.includes('animationPlayState'), 'DonationSacredAtmosphere must pause CSS spin off-screen');
+  const donationAtmosCode = fs.readFileSync('src/components/DonationSectionAtmosphere.tsx', 'utf-8');
+  assert.ok(donationAtmosCode.includes('IntersectionObserver'), 'DonationSectionAtmosphere must gate RAF behind IntersectionObserver');
+  assert.ok(donationAtmosCode.includes('visibilitychange'), 'DonationSectionAtmosphere must pause RAF when tab is hidden');
+  assert.strictEqual(donationAtmosCode.includes('blur-3xl'), false, 'DonationSectionAtmosphere must avoid heavy blur-3xl layers');
+
+  const donationSacredCode = fs.readFileSync('src/components/DonationSacredAtmosphere.tsx', 'utf-8');
+  assert.ok(donationSacredCode.includes('visibilitychange'), 'DonationSacredAtmosphere must pause RAF when tab is hidden');
+  assert.ok(donationSacredCode.includes('animationPlayState'), 'DonationSacredAtmosphere must pause CSS spin off-screen');
 
   const goldenCode = fs.readFileSync('src/components/GoldenParticles.tsx', 'utf-8');
   assert.ok(goldenCode.includes('visibilitychange'), 'GoldenParticles must pause canvas RAF when tab is hidden');
@@ -70,11 +86,15 @@ test('CPU/GPU & Loop Optimization: zero 60fps bell setState and viewport/visibil
 
   const presenceCode = fs.readFileSync('src/components/DevotionalPresenceSection.tsx', 'utf-8');
   assert.ok(presenceCode.includes('Math.round(latest'), 'DevotionalPresenceSection must quantize scroll progress updates');
+
+  const cssCode = fs.readFileSync('src/index.css', 'utf-8');
+  assert.ok(cssCode.includes('content-visibility: auto'), 'src/index.css must defer below-the-fold layout/paint via content-visibility');
 });
 
 test('Compressed WebP Companions & Non-blocking Fonts', () => {
   for (const webpRel of [
     'public/assets/temple_bell.webp',
+    'public/assets/aistudio/Golden_Temple_at_Sunrise_deacf4d9.webp',
     'public/assets/aistudio/Vibrant_Temple_Ceremony_Portrait_8e2d2892.webp',
     'public/assets/aistudio/Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.webp',
     'public/assets/aistudio/Ornate_Temple_Procession_with_Red_Parasol_6d479e42.webp',
@@ -94,4 +114,13 @@ test('Compressed WebP Companions & Non-blocking Fonts', () => {
 
   const indexHtml = fs.readFileSync('index.html', 'utf-8');
   assert.ok(indexHtml.includes('media="print"'), 'index.html must load Google Fonts non-blocking');
+  assert.ok(
+    indexHtml.includes('Golden_Temple_at_Sunrise_deacf4d9.webp'),
+    'index.html must preload Golden_Temple_at_Sunrise_deacf4d9.webp'
+  );
+  assert.strictEqual(
+    indexHtml.includes('gemini_generated_video_poster.webp'),
+    false,
+    'index.html must not preload deleted gemini_generated_video_poster.webp'
+  );
 });

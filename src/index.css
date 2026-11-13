@@ -338,3 +338,9 @@
     transform: translate(-50%, -50%) !important;
   }
 }
+
+/* Defer off-screen layout and paint for below-the-fold sections */
+main > section:not(#overview) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}

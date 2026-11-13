@@ -58,7 +58,7 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = React.memo(({
       'rgba(243, 231, 214, ',
     ];
 
-    const particleCount = Math.min(18, Math.floor(width / 60));
+    const particleCount = width < 640 ? 9 : Math.min(15, Math.floor(width / 80));
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
@@ -66,48 +66,52 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = React.memo(({
         x: Math.random() * width,
         y: Math.random() * height,
         radius: Math.random() * 2.0 + 1.0,
-        speedY: -(Math.random() * 0.42 + 0.14),
-        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: -(Math.random() * 0.65 + 0.22),
+        speedX: (Math.random() - 0.5) * 0.45,
         opacity: Math.random() * 0.5 + 0.2,
-        opacityDelta: (Math.random() - 0.5) * 0.008,
+        opacityDelta: (Math.random() - 0.5) * 0.012,
         color: colors[i % colors.length],
       });
     }
 
-    const render = () => {
+    let lastDraw = 0;
+    const render = (now: number) => {
       if (!isInView || document.hidden) {
         animationFrameId = 0;
         return;
       }
 
-      ctx.clearRect(0, 0, width, height);
+      if (now - lastDraw >= 32) {
+        lastDraw = now;
+        ctx.clearRect(0, 0, width, height);
 
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.y += p.speedY;
-        p.x += p.speedX;
-        p.opacity += p.opacityDelta;
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.opacity += p.opacityDelta;
 
-        if (p.opacity > 0.8 || p.opacity < 0.15) {
-          p.opacityDelta = -p.opacityDelta;
+          if (p.opacity > 0.8 || p.opacity < 0.15) {
+            p.opacityDelta = -p.opacityDelta;
+          }
+
+          if (p.y < -10) {
+            p.y = height + 10;
+            p.x = Math.random() * width;
+          }
+          if (p.x < -10) p.x = width + 10;
+          if (p.x > width + 10) p.x = -10;
+
+          ctx.fillStyle = `${p.color}${(p.opacity * 0.28).toFixed(2)})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = `${p.color}${p.opacity.toFixed(2)})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
         }
-
-        if (p.y < -10) {
-          p.y = height + 10;
-          p.x = Math.random() * width;
-        }
-        if (p.x < -10) p.x = width + 10;
-        if (p.x > width + 10) p.x = -10;
-
-        ctx.fillStyle = `${p.color}${(p.opacity * 0.28).toFixed(2)})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius * 2.2, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = `${p.color}${p.opacity.toFixed(2)})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
       }
 
       animationFrameId = requestAnimationFrame(render);

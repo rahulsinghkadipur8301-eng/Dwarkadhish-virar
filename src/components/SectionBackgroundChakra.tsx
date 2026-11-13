@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 export interface SectionBackgroundChakraProps {
   reducedMotion?: boolean;
+  tone?: 'light' | 'dark';
 }
 
 const OUTER_PETAL_ANGLES = Array.from({ length: 24 }, (_, i) => (i * 360) / 24);
@@ -17,6 +18,7 @@ const INNER_PETAL_ANGLES = Array.from({ length: 16 }, (_, i) => (i * 360) / 16);
  */
 export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = React.memo(({
   reducedMotion = false,
+  tone = 'light',
 }) => {
   const hostRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -42,6 +44,14 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
   const shouldAnimate = isVisible && !reducedMotion;
   const cwClass = shouldAnimate ? 'animate-chakra-cw' : 'chakra-static-center';
   const ccwClass = shouldAnimate ? 'animate-chakra-ccw' : 'chakra-static-center';
+  const isDark = tone === 'dark';
+
+  const primaryStroke = isDark ? '#F5DEAE' : '#C29A54';
+  const secondaryStroke = isDark ? '#E8C784' : '#741C24';
+  const outerOpacity = isDark ? 'opacity-[0.18]' : 'opacity-[0.14]';
+  const innerOpacity = isDark ? 'opacity-[0.20]' : 'opacity-[0.16]';
+  const petalFill = isDark ? 'rgba(245,222,174,0.16)' : 'rgba(194,154,84,0.18)';
+  const innerPetalFill = isDark ? 'rgba(245,222,174,0.14)' : 'rgba(232,199,132,0.16)';
 
   return (
     <div
@@ -51,18 +61,24 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
       className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0"
     >
       {/* Subtle warm radial glow anchoring the center chakra */}
-      <div className="absolute left-1/2 top-1/2 chakra-static-center w-[min(92vw,760px)] h-[min(92vw,760px)] rounded-full bg-[radial-gradient(circle,rgba(232,199,132,0.18)_0%,rgba(194,154,84,0.08)_46%,transparent_72%)]" />
+      <div
+        className={`absolute left-1/2 top-1/2 chakra-static-center w-[min(92vw,760px)] h-[min(92vw,760px)] rounded-full ${
+          isDark
+            ? 'bg-[radial-gradient(circle,rgba(245,222,174,0.14)_0%,rgba(232,199,132,0.06)_48%,transparent_72%)]'
+            : 'bg-[radial-gradient(circle,rgba(232,199,132,0.18)_0%,rgba(194,154,84,0.08)_46%,transparent_72%)]'
+        }`}
+      />
 
       {/* Outer 24-Petal Sacred Lotus Yantra Ring */}
       <div
-        className={`absolute left-1/2 top-1/2 w-[min(96vw,880px)] h-[min(96vw,880px)] opacity-[0.14] ${cwClass}`}
+        className={`absolute left-1/2 top-1/2 w-[min(96vw,880px)] h-[min(96vw,880px)] ${outerOpacity} ${cwClass}`}
       >
         <svg viewBox="0 0 800 800" fill="none" className="w-full h-full">
           <circle
             cx="400"
             cy="400"
             r="386"
-            stroke="#C29A54"
+            stroke={primaryStroke}
             strokeWidth="1.5"
             strokeDasharray="10 8"
           />
@@ -70,7 +86,7 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
             cx="400"
             cy="400"
             r="360"
-            stroke="#741C24"
+            stroke={secondaryStroke}
             strokeWidth="1.2"
             strokeOpacity="0.65"
           />
@@ -78,7 +94,7 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
             cx="400"
             cy="400"
             r="315"
-            stroke="#C29A54"
+            stroke={primaryStroke}
             strokeWidth="1"
             strokeDasharray="4 6"
           />
@@ -86,11 +102,11 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
             <g key={angle} transform={`rotate(${angle} 400 400)`}>
               <path
                 d="M400 18 C412 44, 412 68, 400 86 C388 68, 388 44, 400 18 Z"
-                fill="rgba(194,154,84,0.18)"
-                stroke="#C29A54"
+                fill={petalFill}
+                stroke={primaryStroke}
                 strokeWidth="1.1"
               />
-              <circle cx="400" cy="102" r="3" fill="#741C24" fillOpacity="0.45" />
+              <circle cx="400" cy="102" r="3" fill={secondaryStroke} fillOpacity="0.55" />
             </g>
           ))}
         </svg>
@@ -98,15 +114,15 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
 
       {/* Counter-Rotating Inner 16-Petal Ashtadal Geometric Wheel */}
       <div
-        className={`absolute left-1/2 top-1/2 w-[min(80vw,660px)] h-[min(80vw,660px)] opacity-[0.16] ${ccwClass}`}
+        className={`absolute left-1/2 top-1/2 w-[min(80vw,660px)] h-[min(80vw,660px)] ${innerOpacity} ${ccwClass}`}
       >
         <svg viewBox="0 0 600 600" fill="none" className="w-full h-full">
-          <circle cx="300" cy="300" r="286" stroke="#C29A54" strokeWidth="1.5" />
+          <circle cx="300" cy="300" r="286" stroke={primaryStroke} strokeWidth="1.5" />
           <circle
             cx="300"
             cy="300"
             r="245"
-            stroke="#741C24"
+            stroke={secondaryStroke}
             strokeWidth="1"
             strokeDasharray="8 6"
           />
@@ -116,7 +132,7 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
             width="416"
             height="416"
             rx="16"
-            stroke="#C29A54"
+            stroke={primaryStroke}
             strokeWidth="1.1"
             strokeOpacity="0.65"
           />
@@ -127,7 +143,7 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
             height="416"
             rx="16"
             transform="rotate(45 300 300)"
-            stroke="#741C24"
+            stroke={secondaryStroke}
             strokeWidth="1.1"
             strokeOpacity="0.45"
           />
@@ -135,9 +151,9 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
             <g key={angle} transform={`rotate(${angle} 300 300)`}>
               <path
                 d="M300 22 C310 42, 308 58, 300 72 C292 58, 290 42, 300 22 Z"
-                stroke="#C29A54"
+                stroke={primaryStroke}
                 strokeWidth="1"
-                fill="rgba(232,199,132,0.16)"
+                fill={innerPetalFill}
               />
             </g>
           ))}

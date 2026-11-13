@@ -174,12 +174,16 @@ const SACRED_PETALS: PetalSpec[] = [
  * 3. Breathing warm amber-gold sanctum diya light halos.
  * 4. Drifting golden diya sparks and flower petals.
  */
-export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps> = ({
+export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps> = React.memo(({
   reducedMotion = false,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const bellRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     if (reducedMotion) {
       bellRefs.current.forEach((el) => {
         if (el) el.style.transform = 'rotate(0deg)';
@@ -199,7 +203,8 @@ export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps>
     let lastScrollY = window.scrollY;
     let lastTime = 0;
     let startTime = 0;
-    let rafId = 0;
+    let rafId: number | null = null;
+    let isInView = false;
 
     const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 
@@ -230,6 +235,11 @@ export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps>
     };
 
     const tick = (now: number) => {
+      if (!isInView || document.hidden) {
+        rafId = null;
+        return;
+      }
+
       if (!startTime) startTime = now;
       if (!lastTime) lastTime = now;
       const dt = clamp((now - lastTime) / 1000, 0, 0.032);
@@ -258,19 +268,54 @@ export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps>
       rafId = window.requestAnimationFrame(tick);
     };
 
+    const startLoop = () => {
+      if (rafId === null && isInView && !document.hidden) {
+        lastTime = 0;
+        rafId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          isInView = entry.isIntersecting;
+          if (isInView && !document.hidden) {
+            startLoop();
+          } else if (!isInView && rafId !== null) {
+            window.cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
+
+    const onVisibilityChange = () => {
+      if (document.hidden && rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      } else if (!document.hidden && isInView) {
+        startLoop();
+      }
+    };
+
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
-    rafId = window.requestAnimationFrame(tick);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      window.cancelAnimationFrame(rafId);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      observer.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [reducedMotion]);
 
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
       data-testid="donation-section-atmosphere"
       className="pointer-events-none select-none absolute inset-0 overflow-hidden z-[1]"
@@ -286,7 +331,7 @@ export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps>
               }
         }
         transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute -top-20 left-[14%] w-[480px] h-[480px] rounded-full blur-3xl"
+        className="absolute -top-20 left-[14%] w-[480px] h-[480px] rounded-full pointer-events-none"
         style={{
           background:
             'radial-gradient(circle, rgba(232, 199, 132, 0.42) 0%, rgba(194, 154, 84, 0.14) 52%, transparent 72%)',
@@ -302,7 +347,7 @@ export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps>
               }
         }
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-        className="absolute bottom-[-80px] right-[12%] w-[540px] h-[540px] rounded-full blur-3xl"
+        className="absolute bottom-[-80px] right-[12%] w-[540px] h-[540px] rounded-full pointer-events-none"
         style={{
           background:
             'radial-gradient(circle, rgba(201, 137, 69, 0.32) 0%, rgba(116, 28, 36, 0.08) 55%, transparent 74%)',
@@ -493,6 +538,6 @@ export const DonationSectionAtmosphere: React.FC<DonationSectionAtmosphereProps>
         ))}
     </div>
   );
-};
+});
 
 export default DonationSectionAtmosphere;

@@ -1,8 +1,10 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Language, AARTI_SCHEDULE } from '../data/templeData';
 import { Info, CheckCircle2, Clock } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
+import { PeacockFeather, LotusOrnament } from './KrishnaMotifs';
 
 interface DarshanSectionProps {
   language: Language;
@@ -33,18 +35,36 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
     <section id="darshan" className="relative overflow-hidden py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-14">
-          <div className="text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold mb-2.5 font-cinzel">
-            {tDict.schedule.kicker}
+        {/* Centered Section Header matching other Temple Sections */}
+        <motion.div
+          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          className="text-center max-w-4xl mx-auto mb-10 sm:mb-12"
+        >
+          <div className="flex items-center justify-center gap-2.5 mb-2.5">
+            <PeacockFeather size={24} />
+            <span className="font-cinzel text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-bold">
+              {tDict.schedule.kicker}
+            </span>
+            <PeacockFeather size={24} className="transform scale-x-[-1]" />
           </div>
-          <h2 className="font-serif-royal text-3xl sm:text-4xl lg:text-5xl font-bold text-[#3C2A20] tracking-tight mb-4">
+
+          <h2 className="font-serif-royal text-3xl sm:text-4xl lg:text-5xl font-bold text-[#3C2A20] tracking-tight mb-3.5">
             {tDict.schedule.title}
           </h2>
-          <p className="text-base sm:text-lg text-[#715847] leading-relaxed">
+
+          <p className="text-sm sm:text-base lg:text-lg text-[#715847] leading-relaxed max-w-3xl mx-auto mb-5">
             {tDict.schedule.description}
           </p>
-        </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C29A54]/60 to-[#C29A54] w-16 sm:w-28" />
+            <LotusOrnament size={24} className="text-[#C29A54]" />
+            <div className="h-[1px] bg-gradient-to-l from-transparent via-[#C29A54]/60 to-[#C29A54] w-16 sm:w-28" />
+          </div>
+        </motion.div>
 
         {/* Mandatory Verification & Notice Box */}
         <div className="mb-10 p-5 sm:p-6 bg-[#FFFDF8] border border-[#C8AB88] flex items-start gap-4 rounded-xs shadow-xs">

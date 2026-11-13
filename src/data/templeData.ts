@@ -56,6 +56,8 @@ export interface AartiItem {
   category: 'morning' | 'afternoon' | 'evening' | 'night';
 }
 
+export type FestivalFilterGroup = 'appearance' | 'leela' | 'wisdom';
+
 export interface FestivalEvent {
   id: string;
   titleEn: string;
@@ -63,14 +65,31 @@ export interface FestivalEvent {
   titleMr: string;
   titleGu: string;
   month: string;
+  monthHi: string;
+  monthMr: string;
+  monthGu: string;
   dateStr: string;
+  dateHi: string;
+  dateMr: string;
+  dateGu: string;
   timeStr: string;
+  timeHi: string;
+  timeMr: string;
+  timeGu: string;
   descriptionEn: string;
   descriptionHi: string;
   descriptionMr: string;
   descriptionGu: string;
   status: 'upcoming' | 'ongoing' | 'archived';
   category: string;
+  categoryHi: string;
+  categoryMr: string;
+  categoryGu: string;
+  filterGroup: FestivalFilterGroup;
+  highlightsEn: string[];
+  highlightsHi: string[];
+  highlightsMr: string[];
+  highlightsGu: string[];
 }
 
 export interface SevaOffering {
@@ -192,84 +211,481 @@ export const AARTI_SCHEDULE: AartiItem[] = [
 
 export const FESTIVALS_DATA: FestivalEvent[] = [
   {
-    id: 'janmashtami',
-    titleEn: 'Shri Krishna Janmashtami Mahotsav',
-    titleHi: 'श्री कृष्ण जन्माष्टमी महोत्सव',
-    titleMr: 'श्री कृष्ण जन्माष्टमी महोत्सव',
-    titleGu: 'શ્રીકૃષ્ણ જન્માષ્ટમી મહોત્સવ',
-    month: 'August / September',
-    dateStr: 'Bhadrapada Krishna Ashtami',
-    timeStr: 'Midnight 12:00 AM Maha Abhishekam',
-    descriptionEn: 'The supreme appearance day of Lord Dwarkadhish with 24-hour Akhanda kirtan, midnight panchamrit snan, and grand palanquin celebration.',
-    descriptionHi: 'श्री द्वारकाधीश का अवतरण दिवस: अखंड संकीर्तन, मध्यरात्रि पंचामृत महाभिषेक एवं भव्य पालकी उत्सव।',
-    descriptionMr: 'श्री द्वारकाधीशांचा अवतरण दिवस: अखंड संकीर्तन, मध्यरात्री पंचामृत महाअभिषेक आणि भव्य पालखी उत्सव.',
-    descriptionGu: 'શ્રી દ્વારકાધીશ પ્રભુનો પ્રાગટ્ય દિવસ: અખંડ સંકીર્તન, મધ્યરાત્રિ પંચામૃત સ્નાન અને ભવ્ય પાલખી મહોત્સવ.',
-    status: 'upcoming',
-    category: 'Supreme Utsav'
-  },
-  {
-    id: 'radhashtami',
-    titleEn: 'Radhashtami Celebrations',
-    titleHi: 'राधाष्टमी उत्सव',
-    titleMr: 'राधाष्टमी उत्सव',
-    titleGu: 'રાધાષ્ટમી ઉત્સવ',
-    month: 'September',
-    dateStr: 'Bhadrapada Shukla Ashtami',
-    timeStr: '10:00 AM to 1:00 PM',
-    descriptionEn: 'Devotional offering celebrating the divine grace of Shri Radha with special sahasranama archana and lotus offerings.',
-    descriptionHi: 'श्री राधा रानी की कृपा उत्सव: सहस्रनाम अर्चना, कमल पुष्प अर्पण एवं भक्ति संगीतमय सत्संग।',
-    descriptionMr: 'श्री राधा राणींची कृपा उत्सव: सहस्रनाम अर्चना, कमळ पुष्प अर्पण आणि भक्तिमय सत्संग.',
-    descriptionGu: 'શ્રી રાધારાણીનો કૃપા મહોત્સવ: સહસ્રનામ અર્ચના, કમળ પુષ્પ અર્પણ અને ભક્તિ સંગીતમય સત્સંગ.',
-    status: 'upcoming',
-    category: 'Devotional'
-  },
-  {
-    id: 'govardhan',
-    titleEn: 'Govardhan Puja & Annakut Mahotsav',
-    titleHi: 'गोवर्धन पूजा एवं अन्नकूट महोत्सव',
-    titleMr: 'गोवर्धन पूजा आणि अन्नकूट महोत्सव',
-    titleGu: 'ગોવર્ધન પૂજા અને અન્નકૂટ મહોત્સવ',
-    month: 'October / November',
-    dateStr: 'Kartik Shukla Pratipada',
-    timeStr: '11:00 AM to 3:00 PM',
-    descriptionEn: 'Grand offering of 108 authentic vegetarian bhog preparations commemorating the lifting of Mount Govardhan.',
-    descriptionHi: 'गोवर्धन पर्वत धारण स्मरण: १०८ प्रकार के पारंपरिक सात्त्विक व्यंजनों का भव्य अन्नकूट भोग।',
-    descriptionMr: 'गोवर्धन पर्वत उचलण्याच्या स्मृतीप्रित्यर्थ: १०८ प्रकारच्या पारंपरिक सात्त्विक पदार्थांचा भव्य अन्नकूट.',
-    descriptionGu: 'ગોવર્ધન પર્વત ધારણ સ્મૃતિ: ૧૦૮ પ્રકારની પરંપરાગત સાત્ત્વિક વાનગીઓનો ભવ્ય અન્નકૂટ ભોગ.',
-    status: 'upcoming',
-    category: 'Temple Utsav'
-  },
-  {
     id: 'gita_jayanti',
     titleEn: 'Gita Jayanti',
     titleHi: 'गीता जयंती',
     titleMr: 'गीता जयंती',
     titleGu: 'ગીતા જયંતી',
-    month: 'December',
-    dateStr: 'Margashirsha Shukla Ekadashi',
-    timeStr: '08:00 AM to 12:00 PM',
-    descriptionEn: 'Universal recitation of all 18 chapters of Shrimad Bhagavad Gita with spiritual discourse by revered scholars.',
-    descriptionHi: 'श्रीमद्भगवद्गीता के १८ अध्यायों का सामूहिक पाठ एवं विख्यात संतों द्वारा सारगर्भित व्याख्यान।',
-    descriptionMr: 'श्रीमद्भगवद्गीतेच्या १८ अध्यायांचे सामूहिक पठण आणि विचारवंतांचे मार्गदर्शन.',
-    descriptionGu: 'શ્રીમદ્ ભગવદ્ ગીતાના ૧૮ અધ્યાયોનું સામૂહિક પઠન અને વિદ્વાન સંતો દ્વારા પ્રવચન.',
+    month: 'Dec 2026',
+    monthHi: 'दिसम्बर २०२६',
+    monthMr: 'डिसेंबर २०२६',
+    monthGu: 'ડિસેમ્બર ૨૦૨૬',
+    dateStr: '20 Dec 2026 · Sunday',
+    dateHi: '२० दिसम्बर २०२६ · रविवार',
+    dateMr: '२० डिसेंबर २०२६ · रविवार',
+    dateGu: '૨૦ ડિસેમ્બર ૨૦૨૬ · રવિવાર',
+    timeStr: '08:00 AM – 12:00 PM',
+    timeHi: 'प्रातः ०८:०० – दोपहर १२:००',
+    timeMr: 'सकाळी ०८:०० – दुपारी १२:००',
+    timeGu: 'સવારે ૦૮:૦૦ – બપોરે ૧૨:૦૦',
+    descriptionEn: 'Krishna delivered Bhagavad Gita to Arjuna.',
+    descriptionHi: 'भगवान श्री कृष्ण ने कुरुक्षेत्र में अर्जुन को श्रीमद्भगवद्गीता का दिव्य उपदेश दिया।',
+    descriptionMr: 'भगवान श्रीकृष्णांनी अर्जुनाला श्रीमद्भगवद्गीतेचा शाश्वत उपदेश दिला.',
+    descriptionGu: 'ભગવાન શ્રીકૃષ્ણે અર્જુનને શ્રીમદ્ ભગવદ્ ગીતાનો દિવ્ય ઉપદેશ આપ્યો.',
     status: 'upcoming',
-    category: 'Scriptural'
+    category: 'Scriptural Wisdom',
+    categoryHi: 'गीता ज्ञान पर्व',
+    categoryMr: 'गीता ज्ञान सोहळा',
+    categoryGu: 'ગીતા જ્ઞાન પર્વ',
+    filterGroup: 'wisdom',
+    highlightsEn: [
+      'Consecrated Bhagavad Gita scripture Pujan on carved sandalwood Vyasapitha',
+      'Complete 18-chapter rhythmic Sanskrit Parayan led by temple Acharyas and devotees',
+      'Discourse on Nishkama Karma Yoga & Sharanagati for modern household harmony',
+      'Afternoon Ekadashi Phalahar Prasad distribution to all visiting devotees'
+    ],
+    highlightsHi: [
+      'चंदन व्यासपीठ पर श्रीमद्भगवद्गीता ग्रंथ का वैदिक षोडशोपचार पूजन',
+      'आचार्यों एवं श्रद्धालुओं द्वारा संपूर्ण १८ अध्यायों का सामूहिक संस्कृत पारायण',
+      'दैनिक जीवन में निष्काम कर्मयोग एवं शरणागति पर सारगर्भित प्रवचन',
+      'एकादशी सात्त्विक फलाहार महाप्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'चंदन व्यासपीठावर श्रीमद्भगवद्गीता ग्रंथाचे विधिवत पूजन',
+      'आचार्य व भाविकांसोबत संपूर्ण १८ अध्यायांचे लयबद्ध संस्कृत पारायण',
+      'दैनंदिन जीवनासाठी निष्काम कर्मयोग व शरणागती यावर मार्गदर्शनपर प्रवचन',
+      'दुपारी एकादशी सात्त्विक फराळ महाप्रसाद वाटप'
+    ],
+    highlightsGu: [
+      'ચંદન વ્યાસપીઠ પર શ્રીમદ્ ભગવદ્ ગીતા ગ્રંથનું વૈદિક પૂજન',
+      'આચાર્યો અને ભક્તો દ્વારા સંપૂર્ણ ૧૮ અધ્યાયોનું સામૂહિક સંસ્કૃત પારાયણ',
+      'આધુનિક જીવનમાં નિષ્કામ કર્મયોગ અને શરણાગતિ વિષયક પ્રવચન',
+      'મધ્યાહ્ને એકાદશી સાત્ત્વિક ફળાહાર પ્રસાદ વિતરણ'
+    ]
+  },
+  {
+    id: 'holika_dahan',
+    titleEn: 'Holika Dahan',
+    titleHi: 'होलिका दहन',
+    titleMr: 'होलिका दहन',
+    titleGu: 'હોલિકા દહન',
+    month: 'Mar 2027',
+    monthHi: 'मार्च २०२७',
+    monthMr: 'मार्च २०२७',
+    monthGu: 'માર્ચ ૨૦૨७',
+    dateStr: '21 Mar 2027 · Sunday',
+    dateHi: '२१ मार्च २०२७ · रविवार',
+    dateMr: '२१ मार्च २०२७ · रविवार',
+    dateGu: '૨૧ માર્ચ ૨૦૨૭ · રવિવાર',
+    timeStr: '07:15 PM – 09:00 PM',
+    timeHi: 'सायं ०७:१५ – रात्रि ०९:००',
+    timeMr: 'सायंकाळी ०७:१५ – रात्री ०९:००',
+    timeGu: 'સાંજે ૦૭:૧૫ – રાત્રે ૦૯:૦૦',
+    descriptionEn: 'Celebration of devotion and victory over evil.',
+    descriptionHi: 'प्रह्लाद की अटूट भक्ति और अधर्म पर धर्म की पावन विजय का उत्सव।',
+    descriptionMr: 'भक्त प्रल्हादाच्या अढळ भक्तीचा आणि असत्यावर सत्याच्या विजयाचा उत्सव.',
+    descriptionGu: 'ભક્ત પ્રહ્લાદની અતૂટ ભક્તિ અને અધર્મ પર ધર્મના વિજયનો પાવન ઉત્સવ.',
+    status: 'upcoming',
+    category: 'Sacred Triumph',
+    categoryHi: 'भक्ति विजय पर्व',
+    categoryMr: 'भक्ती विजय सोहळा',
+    categoryGu: 'ભક્તિ વિજય પર્વ',
+    filterGroup: 'wisdom',
+    highlightsEn: [
+      'Evening Sandhya Aarti & Vedic Sankalpa honoring Bhakta Prahlad’s unwavering faith',
+      'Eco-friendly cow-dung & camphor sacred Holika Pujan in the outer courtyard',
+      'Collective Narasimha Stuti & Shri Krishna kirtan around the sacred fire',
+      'Roasted grains, coconut & kesar sweet prasad offering to visiting families'
+    ],
+    highlightsHi: [
+      'संध्या आरती एवं भक्त प्रह्लाद की अटल श्रद्धा के स्मरण में वैदिक संकल्प',
+      'बाह्य प्रांगण में गोकाष्ठ व कपूर से पर्यावरण-अनुकूल होलिका पूजन',
+      'पावन अग्नि के समक्ष सामूहिक श्री नृसिंह स्तुति एवं हरे कृष्ण संकीर्तन',
+      'सभी परिवारों में भुने धान्य, नारियल एवं केसर मिष्ठान प्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'संध्या आरती आणि भक्त प्रल्हादाच्या अढळ निष्ठेच्या स्मरणार्थ वैदिक संकल्प',
+      'मंदिर प्रांगणात गोकाष्ठ आणि कापुराने पर्यावरणपूरक होलिका पूजन',
+      'पवित्र अग्नीसमोर सामूहिक नृसिंह स्तुती आणि हरीनाम संकीर्तन',
+      'भाविकांना नारळ, भाजलेले धान्य आणि पुरणपोळी-मिठाई प्रसाद वाटप'
+    ],
+    highlightsGu: [
+      'સંધ્યા આરતી અને ભક્ત પ્રહ્લાદની અડગ શ્રદ્ધાના સ્મરણમાં વૈદિક સંકલ્પ',
+      'પ્રાંગણમાં ગાયના છાણા અને કપૂરથી પર્યાવરણ-અનુકૂળ હોલિકા પૂજન',
+      'પવિત્ર અગ્નિ સમક્ષ સામૂહિક નૃસિંહ સ્તુતિ અને હરિનામ સંકીર્તન',
+      'દર્શનાર્થીઓને ધાણી, ખજૂર, નાળિયેર અને કેસર પ્રસાદ વિતરણ'
+    ]
   },
   {
     id: 'holi',
-    titleEn: 'Phag Utsav & Holi Darshan',
-    titleHi: 'फाग उत्सव एवं होली दर्शन',
-    titleMr: 'फाग उत्सव आणि होळी दर्शन',
-    titleGu: 'ફાગ ઉત્સવ અને હોળી દર્શન',
-    month: 'March',
-    dateStr: 'Phalguna Purnima',
-    timeStr: '04:00 PM to 7:00 PM',
-    descriptionEn: 'Sacred flower petals and natural herbal gulal offering in the sanctum courtyard with traditional Braj Haveli sangeet.',
-    descriptionHi: 'सुगंधित पुष्प पंखुड़ियों एवं प्राकृतिक अबीर-गुलाल से प्रभु संग फाग उत्सव एवं हवेली संगीत।',
-    descriptionMr: 'सुगंधी फुलांच्या पाकळ्या आणि नैसर्गिक गुलालाने प्रभूंसोबत फाग उत्सव आणि हवेली संगीत.',
-    descriptionGu: 'સુગંધિત પુષ્પોની પાંખડીઓ અને પ્રાકૃતિક અબીલ-ગુલાલ સાથે પ્રભુ સંગ ફાગ ઉત્સવ અને હવેલી સંગીત.',
+    titleEn: 'Holi (Braj Holi)',
+    titleHi: 'होली (ब्रज होली)',
+    titleMr: 'होळी (ब्रज होळी)',
+    titleGu: 'હોળી (વ્રજ હોળી)',
+    month: 'Mar 2027',
+    monthHi: 'मार्च २०२७',
+    monthMr: 'मार्च २०२७',
+    monthGu: 'માર્ચ ૨૦૨૭',
+    dateStr: '22 Mar 2027 · Monday',
+    dateHi: '२२ मार्च २०२७ · सोमवार',
+    dateMr: '२२ मार्च २०२७ · सोमवार',
+    dateGu: '૨૨ માર્ચ ૨૦૨૭ · સોમવાર',
+    timeStr: '04:00 PM – 07:00 PM',
+    timeHi: 'सायं ०४:०० – ०७:००',
+    timeMr: 'सायंकाळी ०४:०० – ०७:००',
+    timeGu: 'સાંજે ૦૪:૦૦ – ૦૭:૦૦',
+    descriptionEn: 'Divine love of Radha and Krishna.',
+    descriptionHi: 'श्री राधा एवं श्री कृष्ण के अलौकिक दिव्य प्रेम, पुष्प वर्षा और ब्रज रसिया का रंगोत्सव।',
+    descriptionMr: 'श्री राधा आणि श्रीकृष्णांच्या अलौकिक दिव्य प्रेमाचा पुष्प व रंगोत्सव.',
+    descriptionGu: 'શ્રી રાધા અને શ્રીકૃષ્ણના અલૌકિક દિવ્ય પ્રેમ, પુષ્પવર્ષા અને વ્રજ રસિયાનો રંગોત્સવ.',
     status: 'upcoming',
-    category: 'Cultural'
+    category: 'Braj Heritage Utsav',
+    categoryHi: 'ब्रज रंगोत्सव',
+    categoryMr: 'ब्रज रंगोत्सव',
+    categoryGu: 'વ્રજ રંગોત્સવ',
+    filterGroup: 'wisdom',
+    highlightsEn: [
+      'Traditional Dolotsav Shringaar of Lord Dwarkadhish in radiant spring saffron attire',
+      'Pure Pushpa-Holi showering marigold, rose & jasmine petals across the Sabha Mandapa',
+      'Live Braj Dhamar, Hori & Haveli Sangeet kirtan with pakhawaj and harmonium',
+      'Kesudo herbal gulal tilak blessings and cooling Thandai prasad'
+    ],
+    highlightsHi: [
+      'वासंती केसरिया परिधान में श्री द्वारकाधीश का भव्य डोलोत्सव शृंगार',
+      'सभामंडप में गुलाब, गेंदा एवं चमेली की पंखुड़ियों की दिव्य पुष्प वर्षा',
+      'पखावज एवं हारमोनियम संग पारंपरिक ब्रज होरी, धमार व हवेली संगीत',
+      'प्रभु का प्रसादी केसूड़ा-चंदन तिलक एवं शीतल ठंडाई प्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'वसंत ऋतूतील केशरी वस्त्रांत श्री द्वारकाधीशांचा सुंदर डोलोत्सव शृंगार',
+      'सभामंडपात गुलाब, झेंडू व मोगऱ्याच्या पाकळ्यांची मंगल पुष्प होळी',
+      'पखवाज व संवादिनीच्या साथीने पारंपरिक ब्रज होरी व हवेली संगीत',
+      'नैसर्गिक केशर-गुलाल टिळा आणि थंडाई महाप्रसाद वाटप'
+    ],
+    highlightsGu: [
+      'વસંત ઋતુના કેસરિયા વસ્ત્રોમાં શ્રી દ્વારકાધીશનો દિવ્ય ડોલોત્સવ શૃંગાર',
+      'સભામંડપમાં ગુલાબ, ગલગોટા અને મોગરાની પાંખડીઓની પાવન પુષ્પ હોળી',
+      'પખવાજ અને હાર્મોનિયમના તાલે પરંપરાગત વ્રજ હોરી અને હવેલી સંગીત',
+      'પ્રાકૃતિક કેસૂડા-ગુલાલ તિલક અને શીતળ ઠંડાઈ પ્રસાદ વિતરણ'
+    ]
+  },
+  {
+    id: 'jagannath_rath_yatra',
+    titleEn: 'Jagannath Rath Yatra',
+    titleHi: 'जगन्नाथ रथ यात्रा',
+    titleMr: 'जगन्नाथ रथयात्रा',
+    titleGu: 'જગન્નાથ રથયાત્રા',
+    month: 'Jul 2027',
+    monthHi: 'जुलाई २०२७',
+    monthMr: 'जुलै २०२७',
+    monthGu: 'જુલાઈ ૨૦૨૭',
+    dateStr: '5 Jul 2027 · Monday',
+    dateHi: '५ जुलाई २०२७ · सोमवार',
+    dateMr: '५ जुलै २०२७ · सोमवार',
+    dateGu: '૫ જુલાઈ ૨૦૨૭ · સોમવાર',
+    timeStr: '03:30 PM – 07:30 PM',
+    timeHi: 'अपराह्न ०३:३० – सायं ०७:३०',
+    timeMr: 'दुपारी ०३:३० – सायं ०७:३०',
+    timeGu: 'બપોરે ૦૩:૩૦ – સાંજે ૦૭:૩૦',
+    descriptionEn: 'Lord Jagannath, a form of Krishna, travels in a chariot.',
+    descriptionHi: 'श्री कृष्ण स्वरूप भगवान जगन्नाथ जी का सुसज्जित भव्य रथ में नगर दर्शन उत्सव।',
+    descriptionMr: 'श्रीकृष्ण स्वरूप भगवान जगन्नाथ सुसज्ज रथातून भक्तांना दर्शन देण्यासाठी निघतात.',
+    descriptionGu: 'શ્રીકૃષ્ણ સ્વરૂપ ભગવાન જગન્નાથજી શણગારેલા ભવ્ય રથમાં ભક્તોને દર્શન આપવા પધારે છે.',
+    status: 'upcoming',
+    category: 'Chariot Procession',
+    categoryHi: 'पावन रथयात्रा',
+    categoryMr: 'पावन रथयात्रा',
+    categoryGu: 'પાવન રથયાત્રા',
+    filterGroup: 'appearance',
+    highlightsEn: [
+      'Morning Pahandi ceremonial procession & garland offering to the decorated temple Rath',
+      'Sacred Chhera Pahara sweeping ritual before the chariot ropes are pulled',
+      'Devotional mridanga & kartal sankirtan accompanying the Rath Yatra around Shirgaon',
+      'Evening Sandhya Aarti followed by Khichdi & sweet Boondi Mahaprasad'
+    ],
+    highlightsHi: [
+      'प्रातः पुष्प सुसज्जित मंदिर रथ का पूजन एवं दिव्य पाहंडी उत्सव',
+      'रथयात्रा शुभारंभ से पूर्व पारंपरिक छेरा पहरा एवं स्वर्ण झाड़ू सेवा',
+      'शिरगाव परिक्रमा में मृदंग-करताल संग भावपूर्ण हरे कृष्ण नगर संकीर्तन',
+      'संध्या महाआरती उपरांत पावन खिचड़ी एवं बूंदी महाप्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'सकाळी फुलांनी सजवलेल्या मंदिर रथाचे पूजन व पाहंडी मिरवणूक',
+      'रथ ओढण्यापूर्वी पारंपरिक छेरा पहरा व सुवर्ण केरसुणी सेवा विधी',
+      'शिरगाव परिसरात मृदुंग-टाळांच्या गजरात भव्य रथयात्रा व नामसंकीर्तन',
+      'संध्या आरतीनंतर पवित्र खिचडी आणि गोड बुंदी महाप्रसाद वाटप'
+    ],
+    highlightsGu: [
+      'સવારે પુષ્પોથી શણગારેલા મંદિર રથનું પૂજન અને દિવ્ય પહંડી વિધિ',
+      'રથયાત્રા પ્રસ્થાન પૂર્વે પરંપરાગત પહિંદ (છેરા પહરા) સેવા વિધિ',
+      'શિરગાવ પરિસરમાં મૃદંગ-કરતાલ સાથે ભવ્ય નગર સંકીર્તન રથયાત્રા',
+      'સંધ્યા આરતી બાદ પાવન ખીચડી અને બુંદી મહાપ્રસાદ વિતરણ'
+    ]
+  },
+  {
+    id: 'janmashtami',
+    titleEn: 'Krishna Janmashtami',
+    titleHi: 'कृष्ण जन्माष्टमी',
+    titleMr: 'कृष्ण जन्माष्टमी',
+    titleGu: 'કૃષ્ણ જન્માષ્ટમી',
+    month: 'Aug 2027',
+    monthHi: 'अगस्त २०२७',
+    monthMr: 'ऑगस्ट २०२७',
+    monthGu: 'ઓગસ્ટ ૨૦૨૭',
+    dateStr: '25 Aug 2027 · Wednesday',
+    dateHi: '२५ अगस्त २०२७ · बुधवार',
+    dateMr: '२५ ऑगस्ट २०२७ · बुधवार',
+    dateGu: '૨૫ ઓગસ્ટ ૨૦૨૭ · બુધવાર',
+    timeStr: 'Midnight 12:00 AM Maha Abhishekam',
+    timeHi: 'मध्यरात्रि १२:०० बजे महाभिषेक',
+    timeMr: 'मध्यरात्री १२:०० वाजता महाअभिषेक',
+    timeGu: 'મધ્યરાત્રિ ૧૨:૦૦ વાગ્યે મહાઅભિષેક',
+    descriptionEn: 'Appearance of Lord Krishna.',
+    descriptionHi: 'भगवान श्री कृष्ण का पावन मध्यरात्रि अवतरण, पंचामृत महाभिषेक एवं पालकी उत्सव।',
+    descriptionMr: 'भगवान श्रीकृष्णांचा पावन मध्यरात्रीचा अवतरण सोहळा आणि महाअभिषेक.',
+    descriptionGu: 'ભગવાન શ્રીકૃષ્ણનો પાવન મધ્યરાત્રિ પ્રાગટ્ય મહોત્સવ અને પંચામૃત મહાઅભિષેક.',
+    status: 'upcoming',
+    category: 'Supreme Appearance',
+    categoryHi: 'परम अवतरण पर्व',
+    categoryMr: 'परम अवतरण सोहळा',
+    categoryGu: 'પરમ પ્રાગટ્ય ઉત્સવ',
+    filterGroup: 'appearance',
+    highlightsEn: [
+      'Dawn Mangala Aarti & 24-hour Akhanda Hare Krishna Sankirtan in the Mandapa',
+      'Evening Nandagopal Jhulan (Silver Cradle) Shringaar with fresh jasmine garlands',
+      '12:00 AM Midnight Shankha & Panchamrit Maha Abhishekam of Lord Dwarkadhish',
+      'Panjiri, Makhan-Mishri & Panchamrit Mahaprasad distribution after Janmotsav Aarti'
+    ],
+    highlightsHi: [
+      'प्रातः मंगला आरती एवं मंडप में २४ घंटे अखंड हरे कृष्ण संकीर्तन',
+      'सांयकालीन नंदगोपाल रजत हिंडोला एवं सुगंधित मोगरा-पुष्प शृंगार',
+      'मध्यरात्रि १२:०० बजे शंखनाद व वैदिक मंत्रोच्चार संग पंचामृत महाभिषेक',
+      'जन्मोत्सव महाआरती के पश्चात पंजीरी, माखन-मिश्री एवं चरणामृत वितरण'
+    ],
+    highlightsMr: [
+      'पहाटे मंगला आरती व सभामंडपात २४ तास अखंड नामसंकीर्तन',
+      'सायंकाळी बालगोपाळ चांदीचा पाळणा आणि सुगंधी मोगरा-फुलांची सजावट',
+      'मध्यरात्री १२:०० वाजता शंखनाद व वेदमंत्रांच्या घोषात पंचामृत महाअभिषेक',
+      'जन्मोत्सव आरतीनंतर पंजिरी, लोणी-खडीसाखर व महाप्रसाद वाटप'
+    ],
+    highlightsGu: [
+      'પ્રાતઃ મંગળા આરતી અને સભામંડપમાં ૨૪ કલાક અખંડ હરિનામ સંકીર્તન',
+      'સાંજે નંદગોપાળ રજત પારણા અને તાજા મોગરા-પુષ્પોનો દિવ્ય શૃંગાર',
+      'મધ્યરાત્રિ ૧૨:૦૦ વાગ્યે શંખનાદ અને વૈદિક મંત્રોચ્ચાર સાથે પંચામૃત મહાઅભિષેક',
+      'જન્મોત્સવ મહાઆરતી બાદ પંજરી, માખણ-મિશ્રી અને પ્રસાદ વિતરણ'
+    ]
+  },
+  {
+    id: 'radhashtami',
+    titleEn: 'Radha Ashtami',
+    titleHi: 'राधा अष्टमी',
+    titleMr: 'राधा अष्टमी',
+    titleGu: 'રાધા અષ્ટમી',
+    month: 'Sep 2027',
+    monthHi: 'सितम्बर २०२७',
+    monthMr: 'सप्टेंबर २०२७',
+    monthGu: 'સપ્ટેમ્બર ૨૦૨૭',
+    dateStr: '8 Sep 2027 · Wednesday',
+    dateHi: '८ सितम्बर २०२७ · बुधवार',
+    dateMr: '८ सप्टेंबर २०२७ · बुधवार',
+    dateGu: '૮ સપ્ટેમ્બર ૨૦૨૭ · બુધવાર',
+    timeStr: '10:00 AM – 01:00 PM',
+    timeHi: 'प्रातः १०:०० – दोपहर ०१:००',
+    timeMr: 'सकाळी १०:०० – दुपारी ०१:००',
+    timeGu: 'સવારે ૧૦:૦૦ – બપોરે ૦૧:૦૦',
+    descriptionEn: 'Appearance of Radha Rani.',
+    descriptionHi: 'करुणामयी श्री राधा रानी का पावन प्राकट्य दिवस, सहस्रनाम अर्चना एवं पुष्प शृंगार।',
+    descriptionMr: 'करुणामयी श्री राधा राणींचा पावन अवतरण दिवस आणि सहस्रनाम अर्चना.',
+    descriptionGu: 'કરુણામયી શ્રી રાધારાણીનો પાવન પ્રાગટ્ય દિવસ, સહસ્રનામ અર્ચના અને પુષ્પ શૃંગાર.',
+    status: 'upcoming',
+    category: 'Devotional Grace',
+    categoryHi: 'भक्ति एवं कृपा पर्व',
+    categoryMr: 'भक्ती व कृपा सोहळा',
+    categoryGu: 'ભક્તિ અને કૃપા પર્વ',
+    filterGroup: 'appearance',
+    highlightsEn: [
+      'Morning Shringaar adorned with pink lotus petals and fragrant sandalwood chandan',
+      'Collective chanting of Shri Radha Sahasranama and Ashtottara archana',
+      'Afternoon Radhakripa Haveli Sangeet & Braj Padavali bhajan recital',
+      'Special Arbi & Kesari Laddoo Rajbhog offering and devotee prasad'
+    ],
+    highlightsHi: [
+      'प्रातः गुलाबी कमल पुष्पों एवं सुगंधित चंदन से दिव्य शृंगार',
+      'सामूहिक श्री राधा सहस्रनाम पाठ एवं वैदिक पुष्पार्चना',
+      'मध्याह्न ब्रज पदावली एवं भक्तिमय हवेली संगीत प्रस्तुति',
+      'विशेष राजभोग अर्पण एवं श्रद्धालुओं हेतु प्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'सकाळी ताज्या गुलाबी कमळांच्या पाकळ्या आणि चंदनाचा दिव्य शृंगार',
+      'सामूहिक श्री राधा सहस्रनाम पठण आणि पुष्पार्चना',
+      'दुपारी ब्रज पदावली व भक्तिसंगीत हवेली गायन',
+      'विशेष राजभोग नैवेद्य अर्पण आणि भाविकांना महाप्रसाद वितरण'
+    ],
+    highlightsGu: [
+      'સવારે તાજા ગુલાબી કમળ અને સુગંધિત ચંદનનો દિવ્ય શૃંગાર',
+      'સામૂહિક શ્રી રાધા સહસ્રનામ પાઠ અને વૈદિક પુષ્પાર્ચના',
+      'મધ્યાહ્ને વ્રજ પદાવલી અને ભક્તિ હવેલી સંગીત ગાન',
+      'વિશેષ રાજભોગ નૈવેદ્ય અર્પણ અને ભક્તોમાં પ્રસાદ વિતરણ'
+    ]
+  },
+  {
+    id: 'sharad_purnima',
+    titleEn: 'Sharad Purnima',
+    titleHi: 'शरद पूर्णिमा',
+    titleMr: 'शरद पौर्णिमा',
+    titleGu: 'શરદ પૂર્ણિમા',
+    month: 'Oct 2027',
+    monthHi: 'अक्टूबर २०२७',
+    monthMr: 'ऑक्टोबर २०२७',
+    monthGu: 'ઓક્ટોબર ૨૦૨૭',
+    dateStr: '14 Oct 2027 · Thursday',
+    dateHi: '१४ अक्टूबर २०२७ · गुरुवार',
+    dateMr: '१४ ऑक्टोबर २०२७ · गुरुवार',
+    dateGu: '૧૪ ઓક્ટોબર ૨૦૨૭ · ગુરુવાર',
+    timeStr: '07:00 PM – 11:00 PM',
+    timeHi: 'सायं ०७:०० – रात्रि ११:००',
+    timeMr: 'सायंकाळी ०७:०० – रात्री ११:००',
+    timeGu: 'સાંજે ૦૭:૦૦ – રાત્રે ૧૧:૦૦',
+    descriptionEn: "Krishna's Maha Raas Leela.",
+    descriptionHi: 'शरद ऋतु की धवल चांदनी में श्री कृष्ण की दिव्य महारास लीला एवं अमृत खीर भोग।',
+    descriptionMr: 'शरद ऋतूच्या शुभ्र चांदण्यात श्रीकृष्णांची दिव्य महारास लीला व केशर दूध-खीर नैवेद्य.',
+    descriptionGu: 'શરદ પૂનમની શીતળ ચાંદનીમાં શ્રીકૃષ્ણની દિવ્ય મહારાસ લીલા અને અમૃત ખીરનો ભોગ.',
+    status: 'upcoming',
+    category: 'Moonlit Raas Leela',
+    categoryHi: 'शरद रास लीला',
+    categoryMr: 'शरद रास लीला',
+    categoryGu: 'શરદ રાસ લીલા',
+    filterGroup: 'leela',
+    highlightsEn: [
+      'Dhaval (all-white) silver-threaded silk vastras and fragrant mogra blossom garlands',
+      'Courtyard classical Bansuri flute and Raas-Panchadhyayi devotional recital',
+      'Moonlit evening Sandhya Aarti beneath open coastal skies at Shirgaon',
+      'Distribution of saffron-cardamom Doodh-Kheer sanctified under the full moon'
+    ],
+    highlightsHi: [
+      'श्वेत रेशमी धवल वस्त्र एवं मोगरा-चमेली की दिव्य पुष्पमाला शृंगार',
+      'मंदिर प्रांगण में शास्त्रीय बांसुरी वादन एवं रास पंचाध्यायी गायन',
+      'शरद पूर्णिमा की शीतल चांदनी में विशेष संध्या महाआरती',
+      'चंद्रमा की किरणों में रखी केसरिया दूध-खीर महाप्रसाद का वितरण'
+    ],
+    highlightsMr: [
+      'शुभ्र धवल रेशमी वस्त्रे व सुगंधी मोगऱ्याच्या गजऱ्यांचा शृंगार',
+      'मंदिर प्रांगणात शास्त्रीय बासरी वादन आणि रासपंचाध्यायी पठण',
+      'शिरगावच्या मोकळ्या आकाशाखाली शीतल चांदण्यात विशेष संध्या आरती',
+      'चंद्रकिरणांत ठेवलेल्या केशर-वेलदोडा दूध-खीर प्रसादाचे वाटप'
+    ],
+    highlightsGu: [
+      'ધવલ શ્વેત રેશમી વસ્ત્રો અને મોગરા-ચમેલીના પુષ્પોનો અલૌકિક શૃંગાર',
+      'મંદિર પ્રાંગણમાં શાસ્ત્રીય બાંસુરી વાદન અને રાસપંચાધ્યાયી ગાન',
+      'પૂર્ણિમાની શીતળ ચાંદનીમાં ખુલ્લા પ્રાંગણમાં વિશેષ સંધ્યા મહાઆરતી',
+      'ચંદ્રપ્રકાશમાં સિદ્ધ કરાયેલ કેસર-એલચી દૂધ-પૌંઆ ખીરનો પ્રસાદ'
+    ]
+  },
+  {
+    id: 'narak_chaturdashi',
+    titleEn: 'Narak Chaturdashi',
+    titleHi: 'नरक चतुर्दशी',
+    titleMr: 'नरक चतुर्दशी',
+    titleGu: 'નરક ચતુર્દશી',
+    month: 'Oct 2027',
+    monthHi: 'अक्टूबर २०२७',
+    monthMr: 'ऑक्टोबर २०२७',
+    monthGu: 'ઓક્ટોબર ૨૦૨૭',
+    dateStr: '28 Oct 2027 · Thursday',
+    dateHi: '२८ अक्टूबर २०२७ · गुरुवार',
+    dateMr: '२८ ऑक्टोबर २०२७ · गुरुवार',
+    dateGu: '૨૮ ઓક્ટોબર ૨૦૨૭ · ગુરુવાર',
+    timeStr: '05:30 AM – 09:00 AM',
+    timeHi: 'प्रातः ०५:३० – ०९:००',
+    timeMr: 'पहाटे ०५:३० – सकाळी ०९:००',
+    timeGu: 'પ્રાતઃ ૦૫:૩૦ – સવારે ૦૯:૦૦',
+    descriptionEn: 'Krishna defeated Narakasura.',
+    descriptionHi: 'भगवान श्री कृष्ण द्वारा नरकासुर वध की स्मृति में मंगल दीपमालिका एवं प्रभात आराधना।',
+    descriptionMr: 'भगवान श्रीकृष्णांनी नरकासुराचा वध केल्याच्या स्मृतीप्रित्यर्थ मंगल दीपोत्सव.',
+    descriptionGu: 'ભગવાન શ્રીકૃષ્ણે નરકાસુરનો વધ કર્યો તે પાવન સ્મૃતિમાં મંગલ દીપોત્સવ.',
+    status: 'upcoming',
+    category: 'Dawn Deepotsav',
+    categoryHi: 'प्रभात दीपोत्सव',
+    categoryMr: 'मंगल दीपोत्सव',
+    categoryGu: 'મંગલ દીપોત્સવ',
+    filterGroup: 'leela',
+    highlightsEn: [
+      'Brahma Muhurta Mangala Darshan & sacred Abhyanga Snan ritual hymns',
+      'Lighting of hundreds of earthen oil diyas across the sandstone steps and mandapa',
+      'Special Tulsi Archana & conch resonance honoring Krishna’s victory over darkness',
+      'Morning festive sweets, poha-chiwda & warm kesar milk prasad'
+    ],
+    highlightsHi: [
+      'ब्रह्म मुहूर्त मंगल दर्शन एवं पावन वैदिक स्तोत्र पाठ',
+      'मंदिर के पाषाण सोपानों व प्रांगण में सैकड़ों मंगल मिट्टी के दीपों का प्रज्वलन',
+      'अंधकार पर प्रकाश की विजय हेतु विशेष तुलसी अर्चना एवं शंखनाद',
+      'प्रातःकालीन दीपोत्सव मिष्ठान एवं केसर दूध महाप्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'ब्राह्म मुहूर्तावर मंगल दर्शन आणि पावन वेदमंत्र पठण',
+      'मंदिराच्या दगडी पायऱ्या व प्रांगणात शेकडो पणत्यांचा मंगल दीपोत्सव',
+      'अज्ञानाच्या अंधकारावर ज्ञानाच्या विजयासाठी विशेष तुळशी अर्चना',
+      'सकाळी दिवाळी फराळ आणि केशर दुधाचा महाप्रसाद वाटप'
+    ],
+    highlightsGu: [
+      'બ્રહ્મ મુહૂર્તમાં મંગળા દર્શન અને પાવન વૈદિક સ્તોત્ર પઠન',
+      'મંદિરના પથ્થરના પગથિયાં અને પ્રાંગણમાં સેંકડો દીવડાઓની મંગલ દીપમાળા',
+      'અંધકાર પર પ્રકાશના વિજય માટે વિશેષ તુલસી અર્ચના અને શંખનાદ',
+      'પ્રાતઃકાળે દિવાળી મિષ્ટાન્ન અને કેસર દૂધનો પ્રસાદ વિતરણ'
+    ]
+  },
+  {
+    id: 'govardhan',
+    titleEn: 'Govardhan Puja',
+    titleHi: 'गोवर्धन पूजा',
+    titleMr: 'गोवर्धन पूजा',
+    titleGu: 'ગોવર્ધન પૂજા',
+    month: 'Oct 2027',
+    monthHi: 'अक्टूबर २०२७',
+    monthMr: 'ऑक्टोबर २०२७',
+    monthGu: 'ઓક્ટોબર ૨૦૨૭',
+    dateStr: '30 Oct 2027 · Saturday',
+    dateHi: '३० अक्टूबर २०२७ · शनिवार',
+    dateMr: '३० ऑक्टोबर २०२७ · शनिवार',
+    dateGu: '૩૦ ઓક્ટોબર ૨૦૨૭ · શનિવાર',
+    timeStr: '11:00 AM – 03:00 PM',
+    timeHi: 'प्रातः ११:०० – अपराह्न ०३:००',
+    timeMr: 'सकाळी ११:०० – दुपारी ०३:००',
+    timeGu: 'સવારે ૧૧:૦૦ – બપોરે ૦૩:૦૦',
+    descriptionEn: 'Krishna lifted Govardhan Hill.',
+    descriptionHi: 'भगवान श्री कृष्ण द्वारा गिरिराज गोवर्धन पर्वत धारण एवं भव्य १०८ व्यंजन अन्नकूट भोग।',
+    descriptionMr: 'भगवान श्रीकृष्णांनी गोवर्धन पर्वत उचलल्याचा सोहळा आणि भव्य अन्नकूट महाभोग.',
+    descriptionGu: 'ભગવાન શ્રીકૃષ્ણે ગિરિરાજ ગોવર્ધન પર્વત ધારણ કર્યો તે પ્રસંગે ભવ્ય અન્નકૂટ મહાભોગ.',
+    status: 'upcoming',
+    category: 'Sacred Annakut Bhog',
+    categoryHi: 'अन्नकूट महाभोग',
+    categoryMr: 'अन्नकूट महाभोग',
+    categoryGu: 'અન્નકૂટ મહાભોગ',
+    filterGroup: 'leela',
+    highlightsEn: [
+      'Traditional Giriraj Govardhan & Gau-mata Pujan in the morning courtyard',
+      'Artistic multi-tiered Annakut display of 108 pure sattvik sweets, farsan & grains',
+      'Noon Maha Rajbhog Aarti illuminated by brass Deepa-stambha lamps',
+      'Sanctified Annakut Mahaprasad served to all visiting devotees and pilgrims'
+    ],
+    highlightsHi: [
+      'प्रातः प्रांगण में पारंपरिक गिरिराज गोवर्धन एवं गौ-माता पूजन',
+      '१०८ प्रकार के सात्त्विक पकवान, मिष्ठान एवं व्यंजनों की भव्य अन्नकूट झांकी',
+      'मध्याह्न दीप-स्तंभ के प्रकाश में भव्य राजभोग महाआरती',
+      'सभी दर्शनार्थियों एवं श्रद्धालुओं को पवित्र अन्नकूट महाप्रसाद वितरण'
+    ],
+    highlightsMr: [
+      'सकाळी प्रांगणात पारंपरिक गिरिराज गोवर्धन व गोमाता पूजन',
+      '१०८ प्रकारच्या सात्त्विक मिठाई, फळे व पक्वान्नांची भव्य अन्नकूट मांडणी',
+      'दुपारी दीपमाळेच्या प्रकाशात भव्य राजभोग महाआरती',
+      'सर्व भाविकांना पवित्र अन्नकूट महाप्रसादाचे वितरण'
+    ],
+    highlightsGu: [
+      'સવારે પ્રાંગણમાં પરંપરાગત ગિરિરાજ ગોવર્ધન અને ગૌમાતા પૂજન',
+      '૧૦૮ પ્રકારના સાત્ત્વિક મિષ્ટાન્ન, ફરસાણ અને અન્નરાશિની ભવ્ય અન્નકૂટ ઝાંખી',
+      'મધ્યાહ્ને દીપસ્તંભના પ્રકાશમાં ભવ્ય રાજભોગ મહાઆરતી',
+      'સર્વ ભક્તો અને યાત્રાળુઓને પવિત્ર અન્નકૂટ મહાપ્રસાદ વિતરણ'
+    ]
   }
 ];
 

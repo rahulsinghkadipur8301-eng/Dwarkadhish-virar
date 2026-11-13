@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       {/* Primary Navigation Bar in Warm Ivory */}
-      <header className="sticky top-0 z-40 bg-[#FFFDF8]/96 backdrop-blur-md border-b border-[#E5D1B6] transition-all duration-200">
+      <header className="sticky top-0 z-40 bg-[#FFFDF8]/98 border-b border-[#E5D1B6] transition-colors duration-200">
         <div className="w-full max-w-[min(98vw,1920px)] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8 h-20 flex items-center justify-between gap-3 xl:gap-4">
           {/* Zone 1: Identity Lockup */}
           <button
@@ -78,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           {/* Zone 2: Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-3 xl:gap-4 text-sm xl:text-[15px] font-medium text-[#3C2A20]">
+          <nav className="hidden xl:flex items-center gap-3 2xl:gap-4 text-[13.5px] 2xl:text-[15px] font-medium text-[#3C2A20]">
             {primaryNav.map((item) => (
               <button
                 key={item.id}
@@ -182,8 +182,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Mobile Menu Hamburger */}
-          <div className="flex lg:hidden items-center gap-2">
+          {/* Mobile & Compact Laptop Menu Hamburger */}
+          <div className="flex xl:hidden items-center gap-2">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -195,9 +195,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu in Warm Ivory */}
+        {/* Mobile & Tablet Dropdown Menu in Warm Ivory */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#FFFDF8] border-b border-[#E5D1B6] px-6 py-6 shadow-xl space-y-5">
+          <div className="xl:hidden bg-[#FFFDF8] border-b border-[#E5D1B6] px-6 py-6 shadow-xl space-y-5">
             {/* Mobile Language Selector */}
             <div className="pb-4 border-b border-[#E5D1B6]/60">
               <span className="block text-xs font-cinzel text-[#76502F] uppercase tracking-wider font-semibold mb-2">

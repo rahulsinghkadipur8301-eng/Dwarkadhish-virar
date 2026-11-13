@@ -432,7 +432,7 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
 
       BELL_DEFINITIONS.forEach((bell, idx) => {
         const el = bellRefs.current[idx];
-        if (!el) return;
+        if (!el || el.offsetParent === null) return;
 
         const state = physics[idx];
 
@@ -461,7 +461,7 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
       });
 
       // Keep RAF alive while bells swing or user recently scrolled; sleep when completely idle
-      if (anyMoving || timestamp - lastActivityAt < 220) {
+      if (anyMoving || timestamp - lastActivityAt < 160) {
         animId = window.requestAnimationFrame(tick);
       } else {
         animId = null;
@@ -565,8 +565,26 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
       className="absolute inset-0 z-10 pointer-events-none overflow-hidden select-none"
       aria-hidden="true"
     >
+      {/* Shared SVG gradient definitions reused by all hanging bells and chains */}
+      <svg width="0" height="0" className="absolute pointer-events-none" focusable="false">
+        <defs>
+          <linearGradient id="heroBellChainGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#4A3018" />
+            <stop offset="30%" stopColor="#C59B56" />
+            <stop offset="60%" stopColor="#FFE8B3" />
+            <stop offset="100%" stopColor="#6B4828" />
+          </linearGradient>
+          <linearGradient id="heroBgBellGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#3E2612" />
+            <stop offset="35%" stopColor="#B68A45" />
+            <stop offset="60%" stopColor="#E5BE75" />
+            <stop offset="100%" stopColor="#5A3A1E" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       {/* Top Ceiling Beam Moulding from which all chains physically hang */}
-      <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#2A1810]/80 via-[#5A3818]/60 to-[#2A1810]/80 border-b border-[#B68A45]/30 z-20" />
+      <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#2A1810]/80 via-[#5A3818]/60 to-[#2A1810]/80 z-20" />
 
       {BELL_DEFINITIONS.map((bell, idx) => {
         const responsiveClasses = [
@@ -590,7 +608,7 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
               top: `${bell.topPx}px`,
               width: `${bell.widthPx}px`,
               transformOrigin: '50% 0%',
-              willChange: reducedMotion ? 'auto' : 'transform, opacity',
+              willChange: !reducedMotion && bell.layer === 'fg' ? 'transform, opacity' : 'auto',
               opacity: bell.baseOpacity * 0.12,
             }}
           >
@@ -605,17 +623,8 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
                 viewBox={`0 0 14 ${bell.chainLengthPx}`}
                 fill="none"
                 preserveAspectRatio="none"
-                className="w-3.5 h-full drop-shadow-xs"
+                className="w-3.5 h-full"
               >
-                <defs>
-                  <linearGradient id={`bellChainGrad-${bell.id}`} x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#4A3018" />
-                    <stop offset="30%" stopColor="#C59B56" />
-                    <stop offset="60%" stopColor="#FFE8B3" />
-                    <stop offset="100%" stopColor="#6B4828" />
-                  </linearGradient>
-                </defs>
-                {/* Continuous alternating oval chain links */}
                 {[...Array(Math.max(3, Math.floor(bell.chainLengthPx / 14)))].map((_, linkIdx) => (
                   <ellipse
                     key={linkIdx}
@@ -624,7 +633,7 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
                     rx="4"
                     ry="6.5"
                     fill="none"
-                    stroke={`url(#bellChainGrad-${bell.id})`}
+                    stroke="url(#heroBellChainGrad)"
                     strokeWidth="1.6"
                   />
                 ))}
@@ -656,25 +665,13 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(
                   fill="none"
                   className="w-full h-auto opacity-90"
                 >
-                  <defs>
-                    <linearGradient id={`bgBellGrad-${bell.id}`} x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#3E2612" />
-                      <stop offset="35%" stopColor="#B68A45" />
-                      <stop offset="60%" stopColor="#E5BE75" />
-                      <stop offset="100%" stopColor="#5A3A1E" />
-                    </linearGradient>
-                  </defs>
-                  {/* Top Bell Dome & Lotus Cap */}
-                  <ellipse cx="30" cy="12" rx="10" ry="5" fill={`url(#bgBellGrad-${bell.id})`} />
-                  {/* Flared Bell Body */}
+                  <ellipse cx="30" cy="12" rx="10" ry="5" fill="url(#heroBgBellGrad)" />
                   <path
                     d="M 22 12 C 20 25, 14 45, 6 56 C 5 58, 7 60, 10 60 L 50 60 C 53 60, 55 58, 54 56 C 46 45, 40 25, 38 12 Z"
-                    fill={`url(#bgBellGrad-${bell.id})`}
+                    fill="url(#heroBgBellGrad)"
                   />
-                  {/* Bottom Rim */}
                   <ellipse cx="30" cy="60" rx="22" ry="4.5" fill="#FFE8B3" opacity="0.6" />
                   <ellipse cx="30" cy="61" rx="22" ry="4.5" fill="#2A1608" opacity="0.8" />
-                  {/* Hanging Clapper */}
                   <circle cx="30" cy="67" r="3.5" fill="#FFE8B3" stroke="#3E2612" strokeWidth="0.8" />
                 </svg>
               )}

@@ -176,7 +176,7 @@ test('Dedicated TempleGallerySection & SectionBackgroundChakra across every sect
   const footerCode = fs.readFileSync('src/components/Footer.tsx', 'utf-8');
   assert.ok(footerCode.includes("onNavigate('gallery')"), 'Footer must include gallery navigation link');
 
-  // Verify SectionBackgroundChakra is mounted in every non-homepage content section (with donation having its dedicated Mandala/Chakra)
+  // Verify SectionBackgroundChakra is mounted in every non-homepage content section & footer (with donation having its dedicated Mandala/Chakra)
   for (const componentPath of [
     'src/components/DevotionalPresenceSection.tsx',
     'src/components/VisionarySection.tsx',
@@ -186,10 +186,12 @@ test('Dedicated TempleGallerySection & SectionBackgroundChakra across every sect
     'src/components/FestivalsSection.tsx',
     'src/components/SevaSection.tsx',
     'src/components/TempleSocialConnectSection.tsx',
+    'src/components/Footer.tsx',
   ]) {
     const code = fs.readFileSync(componentPath, 'utf-8');
     assert.ok(code.includes('<SectionBackgroundChakra'), `${componentPath} must mount <SectionBackgroundChakra`);
   }
+  assert.ok(footerCode.includes('motion.'), 'Footer must include animated motion elements');
 
   // Strictly verify HeroSection (main homepage) does NOT mount SectionBackgroundChakra
   const heroSectionCode = fs.readFileSync('src/components/HeroSection.tsx', 'utf-8');

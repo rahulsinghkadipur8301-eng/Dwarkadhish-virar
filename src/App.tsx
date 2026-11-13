@@ -329,6 +329,7 @@ export default function App() {
           language={language}
           onNavigate={handleTabChange}
           onOpenPlanner={handleOpenPlanner}
+          reducedMotion={reducedMotion}
         />
       </Suspense>
     </div>
