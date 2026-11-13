@@ -78,4 +78,47 @@ test('i18n: Marathi translations contain authentic Marathi phrasing distinct fro
   // Marathi uses 'पुष्पवृष्टी'
   assert(mr.darshan.flowerShower.includes('पुष्पवृष्टी'), 'Marathi darshan should use "पुष्पवृष्टी"');
   assert(hi.darshan.flowerShower.includes('पुष्प वर्षा'), 'Hindi darshan should use "पुष्प वर्षा"');
+
+  // Marathi homepage heading and orthographically accurate virtues
+  assert.equal(mr.hero.heading, '॥ श्री द्वारकाधीश मंदिर ॥');
+  assert.equal(mr.hero.virtues, 'श्रद्धा • भक्ती • शांती');
+  assert(!mr.vision.photoChronicleTitle.includes('समपर्णाची'), 'Marathi typo समपर्णाची should be corrected to समर्पणाची');
 });
+
+test('typography: index.html and src/index.css configure multilingual fonts and :lang rules', async () => {
+  const { readFileSync } = await import('node:fs');
+  const html = readFileSync('index.html', 'utf8');
+  const css = readFileSync('src/index.css', 'utf8');
+
+  for (const font of [
+    'Cormorant+Garamond',
+    'Manrope',
+    'Noto+Serif+Devanagari',
+    'Mukta',
+    'Noto+Serif+Gujarati',
+    'Noto+Sans+Gujarati',
+  ]) {
+    assert(html.includes(font), `index.html should load Google Font ${font}`);
+  }
+
+  for (const token of [
+    '--font-english-heading',
+    '--font-english-body',
+    '--font-devanagari-heading',
+    '--font-devanagari-body',
+    '--font-gujarati-heading',
+    '--font-gujarati-body',
+    ':lang(hi)',
+    ':lang(mr)',
+    ':lang(gu)',
+    '.hero-title',
+    '.section-title',
+    '.card-title',
+    '.body-copy',
+    '.nav-link',
+    '.primary-button',
+  ]) {
+    assert(css.includes(token), `src/index.css should define ${token}`);
+  }
+});
+

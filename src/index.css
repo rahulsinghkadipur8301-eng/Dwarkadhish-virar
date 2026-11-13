@@ -16,6 +16,25 @@
     --color-muted-peacock: #376C68;
     --color-soft-saffron: #C98945;
 
+    /* Multilingual Editorial Typography Tokens */
+    --font-english-heading:
+      "Cormorant Garamond", Georgia, serif;
+
+    --font-english-body:
+      "Manrope", Arial, sans-serif;
+
+    --font-devanagari-heading:
+      "Noto Serif Devanagari", serif;
+
+    --font-devanagari-body:
+      "Mukta", sans-serif;
+
+    --font-gujarati-heading:
+      "Noto Serif Gujarati", serif;
+
+    --font-gujarati-body:
+      "Noto Sans Gujarati", sans-serif;
+
     /* Global Fluid Layout System Tokens */
     --site-gutter-mobile: 16px;
     --site-gutter-tablet: 24px;
@@ -25,16 +44,27 @@
     --section-space: clamp(48px, 4.5vw, 88px);
   }
 
+  /* Default English typography */
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-english-body);
+    font-size: 1.0625rem;
+    line-height: 1.7;
     color: #3C2A20;
     background-color: #FBF6ED;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, .font-serif-royal {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+  @media (min-width: 768px) {
+    body {
+      font-size: 1.125rem;
+    }
+  }
+
+  h1, h2, h3, .heritage-heading, .font-serif-royal {
+    font-family: var(--font-english-heading);
+    font-weight: 600;
+    line-height: 1.15;
   }
 
   .font-cinzel {
@@ -42,12 +72,91 @@
   }
 
   .font-devanagari {
-    font-family: 'Yatra One', 'Rozha One', 'Plus Jakarta Sans', serif;
+    font-family: var(--font-devanagari-heading);
+    letter-spacing: normal;
   }
 
   .font-gujarati {
-    font-family: 'Noto Serif Gujarati', 'Noto Sans Gujarati', 'Cormorant Garamond', serif;
+    font-family: var(--font-gujarati-heading);
+    letter-spacing: normal;
   }
+}
+
+/* Hindi and Marathi */
+:lang(hi),
+:lang(hi) body,
+:lang(mr),
+:lang(mr) body {
+  font-family: var(--font-devanagari-body);
+}
+
+:lang(hi) h1,
+:lang(hi) h2,
+:lang(hi) h3,
+:lang(hi) .heritage-heading,
+:lang(mr) h1,
+:lang(mr) h2,
+:lang(mr) h3,
+:lang(mr) .heritage-heading {
+  font-family: var(--font-devanagari-heading);
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
+:lang(hi) .font-serif-royal,
+:lang(mr) .font-serif-royal,
+:lang(hi) .font-cinzel,
+:lang(mr) .font-cinzel {
+  font-family: var(--font-devanagari-heading);
+  font-style: normal;
+  letter-spacing: normal;
+}
+
+/* Gujarati */
+:lang(gu),
+:lang(gu) body {
+  font-family: var(--font-gujarati-body);
+}
+
+:lang(gu) h1,
+:lang(gu) h2,
+:lang(gu) h3,
+:lang(gu) .heritage-heading {
+  font-family: var(--font-gujarati-heading);
+  line-height: 1.4;
+  letter-spacing: normal;
+}
+
+:lang(gu) .font-serif-royal,
+:lang(gu) .font-cinzel {
+  font-family: var(--font-gujarati-heading);
+  font-style: normal;
+  letter-spacing: normal;
+}
+
+/* Responsive typography */
+.hero-title {
+  font-size: clamp(2.5rem, 4vw + 1rem, 5rem);
+}
+
+.section-title {
+  font-size: clamp(1.875rem, 2vw + 1rem, 3.25rem);
+}
+
+.card-title {
+  font-size: clamp(1.25rem, 1vw + 0.75rem, 1.625rem);
+}
+
+.body-copy {
+  font-size: clamp(1rem, 0.4vw + 0.75rem, 1.1875rem);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+.nav-link,
+.primary-button {
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 /* Fluid Typography Utility Classes with clamp() */

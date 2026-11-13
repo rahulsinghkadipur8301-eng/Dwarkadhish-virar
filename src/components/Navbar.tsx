@@ -35,8 +35,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'location', labelEn: 'Plan Your Visit', labelHi: 'स्थान व मार्ग', labelMr: 'स्थान व नकाशा', labelGu: 'સ્થાન અને નકશો' },
     { id: 'festivals', labelEn: 'Festivals', labelHi: 'उत्सव', labelMr: 'उत्सव', labelGu: 'ઉત્સવ' },
     { id: 'seva', labelEn: 'Seva Offerings', labelHi: 'सेवा', labelMr: 'सेवा', labelGu: 'સેવા' },
-    { id: 'donation', labelEn: 'Contributions', labelHi: 'सेवा सहयोग', labelMr: 'देणगी सहयोग', labelGu: 'સેવા સહયોગ' },
-    { id: 'social', labelEn: 'Connect', labelHi: 'जुड़ें', labelMr: 'जोडा', labelGu: 'જોડાઓ' },
+    { id: 'donation', labelEn: 'Contributions', labelHi: 'सेवा सहयोग', labelMr: 'देणगी सहकार्य', labelGu: 'સેવા સહયોગ' },
+    { id: 'social', labelEn: 'Connect', labelHi: 'जुड़ें', labelMr: 'जोडलेले राहा', labelGu: 'જોડાઓ' },
     { id: 'admin', labelEn: 'Management', labelHi: 'प्रबंधन', labelMr: 'व्यवस्थापन', labelGu: 'વ્યવસ્થાપન' },
   ];
 

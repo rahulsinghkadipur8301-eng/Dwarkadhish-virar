@@ -74,7 +74,7 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
           <Info className="w-5 h-5 text-[#A67C57] shrink-0 mt-0.5" />
           <div className="text-xs sm:text-sm text-[#3C2A20] leading-relaxed">
             <span className="font-semibold text-[#6B4832] block sm:inline mr-2">
-              {tDict.seva.noticeHeader}:
+              {tDict.seva.noticeHeader}
             </span>
             {tDict.seva.noticeBody}
           </div>

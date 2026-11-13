@@ -45,7 +45,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onNavigate, onOpenPlan
             </p>
 
             <div className="p-4 bg-[#3C2A20] border border-[#A67C57] text-xs sm:text-sm text-[#F0DFCA] max-w-lg rounded-xs">
-              <strong className="text-[#C98945] block mb-1 font-cinzel text-xs tracking-wider uppercase">{tDict.footer.attributionNoteTitle}:</strong>
+              <strong className="text-[#C98945] block mb-1 font-cinzel text-xs tracking-wider uppercase">{tDict.footer.attributionNoteTitle}</strong>
               {tDict.footer.attributionNoteBody}
             </div>
 
