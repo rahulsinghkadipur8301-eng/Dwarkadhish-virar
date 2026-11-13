@@ -124,13 +124,13 @@ test('Blended Donation Poster Asset, Google Maps Directions & Build Size Discipl
     'Vibrant_Temple_Ceremony_Portrait_8e2d2892.png',
     'Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png',
     'Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png',
-    'golden_om_favicon_b8148356.png',
+    'dwarikadish_favicon_1c574a57.png',
   ]) {
     assert.ok(fs.existsSync(path.join(process.cwd(), 'public/assets/aistudio', file)), `Missing ${file} in public/assets/aistudio`);
   }
 
   const indexHtml = fs.readFileSync('index.html', 'utf-8');
-  assert.ok(indexHtml.includes('golden_om_favicon_b8148356.png'), 'index.html must link the uploaded golden Om favicon');
+  assert.ok(indexHtml.includes('dwarikadish_favicon_1c574a57.png'), 'index.html must link the uploaded Dwarkadhish favicon');
 
   const plannerCode = fs.readFileSync('src/components/PlannerModal.tsx', 'utf-8');
   assert.ok(plannerCode.includes('getGoogleMapsDirectionsUrl'), 'PlannerModal must provide Google Maps directions URL');
