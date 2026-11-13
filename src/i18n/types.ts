@@ -236,6 +236,9 @@ export interface TranslationDictionary {
     filterEkadashi: string;
     ekadashiOpenScroll: string;
     ekadashiScrollSeal: string;
+    ekadashiTithiLabel: string;
+    ekadashiDateLabel: string;
+    ekadashiDayLabel: string;
     ekadashiLunarMonth: string;
     ekadashiDeity: string;
     ekadashiSignificanceHeading: string;
@@ -264,7 +267,7 @@ export interface TranslationDictionary {
     description: string;
     noticeHeader: string;
     noticeBody: string;
-    btnSelect: string;
+    btnContributionPortal: string;
     proposedOfferingLabel: string;
     modalTitle: string;
     modalSubtitle: string;

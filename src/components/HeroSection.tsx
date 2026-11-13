@@ -232,9 +232,9 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
         /* =========================================================================
            MOBILE & TABLET SCREENS (< lg):
            Full-bleed borderless background photograph filling 100% of the first
-           viewport (min-h-[calc(100svh-5rem)]), leaving the upper sunrise sky &
-           temple shikhara clear while integrating copy, CTAs, and stats cleanly
-           over a seamless translucent lower gradient.
+           viewport (min-h-[calc(100svh-5rem)]), leaving the upper ~70%+ temple
+           shikhara, sunrise sky, stairs & gardens completely clear while showing
+           only essential opening info cleanly along the bottom edge.
            ========================================================================= */
         <div className="relative flex-1 flex flex-col justify-end min-h-[calc(100svh-5rem)] overflow-hidden">
           {/* Full-Bleed Borderless Mobile Background Photograph */}
@@ -246,123 +246,84 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
                 alt="Shri Dwarkadhish Mandir at golden sunrise in Shirgaon, Virar East showing the full temple complex, manicured gardens, flying yellow dhwaja flag, carved sandstone shikhara, and grand entrance staircase"
                 width={1869}
                 height={842}
-                className="w-full h-full object-cover object-[68%_32%] sm:object-[72%_40%]"
+                className="w-full h-full object-cover object-[70%_30%] sm:object-[72%_38%]"
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
               />
             </picture>
 
-            {/* Seamless Bottom-Up Scrim keeping top Temple Shikhara & Dhwaja bright */}
+            {/* Compact Bottom-Only Scrim keeping the Temple Complex, Dhwaja & Sky bright */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  'linear-gradient(to top, rgba(20, 12, 8, 0.94) 0%, rgba(20, 12, 8, 0.84) 44%, rgba(24, 14, 9, 0.42) 66%, transparent 86%)',
+                  'linear-gradient(to top, rgba(20, 12, 8, 0.90) 0%, rgba(20, 12, 8, 0.58) 24%, transparent 46%)',
               }}
             />
           </div>
 
           {/* Subtle Non-Obscuring Atmosphere */}
-          <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-45" />
+          <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-40" />
           <HeroBellAtmosphere reducedMotion={reducedMotion} />
 
-          {/* Clear Upper Temple Showcase Spacer */}
-          <div className="flex-1 min-h-[210px] sm:min-h-[260px]" aria-hidden="true" />
+          {/* Clear Upper Temple Showcase Spacer — leaves Golden Temple clearly visible */}
+          <div className="flex-1 min-h-[42svh]" aria-hidden="true" />
 
-          {/* Borderless Mobile Overlaid Content Section */}
-          <div className="relative z-20 px-4 sm:px-6 md:px-10 pt-4 pb-3 flex flex-col justify-end">
-            {/* Location Badge */}
-            <div className="mb-2">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#24150D]/90 border border-[#B68A45]/45 text-[10.5px] font-cinzel text-[#F8F1E5]">
-                <Sparkles className="w-2.5 h-2.5 text-[#B68A45]" />
-                <span className="font-semibold">{tDict.hero.kickerLocality}</span>
-                <span className="text-[#B68A45]">·</span>
-                <span className="text-[#D8C2A4]">{tDict.hero.kickerDistrict}</span>
-              </div>
-            </div>
-
+          {/* Minimal Mobile Bottom Overlay — Title, Virtues, 2 Compact Buttons & Translucent Hours */}
+          <div
+            data-testid="mobile-hero-compact-overlay"
+            className="relative z-20 px-4 sm:px-6 md:px-10 pt-3 pb-3 flex flex-col justify-end"
+          >
             {/* Main Primary Heading */}
-            <h1 className="font-devanagari text-[1.5rem] sm:text-[1.8rem] md:text-[2.15rem] font-bold tracking-tight text-[#FFFCF7] leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+            <h1 className="font-devanagari text-[1.45rem] sm:text-[1.75rem] font-bold tracking-tight text-[#FFFCF7] leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
               {tDict.hero.heading}
             </h1>
 
-            {/* Compact Golden Line */}
-            <div className="flex items-center gap-1.5 my-1.5">
-              <div className="h-[1.5px] w-14 bg-gradient-to-r from-transparent via-[#B68A45] to-[#B68A45]" />
-              <span className="w-1.5 h-1.5 rotate-45 bg-[#B68A45]" />
-              <div className="h-[1.5px] w-14 bg-gradient-to-l from-transparent via-[#B68A45] to-[#B68A45]" />
+            {/* Compact Golden Line & Values Sub-heading */}
+            <div className="flex items-center gap-2 mt-1 mb-2.5">
+              <div className="font-devanagari text-[11.5px] sm:text-[13px] font-medium tracking-[0.16em] text-[#E6D6C0] drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+                {tDict.hero.virtues}
+              </div>
+              <span className="h-[1px] flex-1 max-w-[64px] bg-gradient-to-r from-[#B68A45] to-transparent" aria-hidden="true" />
             </div>
 
-            {/* Values Sub-heading */}
-            <div className="font-devanagari text-[12px] sm:text-[13.5px] font-medium tracking-[0.18em] text-[#D8C2A4] mb-1 drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]">
-              {tDict.hero.virtues}
-            </div>
-
-            {/* Supporting Line */}
-            <p className="font-serif-royal italic text-base sm:text-lg text-[#F8F1E5] font-medium tracking-wide mb-1.5 drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]">
-              {tDict.hero.tagline}
-            </p>
-
-            {/* Concise Context */}
-            <p className="text-[12.5px] sm:text-[13.5px] text-[#E6D6C0] leading-snug sm:leading-relaxed mb-3 max-w-xl drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]">
-              {tDict.hero.description}
-            </p>
-
-            {/* Primary Buttons on Mobile */}
-            <div className="flex flex-col sm:flex-row gap-2">
+            {/* Compact 2-Button Action Row */}
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => onExplore('darshan')}
-                className="w-full sm:w-auto px-4 py-2 text-[12.5px] font-semibold tracking-wide text-[#FFFCF7] bg-[#3B2518]/92 hover:bg-[#4A3022] border border-[#B68A45]/80 rounded-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-colors"
+                className="w-full px-3 py-2 text-[11.5px] sm:text-[12.5px] font-semibold tracking-wide text-[#FFFCF7] bg-[#3B2518]/90 hover:bg-[#4A3022] border border-[#B68A45]/80 rounded-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
               >
-                <Clock className="w-4 h-4 text-[#D8C2A4]" />
-                <span className="font-medium">{tDict.hero.btnDarshanInfo}</span>
-                <span className="text-[#D8C2A4]/85 text-[11px] font-normal">
-                  — {tDict.hero.btnDarshanSub}
-                </span>
+                <Clock className="w-3.5 h-3.5 text-[#D8C2A4] shrink-0" aria-hidden="true" />
+                <span className="truncate">{tDict.hero.btnDarshanInfo}</span>
               </button>
 
               <a
                 href={directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-4 py-2 text-[12.5px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-colors"
+                className="w-full px-3 py-2 text-[11.5px] sm:text-[12.5px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
               >
-                <Navigation className="w-4 h-4 text-[#20140D]" />
-                <span>{tDict.hero.btnPlanVisit}</span>
-                <span className="text-[#382317] text-[11px] font-medium">
-                  — {tDict.hero.btnPlanSub}
-                </span>
+                <Navigation className="w-3.5 h-3.5 text-[#20140D] shrink-0" aria-hidden="true" />
+                <span className="truncate">{tDict.hero.btnPlanVisit}</span>
               </a>
             </div>
 
-            {/* Guide Link with Background Pill */}
-            <div className="mt-2 flex justify-center sm:justify-start">
-              <button
-                type="button"
-                onClick={onOpenPlanner}
-                className="px-3.5 py-1.5 text-[12px] font-medium text-[#F8F1E5] hover:text-[#FFFCF7] bg-[#22130B]/90 hover:bg-[#321F14] border border-[#B68A45]/45 rounded-xs shadow-sm inline-flex items-center gap-1.5 cursor-pointer transition-colors"
-              >
-                <Compass className="w-3.5 h-3.5 text-[#D8A85A]" />
-                <span>{tDict.hero.btnGuide}</span>
-              </button>
-            </div>
-
-            {/* Operational Utility Strip with 20% Background Opacity */}
-            <div className="mt-3 px-3 py-2.5 rounded-sm bg-[#160D08]/20 border border-[#FFFCF7]/20 grid grid-cols-2 gap-2 text-[10.5px] text-[#F8F1E5] [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
+            {/* Compact Operational Utility Strip with 20% Background Opacity */}
+            <div className="mt-2.5 px-3 py-2 rounded-sm bg-[#160D08]/20 border border-[#FFFCF7]/20 grid grid-cols-2 gap-2 text-[10px] text-[#F8F1E5] [text-shadow:0_1px_3px_rgba(0,0,0,0.95)]">
               <div className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3 text-[#B68A45] shrink-0" />
+                <Clock className="w-3 h-3 text-[#B68A45] shrink-0" aria-hidden="true" />
                 <div>
-                  <span className="block text-[8.5px] text-[#D8C2A4] uppercase">{tDict.hero.statDailyDarshan}</span>
+                  <span className="block text-[8px] text-[#D8C2A4] uppercase">{tDict.hero.statDailyDarshan}</span>
                   <span className="font-semibold text-[#FFFCF7]">{tDict.hero.statDailyHours}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#B68A45] shadow-[0_0_4px_#B68A45] shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#B68A45] shadow-[0_0_4px_#B68A45] shrink-0" aria-hidden="true" />
                 <div>
-                  <span className="block text-[8.5px] text-[#D8C2A4] uppercase">{tDict.hero.statSandhyaAarti}</span>
+                  <span className="block text-[8px] text-[#D8C2A4] uppercase">{tDict.hero.statSandhyaAarti}</span>
                   <span className="font-semibold text-[#FFFCF7]">{tDict.hero.statSandhyaTime}</span>
                 </div>
               </div>

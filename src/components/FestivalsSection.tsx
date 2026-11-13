@@ -637,6 +637,9 @@ export const FestivalsSection: React.FC<FestivalsSectionProps> = ({
         isReminded={Boolean(selectedEkadashi && remindState[selectedEkadashi.id])}
         labels={{
           scrollSeal: tDict.festivals.ekadashiScrollSeal,
+          tithiLabel: tDict.festivals.ekadashiTithiLabel,
+          dateLabel: tDict.festivals.ekadashiDateLabel,
+          dayLabel: tDict.festivals.ekadashiDayLabel,
           lunarMonth: tDict.festivals.ekadashiLunarMonth,
           deityLabel: tDict.festivals.ekadashiDeity,
           significanceHeading: tDict.festivals.ekadashiSignificanceHeading,

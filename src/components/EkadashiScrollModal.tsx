@@ -22,6 +22,9 @@ import { LotusOrnament } from './KrishnaMotifs';
 
 export interface EkadashiScrollLabels {
   scrollSeal: string;
+  tithiLabel: string;
+  dateLabel: string;
+  dayLabel: string;
   lunarMonth: string;
   deityLabel: string;
   significanceHeading: string;
@@ -183,20 +186,44 @@ export const EkadashiScrollModal: React.FC<EkadashiScrollModalProps> = ({
 
                   <h3
                     id="ekadashi-scroll-title"
-                    className="font-serif-royal text-2xl sm:text-3xl font-bold text-[#3C2A20] leading-tight mb-1.5"
+                    className="font-serif-royal text-2xl sm:text-3xl font-bold text-[#3C2A20] leading-tight mb-2.5"
                   >
                     {view.title}
                   </h3>
 
-                  <div className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-3 py-1 bg-[#EFE0C3]/85 border border-[#C29A54]/55 text-xs sm:text-sm font-semibold text-[#5C3A23]">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#921B2C]" aria-hidden="true" />
-                      <span>{view.date}</span>
-                    </span>
-                    <span aria-hidden="true" className="text-[#C29A54]">
-                      •
-                    </span>
-                    <span className="font-cinzel tracking-wide">{view.weekday}</span>
+                  {/* Structured 3-Column Tithi · Date · Day Card Strip */}
+                  <div
+                    data-testid="ekadashi-tithi-date-day"
+                    className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-left mb-2"
+                  >
+                    <div className="p-2.5 rounded-lg bg-[#FFFDF8] border border-[#C29A54]/65 shadow-xs">
+                      <div className="text-[10px] font-cinzel uppercase tracking-wider text-[#8C6D28] font-bold">
+                        {labels.tithiLabel}
+                      </div>
+                      <div className="text-xs sm:text-sm font-bold text-[#741C24] mt-0.5 leading-snug">
+                        {view.title}
+                      </div>
+                      <div className="text-[11px] text-[#5C3A23] mt-0.5">{view.paksha}</div>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-[#FFFDF8] border border-[#C29A54]/65 shadow-xs">
+                      <div className="text-[10px] font-cinzel uppercase tracking-wider text-[#8C6D28] font-bold">
+                        {labels.dateLabel}
+                      </div>
+                      <div className="text-sm sm:text-base font-bold text-[#3C2A20] mt-0.5 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-[#921B2C] shrink-0" aria-hidden="true" />
+                        <span>{view.date}</span>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-[#FFFDF8] border border-[#C29A54]/65 shadow-xs">
+                      <div className="text-[10px] font-cinzel uppercase tracking-wider text-[#8C6D28] font-bold">
+                        {labels.dayLabel}
+                      </div>
+                      <div className="text-sm sm:text-base font-bold text-[#3C2A20] font-cinzel mt-0.5">
+                        {view.weekday}
+                      </div>
+                    </div>
                   </div>
                 </div>
 

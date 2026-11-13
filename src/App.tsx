@@ -298,7 +298,11 @@ export default function App() {
 
         {/* 8. Devotional Seva Offerings */}
         <Suspense fallback={<SectionPlaceholder id="seva" />}>
-          <SevaSection language={language} reducedMotion={reducedMotion} />
+          <SevaSection
+            language={language}
+            reducedMotion={reducedMotion}
+            onRedirectToPortal={() => handleTabChange('donation')}
+          />
         </Suspense>
 
         {/* 8. Official Contribution Portal */}

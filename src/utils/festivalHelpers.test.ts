@@ -115,9 +115,25 @@ test('HeroSection utility bar uses 20% opacity, Darshan & Seva headers are cente
   assert.ok(sevaSrc.includes('text-center max-w-4xl mx-auto'), 'SevaSection header should be centered');
   assert.ok(sevaSrc.includes('PeacockFeather') && sevaSrc.includes('LotusOrnament'), 'SevaSection should include temple motifs');
   assert.ok(sevaSrc.includes('motion.div'), 'SevaSection header should use scroll animation');
+  assert.ok(!sevaSrc.includes('btnSelect') && !sevaSrc.includes('Select Seva'), 'SevaSection must remove Select Seva');
+  assert.ok(
+    sevaSrc.includes('href="#donation"') && sevaSrc.includes('btnContributionPortal'),
+    'SevaSection must redirect directly to Official Contribution Portal (#donation)'
+  );
 
   const festSrc = readFileSync('src/components/FestivalsSection.tsx', 'utf8');
   assert.ok(festSrc.includes('filterAll') && festSrc.includes('filterEkadashi'), 'FestivalsSection should offer All Krishna Utsavs and Ekadashi tabs');
   assert.ok(!festSrc.includes('filterWisdom') && !festSrc.includes('filterAppearance') && !festSrc.includes('filterLeela'), 'Removed old sub-category filter tabs');
   assert.ok(festSrc.includes('EkadashiScrollModal'), 'FestivalsSection should mount EkadashiScrollModal');
+
+  const ekModalSrc = readFileSync('src/components/EkadashiScrollModal.tsx', 'utf8');
+  assert.ok(
+    ekModalSrc.includes('tithiLabel') && ekModalSrc.includes('dateLabel') && ekModalSrc.includes('dayLabel'),
+    'EkadashiScrollModal must explicitly label Tithi, Date, and Day'
+  );
+
+  assert.ok(
+    heroSrc.includes('mobile-hero-compact-overlay') && heroSrc.includes('min-h-[42svh]'),
+    'HeroSection mobile opening page should keep upper temple image open and display compact bottom info'
+  );
 });
