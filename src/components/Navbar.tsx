@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       {/* Primary Navigation Bar in Warm Ivory */}
       <header className="sticky top-0 z-40 bg-[#FFFDF8]/96 backdrop-blur-md border-b border-[#E5D1B6] transition-all duration-200">
-        <div className="w-full max-w-[min(98vw,1920px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-20 flex items-center justify-between gap-6">
+        <div className="w-full max-w-[min(98vw,1920px)] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8 h-20 flex items-center justify-between gap-3 xl:gap-4">
           {/* Zone 1: Identity Lockup */}
           <button
             type="button"
@@ -61,23 +61,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               onTabChange('overview');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-3.5 text-left shrink-0 group focus:outline-none"
+            className="flex items-center gap-3 text-left shrink-0 group focus:outline-none"
           >
-            <div className="w-11 h-11 rounded-full bg-[#F3E7D6] border border-[#A67C57] flex items-center justify-center text-[#6B4832] font-cinzel font-bold text-xl shadow-xs group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 xl:w-11 xl:h-11 rounded-full bg-[#F3E7D6] border border-[#A67C57] flex items-center justify-center text-[#6B4832] font-cinzel font-bold text-lg xl:text-xl shadow-xs group-hover:scale-105 transition-transform">
               ॐ
             </div>
             <div className="flex flex-col">
-              <span className="font-cinzel text-lg sm:text-xl font-bold tracking-tight text-[#3C2A20] group-hover:text-[#6B4832] transition-colors whitespace-nowrap">
+              <span className="font-cinzel text-base xl:text-lg font-bold tracking-tight text-[#3C2A20] group-hover:text-[#6B4832] transition-colors whitespace-nowrap">
                 {tDict.common.templeName}
               </span>
-              <span className="text-xs font-semibold tracking-wider text-[#A67C57] uppercase font-cinzel">
+              <span className="text-[11px] font-semibold tracking-wider text-[#A67C57] uppercase font-cinzel">
                 {tDict.common.localityBrief}
               </span>
             </div>
           </button>
 
           {/* Zone 2: Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-[15px] xl:text-[16px] font-medium text-[#3C2A20]">
+          <nav className="hidden lg:flex items-center gap-3 xl:gap-4 text-sm xl:text-[15px] font-medium text-[#3C2A20]">
             {primaryNav.map((item) => (
               <button
                 key={item.id}
@@ -134,7 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Zone 3: Language Selector + Primary Action CTA */}
-          <div className="hidden sm:flex items-center gap-3.5 shrink-0">
+          <div className="hidden sm:flex items-center gap-2.5 xl:gap-3 shrink-0">
             {/* Compact Integrated Language Selector */}
             <div
               className="flex items-center bg-[#F3E7D6]/90 p-1 rounded-lg border border-[#D8C2A4] shadow-xs"
@@ -158,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     type="button"
                     onClick={() => onLanguageChange(langCode)}
                     aria-pressed={isActive}
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#B78B49] ${
+                    className={`px-2 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#B78B49] ${
                       isActive
                         ? 'bg-[#B78B49] text-white shadow-xs font-bold'
                         : 'text-[#523725] hover:text-[#34251E] hover:bg-black/5'
@@ -174,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onOpenPlanner}
-              className="px-5 py-2.5 text-xs sm:text-sm uppercase tracking-wider font-bold text-white bg-[#6B4832] hover:bg-[#523725] border border-[#A67C57] rounded-lg shadow-xs hover:shadow-md transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer active:scale-98"
+              className="px-3.5 xl:px-4 py-2.5 text-xs uppercase tracking-wider font-bold text-white bg-[#6B4832] hover:bg-[#523725] border border-[#A67C57] rounded-lg shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer active:scale-98"
             >
               <span>{tDict.common.planYourVisit}</span>
               <ArrowUpRight className="w-4 h-4 text-[#B18A4C]" />

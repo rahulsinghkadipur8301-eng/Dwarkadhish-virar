@@ -254,7 +254,7 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = ({
                   srcSet="/assets/aistudio/dwarkadhish_hero_enhanced_800.webp"
                 />
                 <img
-                  src="/assets/aistudio/dwarkadhish_hero_enhanced_4k_e7e52d48.png"
+                  src="/assets/aistudio/dwarkadhish_hero_enhanced_1600.webp"
                   alt="Shri Dwarkadhish Bhagwan seated in regal simhasana with golden crown, pitambar, and flower garlands at Shirgaon Mandir, Virar East"
                   className="w-full h-full object-contain object-bottom block mx-auto drop-shadow-[0_16px_28px_rgba(0,0,0,0.95)]"
                   loading="eager"

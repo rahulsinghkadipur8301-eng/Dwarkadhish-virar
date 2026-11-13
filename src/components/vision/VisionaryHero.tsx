@@ -82,24 +82,24 @@ export const VisionaryHero: React.FC<VisionaryHeroProps> = ({
   const content = contentRecord[language] || contentRecord.en;
 
   const heroPhoto = {
-    src: '/assets/praveena_thakur/Golden-Hour Namaste at Dwarkadhish Temple(1).png',
-    fallbackSrc: '/Golden-Hour Namaste at Dwarkadhish Temple(1).png',
+    src: '/assets/praveena_thakur/golden_hour_namaste.webp',
+    fallbackSrc: '/assets/praveena_thakur/golden_hour_namaste.webp',
     title: content.title,
     caption: content.heroCaption,
     tag: content.heroTag,
   };
 
   const cardAPhoto = {
-    src: '/assets/praveena_thakur/Praveena Thakur Before the Dwarkadhish Idol(1).png',
-    fallbackSrc: '/Praveena Thakur Before the Dwarkadhish Idol(1).png',
+    src: '/assets/praveena_thakur/before_idol.webp',
+    fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
     title: content.badgeA,
     caption: content.captionA,
     tag: 'Sanctum Darshan',
   };
 
   const cardBPhoto = {
-    src: '/assets/praveena_thakur/Praveena_Thakur_Devotional_Ceremony_4K_Restored(2).png',
-    fallbackSrc: '/Praveena_Thakur_Devotional_Ceremony_4K_Restored(2).png',
+    src: '/assets/praveena_thakur/devotional_ceremony.webp',
+    fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
     title: content.badgeB,
     caption: content.captionB,
     tag: 'Pran Pratishtha Ritual',

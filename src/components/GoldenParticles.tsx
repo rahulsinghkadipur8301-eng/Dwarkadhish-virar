@@ -31,7 +31,8 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId = 0;
+    let isInView = true;
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
@@ -41,33 +42,38 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
       height = canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
-    // Warm Indian spiritual gold and saffron tones
+    // Pre-computed RGBA fill colors (faster than allocating 20+ createRadialGradient objects per frame)
     const colors = [
-      'rgba(177, 138, 76, ',   // Antique gold #B18A4C
-      'rgba(201, 137, 69, ',   // Soft saffron #C98945
-      'rgba(229, 209, 182, ',  // Sandstone beige #E5D1B6
-      'rgba(243, 231, 214, ',  // Warm ivory #F3E7D6
+      'rgba(177, 138, 76, ',
+      'rgba(201, 137, 69, ',
+      'rgba(229, 209, 182, ',
+      'rgba(243, 231, 214, ',
     ];
 
-    const particleCount = Math.min(28, Math.floor(width / 45));
+    const particleCount = Math.min(20, Math.floor(width / 55));
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 2.2 + 1.2,
-        speedY: -(Math.random() * 0.45 + 0.15),
-        speedX: (Math.random() - 0.5) * 0.35,
-        opacity: Math.random() * 0.55 + 0.2,
+        radius: Math.random() * 2.0 + 1.0,
+        speedY: -(Math.random() * 0.42 + 0.14),
+        speedX: (Math.random() - 0.5) * 0.3,
+        opacity: Math.random() * 0.5 + 0.2,
         opacityDelta: (Math.random() - 0.5) * 0.008,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        color: colors[i % colors.length],
       });
     }
 
     const render = () => {
+      if (!isInView) {
+        animationFrameId = 0;
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       for (let i = 0; i < particles.length; i++) {
@@ -76,7 +82,7 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
         p.x += p.speedX;
         p.opacity += p.opacityDelta;
 
-        if (p.opacity > 0.85 || p.opacity < 0.15) {
+        if (p.opacity > 0.8 || p.opacity < 0.15) {
           p.opacityDelta = -p.opacityDelta;
         }
 
@@ -87,23 +93,40 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
         if (p.x < -10) p.x = width + 10;
         if (p.x > width + 10) p.x = -10;
 
+        // Soft outer halo + crisp core (much faster than radial gradient allocation per frame)
+        ctx.fillStyle = `${p.color}${(p.opacity * 0.28).toFixed(2)})`;
         ctx.beginPath();
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 2);
-        gradient.addColorStop(0, `${p.color}${p.opacity})`);
-        gradient.addColorStop(1, `${p.color}0)`);
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.radius * 2, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.radius * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = `${p.color}${p.opacity.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          isInView = entry.isIntersecting;
+          if (isInView && !animationFrameId) {
+            animationFrameId = requestAnimationFrame(render);
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
+    animationFrameId = requestAnimationFrame(render);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [reducedMotion]);
 

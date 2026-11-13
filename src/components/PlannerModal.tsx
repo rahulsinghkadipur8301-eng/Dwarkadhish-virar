@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Language, TEMPLE_LOCATION_RECORD, getGoogleMapsSearchUrl } from '../data/templeData';
-import { MapPin, Navigation, Train, Car, X, Clock, ExternalLink } from 'lucide-react';
+import { Language, TEMPLE_LOCATION_RECORD, getGoogleMapsSearchUrl, getGoogleMapsDirectionsUrl } from '../data/templeData';
+import { MapPin, Navigation, Train, Car, X, Clock, ExternalLink, Bus } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 
 interface PlannerModalProps {
@@ -17,6 +17,7 @@ export const PlannerModal: React.FC<PlannerModalProps> = ({ language, isOpen, on
   if (!isOpen) return null;
 
   const searchUrl = getGoogleMapsSearchUrl(loc);
+  const directionsUrl = getGoogleMapsDirectionsUrl(loc);
 
   return (
     <div
@@ -122,19 +123,50 @@ export const PlannerModal: React.FC<PlannerModalProps> = ({ language, isOpen, on
                 </div>
               </div>
 
+              {/* Dedicated VVMT Municipal Bus Highlight */}
+              <div className="bg-[#FFFDF8] p-4 sm:p-5 border-2 border-[#C29A54]/80">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2.5 text-xs uppercase font-cinzel font-bold text-[#741C24] tracking-wider">
+                    <Bus className="w-4 h-4 text-[#B18A4C]" />
+                    <span>{tDict.location.busTitle}</span>
+                  </div>
+                  <span className="px-2 py-0.5 bg-[#F3E7D6] text-[#741C24] text-[10px] font-cinzel font-bold uppercase border border-[#C29A54]/60">
+                    {tDict.location.busBadge}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-[#5A4435] leading-relaxed mb-3">
+                  {tDict.location.busDescription}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-semibold text-[#3C2A20]">
+                  <div className="bg-[#FBF6ED] px-2.5 py-1.5 border border-[#E5D1B6]">{tDict.location.commuteMetricFreq}</div>
+                  <div className="bg-[#FBF6ED] px-2.5 py-1.5 border border-[#E5D1B6]">{tDict.location.commuteMetricDist}</div>
+                  <div className="bg-[#FBF6ED] px-2.5 py-1.5 border border-[#E5D1B6]">{tDict.location.commuteMetricTime}</div>
+                </div>
+              </div>
+
               {/* Interactive Directions Action */}
               <div className="p-4 bg-[#F3E7D6] border border-[#C8AB88] flex flex-wrap items-center justify-between gap-4">
                 <span className="text-xs text-[#3C2A20]">
                   {tDict.common.coordinates} ({loc.latitude}° N, {loc.longitude}° E):
                 </span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-[#B68A45] hover:bg-[#9D7437] text-[#20140D] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shrink-0 cursor-pointer"
+                  >
+                    <Navigation className="w-3.5 h-3.5 text-[#20140D]" />
+                    <span>{tDict.common.getDirections}</span>
+                    <ExternalLink className="w-3 h-3 text-[#20140D]/75" />
+                  </a>
                   <a
                     href={searchUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-[#6B4832] hover:bg-[#523725] text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 shrink-0 cursor-pointer"
                   >
-                    <Navigation className="w-3.5 h-3.5 text-[#B18A4C]" />
+                    <MapPin className="w-3.5 h-3.5 text-[#B18A4C]" />
                     <span>{tDict.common.openInMaps}</span>
                     <ExternalLink className="w-3 h-3 text-white/70" />
                   </a>

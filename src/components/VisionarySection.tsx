@@ -38,7 +38,7 @@ export const VisionarySection: React.FC<VisionarySectionProps> = ({
     <section
       id="vision"
       aria-label="The Vision Behind Shree Dwarkadhish Dham — Smt. Pravina H. Thakur"
-      className="relative w-full bg-[#FAF4E8] text-[#3F291D] py-16 sm:py-20 lg:py-24 border-b-2 border-[#C29A54]/60 overflow-hidden scroll-mt-20"
+      className="relative w-full bg-[#FAF4E8] text-[#3F291D] py-12 sm:py-14 lg:py-16 border-b-2 border-[#C29A54]/60 overflow-hidden scroll-mt-20"
     >
       {/* Subtle Sandstone & Sacred Geometry Ambient Watermarks */}
       <div className="absolute top-12 left-6 w-80 h-80 opacity-[0.03] pointer-events-none transform -rotate-12">

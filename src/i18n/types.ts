@@ -195,6 +195,12 @@ export interface TranslationDictionary {
     fullAddress: string;
     railwayTitle: string;
     railwayDescription: string;
+    busTitle: string;
+    busDescription: string;
+    busBadge: string;
+    commuteMetricFreq: string;
+    commuteMetricDist: string;
+    commuteMetricTime: string;
     roadTitle: string;
     roadDescription: string;
     crucialDistinctionTitle: string;

@@ -92,7 +92,7 @@ export const TempleArchFrame: React.FC<TempleArchFrameProps> = ({
                 srcSet="/assets/aistudio/dwarkadhish_hero_enhanced_800.webp"
               />
               <img
-                src="/assets/aistudio/dwarkadhish_hero_enhanced_4k_e7e52d48.png"
+                src="/assets/aistudio/dwarkadhish_hero_enhanced_1600.webp"
                 alt="Shri Dwarkadhish Bhagwan seated in regal simhasana with golden crown, pitambar, and flower garlands at Shirgaon Mandir, Virar East"
                 className="w-full h-auto max-h-[460px] sm:max-h-[500px] object-contain object-center block mx-auto drop-shadow-[0_16px_28px_rgba(0,0,0,0.8)]"
                 loading="eager"

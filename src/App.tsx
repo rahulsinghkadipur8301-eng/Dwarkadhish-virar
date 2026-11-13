@@ -3,22 +3,72 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useI18n } from './i18n/I18nContext';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
-import { DevotionalPresenceSection } from './components/DevotionalPresenceSection';
-import { VisionarySection } from './components/VisionarySection';
-import { DarshanSection } from './components/DarshanSection';
-import { TempleLocationSection } from './components/TempleLocationSection';
-import { FestivalsSection } from './components/FestivalsSection';
-import { SevaSection } from './components/SevaSection';
-import { TempleDonationSection } from './components/TempleDonationSection';
-import { TempleSocialConnectSection } from './components/TempleSocialConnectSection';
-import { PlannerModal } from './components/PlannerModal';
-import { AdminDashboard } from './components/AdminDashboard';
-import { Footer } from './components/Footer';
 import { SacredAmbientBackground } from './components/SacredAmbientBackground';
+
+// Code-split below-the-fold sections & modals so above-the-fold Hero renders immediately
+const DevotionalPresenceSection = lazy(() =>
+  import('./components/DevotionalPresenceSection').then((m) => ({
+    default: m.DevotionalPresenceSection,
+  }))
+);
+const VisionarySection = lazy(() =>
+  import('./components/VisionarySection').then((m) => ({
+    default: m.VisionarySection,
+  }))
+);
+const DarshanSection = lazy(() =>
+  import('./components/DarshanSection').then((m) => ({
+    default: m.DarshanSection,
+  }))
+);
+const TempleLocationSection = lazy(() =>
+  import('./components/TempleLocationSection').then((m) => ({
+    default: m.TempleLocationSection,
+  }))
+);
+const FestivalsSection = lazy(() =>
+  import('./components/FestivalsSection').then((m) => ({
+    default: m.FestivalsSection,
+  }))
+);
+const SevaSection = lazy(() =>
+  import('./components/SevaSection').then((m) => ({
+    default: m.SevaSection,
+  }))
+);
+const TempleDonationSection = lazy(() =>
+  import('./components/TempleDonationSection').then((m) => ({
+    default: m.TempleDonationSection,
+  }))
+);
+const TempleSocialConnectSection = lazy(() =>
+  import('./components/TempleSocialConnectSection').then((m) => ({
+    default: m.TempleSocialConnectSection,
+  }))
+);
+const PlannerModal = lazy(() =>
+  import('./components/PlannerModal').then((m) => ({
+    default: m.PlannerModal,
+  }))
+);
+const AdminDashboard = lazy(() =>
+  import('./components/AdminDashboard').then((m) => ({
+    default: m.AdminDashboard,
+  }))
+);
+const Footer = lazy(() =>
+  import('./components/Footer').then((m) => ({
+    default: m.Footer,
+  }))
+);
+
+const SectionPlaceholder: React.FC<{ id: string }> = ({ id }) => (
+  <section id={id} aria-hidden="true" className="min-h-[320px] w-full bg-[#FBF6ED]" />
+);
 
 export default function App() {
   const { language, setLanguage } = useI18n();
@@ -54,7 +104,6 @@ export default function App() {
       (entries) => {
         const visibleEntries = entries.filter((e) => e.isIntersecting);
         if (visibleEntries.length > 0) {
-          // Sort by highest intersection ratio or closest to top
           visibleEntries.sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
           setActiveTab(visibleEntries[0].target.id);
         }
@@ -65,12 +114,20 @@ export default function App() {
       }
     );
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+    const observeAll = () => {
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    };
 
-    return () => observer.disconnect();
+    observeAll();
+    const timer = window.setTimeout(observeAll, 600);
+
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+    };
   }, [adminOpen]);
 
   const handleTabChange = (tabId: string) => {
@@ -104,10 +161,9 @@ export default function App() {
 
   if (adminOpen) {
     return (
-      <AdminDashboard
-        language={language}
-        onClose={() => setAdminOpen(false)}
-      />
+      <Suspense fallback={<div className="min-h-screen bg-[#FBF6ED]" />}>
+        <AdminDashboard language={language} onClose={() => setAdminOpen(false)} />
+      </Suspense>
     );
   }
 
@@ -128,7 +184,7 @@ export default function App() {
       />
 
       <main className="flex-1">
-        {/* 1. Full-Screen Architectural Hero & Visitor-Information Strip */}
+        {/* 1. First-Page Fit Architectural Hero & Operational Utility Strip */}
         <HeroSection
           language={language}
           onExplore={handleTabChange}
@@ -137,46 +193,66 @@ export default function App() {
           reducedMotion={reducedMotion}
         />
 
-        {/* 2. In the Presence of Shri Dwarkadhish — Devotional Imagery & Sacred Shloka */}
-        <DevotionalPresenceSection reducedMotion={reducedMotion} />
+        {/* 2. In the Presence of Shri Dwarkadhish */}
+        <Suspense fallback={<SectionPlaceholder id="presence" />}>
+          <DevotionalPresenceSection reducedMotion={reducedMotion} />
+        </Suspense>
 
-        {/* 3. The Vision Behind Shree Dwarkadhish Dham — Smt. Pravina H. Thakur */}
-        <VisionarySection language={language} reducedMotion={reducedMotion} />
+        {/* 3. The Vision Behind Shree Dwarkadhish Dham */}
+        <Suspense fallback={<SectionPlaceholder id="vision" />}>
+          <VisionarySection language={language} reducedMotion={reducedMotion} />
+        </Suspense>
 
         {/* 4. Darshan & Aarti Schedule */}
-        <DarshanSection language={language} />
+        <Suspense fallback={<SectionPlaceholder id="darshan" />}>
+          <DarshanSection language={language} />
+        </Suspense>
 
-        {/* 5. Visit Shri Dwarkadhish Mandir — Google Maps & Practical Location */}
-        <TempleLocationSection language={language} />
+        {/* 5. Plan Your Visit — Google Maps & Practical Location */}
+        <Suspense fallback={<SectionPlaceholder id="location" />}>
+          <TempleLocationSection language={language} />
+        </Suspense>
 
         {/* 6. Festivals & Annual Celebrations */}
-        <FestivalsSection language={language} />
+        <Suspense fallback={<SectionPlaceholder id="festivals" />}>
+          <FestivalsSection language={language} />
+        </Suspense>
 
         {/* 7. Devotional Seva Offerings */}
-        <SevaSection language={language} />
+        <Suspense fallback={<SectionPlaceholder id="seva" />}>
+          <SevaSection language={language} />
+        </Suspense>
 
-        {/* 8. Devotional Contributions / Donation Preview */}
-        <TempleDonationSection language={language} reducedMotion={reducedMotion} />
+        {/* 8. Official Contribution Portal */}
+        <Suspense fallback={<SectionPlaceholder id="donation" />}>
+          <TempleDonationSection language={language} reducedMotion={reducedMotion} />
+        </Suspense>
 
-        {/* 9. Official Temple Social Connect & Verified QR Portals */}
-        <TempleSocialConnectSection reducedMotion={reducedMotion} />
+        {/* 9. Official Temple Social Connect */}
+        <Suspense fallback={<SectionPlaceholder id="social" />}>
+          <TempleSocialConnectSection reducedMotion={reducedMotion} />
+        </Suspense>
       </main>
 
-      {/* Interactive Pilgrimage Planner Modal */}
-      <PlannerModal
-        language={language}
-        isOpen={plannerOpen}
-        onClose={() => setPlannerOpen(false)}
-      />
+      {/* Interactive Pilgrimage Planner Modal (loaded on demand when opened) */}
+      {plannerOpen && (
+        <Suspense fallback={null}>
+          <PlannerModal
+            language={language}
+            isOpen={plannerOpen}
+            onClose={() => setPlannerOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Footer */}
-      <Footer
-        language={language}
-        onNavigate={handleTabChange}
-        onOpenPlanner={() => setPlannerOpen(true)}
-      />
+      <Suspense fallback={null}>
+        <Footer
+          language={language}
+          onNavigate={handleTabChange}
+          onOpenPlanner={() => setPlannerOpen(true)}
+        />
+      </Suspense>
     </div>
   );
 }
-
-

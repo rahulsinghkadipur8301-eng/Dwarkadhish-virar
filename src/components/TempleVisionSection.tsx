@@ -20,7 +20,7 @@ export interface PhotoItem {
 export const VISION_PHOTOS: PhotoItem[] = [
   {
     id: 'idol-prayer',
-    src: '/assets/praveena_thakur/praveena_thakur_before_idol.png',
+    src: '/assets/praveena_thakur/before_idol.webp',
     titleKey: 'captionIdol',
     captionKey: 'captionIdol',
     date: 'Shrine Consecration',
@@ -28,7 +28,7 @@ export const VISION_PHOTOS: PhotoItem[] = [
   },
   {
     id: 'ceremony',
-    src: '/assets/praveena_thakur/praveena_thakur_ceremony_restored.png',
+    src: '/assets/praveena_thakur/devotional_ceremony.webp',
     titleKey: 'captionCeremony',
     captionKey: 'captionCeremony',
     date: 'November 2025',
@@ -36,7 +36,7 @@ export const VISION_PHOTOS: PhotoItem[] = [
   },
   {
     id: 'golden-hour',
-    src: '/assets/praveena_thakur/praveena_thakur_golden_hour_namaste.png',
+    src: '/assets/praveena_thakur/golden_hour_namaste.webp',
     titleKey: 'captionGoldenHour',
     captionKey: 'captionGoldenHour',
     date: 'Temple Shikhara',
@@ -44,7 +44,7 @@ export const VISION_PHOTOS: PhotoItem[] = [
   },
   {
     id: 'shrine-prayer',
-    src: '/assets/praveena_thakur/praveena_thakur_pink_sari_shrine.png',
+    src: '/assets/praveena_thakur/pink_sari_shrine.webp',
     titleKey: 'captionShrine',
     captionKey: 'captionShrine',
     date: 'Sanctum Courtyard',
@@ -52,7 +52,7 @@ export const VISION_PHOTOS: PhotoItem[] = [
   },
   {
     id: 'enhanced-portrait',
-    src: '/assets/praveena_thakur/praveena_thakur_portrait_enhanced.png',
+    src: '/assets/praveena_thakur/charan_seva.webp',
     titleKey: 'captionPortrait',
     captionKey: 'captionPortrait',
     date: 'Inaugural Milestone',
@@ -60,7 +60,7 @@ export const VISION_PHOTOS: PhotoItem[] = [
   },
   {
     id: 'mandir-portrait',
-    src: '/assets/praveena_thakur/praveena_thakur_mandir_portrait.png',
+    src: '/assets/praveena_thakur/vibrant_ceremony.webp',
     titleKey: 'captionMandir',
     captionKey: 'captionMandir',
     date: 'Shirgaon Sanctuary',
@@ -214,7 +214,7 @@ export const TempleVisionSection: React.FC<TempleVisionSectionProps> = ({ reduce
               {/* Inner Arch Window */}
               <div className="relative rounded-2xl overflow-hidden bg-[#34251E] aspect-[4/5] shadow-inner group">
                 <img
-                  src="/assets/praveena_thakur/praveena_thakur_mandir_portrait.png"
+                  src="/assets/praveena_thakur/vibrant_ceremony.webp"
                   alt="Smt. Pravina Hitendra Thakur at Shri Dwarkadhish Mandir, Shirgaon, Virar East"
                   className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03] transition-transform duration-700 ease-out group-hover:scale-102"
                   loading="lazy"
@@ -440,7 +440,7 @@ export const TempleVisionSection: React.FC<TempleVisionSectionProps> = ({ reduce
           >
             <div className="relative rounded-2xl overflow-hidden bg-[#34251E] border-2 border-[#B78B49]/60 shadow-[0_15px_40px_rgba(52,37,30,0.1)] aspect-[16/11] group">
               <img
-                src="/assets/praveena_thakur/praveena_thakur_before_idol.png"
+                src="/assets/praveena_thakur/before_idol.webp"
                 alt="Smt. Pravina Thakur offering prayers before the sacred Dwarkadhish idol"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                 loading="lazy"

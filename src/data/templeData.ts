@@ -33,12 +33,12 @@ export const TEMPLE_LOCATION_RECORD: TempleLocation = {
 };
 
 export const getGoogleMapsSearchUrl = (loc: TempleLocation): string => {
-  const query = encodeURIComponent(`${loc.templeName}, ${loc.localityFromBrief}`);
+  const query = encodeURIComponent(`${loc.templeName}, Shirgaon, Virar East, Maharashtra 401305`);
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 };
 
 export const getGoogleMapsDirectionsUrl = (loc: TempleLocation): string => {
-  const dest = encodeURIComponent(loc.fullAddress || `${loc.templeName}, ${loc.localityFromBrief}`);
+  const dest = encodeURIComponent(`${loc.templeName}, Shirgaon, Virar East, Maharashtra 401305`);
   return `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
 };
 
@@ -455,7 +455,7 @@ export const GALLERY_DATA: GalleryItem[] = [
     titleMr: 'श्री द्वारकाधीश भगवान दिव्य मूर्ती दर्शन',
     titleGu: 'શ્રી દ્વારકાધીશ ભગવાન દિવ્ય મૂર્તિ દર્શન',
     category: 'interior',
-    imageSrc: '/assets/aistudio/dwarkadhish_hero_enhanced_4k_e7e52d48.png',
+    imageSrc: '/assets/aistudio/dwarkadhish_hero_enhanced_1600.webp',
     captionEn: 'Authentic high-resolution darshan of Lord Dwarkadhish in regal golden crown, vibrant pitambar, and floral garlands seated on the sacred black simhasana at Shirgaon, Virar East.',
     captionHi: 'शिरगाव, विरार स्थित भगवान श्री द्वारकाधीश का स्वर्ण मुकुट, भव्य पीताम्बर एवं पुष्प मालाओं से सुशोभित दिव्य विग्रह दर्शन।',
     captionMr: 'शिरगाव, विरार येथील भगवान श्री द्वारकाधीशांचे सुवर्ण मुकुट, दिव्य पितांबर आणि पुष्पहार परिधान केलेले अलौકિક मूर्ती दर्शन.',

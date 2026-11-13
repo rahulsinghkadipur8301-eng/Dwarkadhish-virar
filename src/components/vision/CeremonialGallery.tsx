@@ -124,8 +124,8 @@ export const CeremonialGallery: React.FC<CeremonialGalleryProps> = ({
   const galleryPhotos: GalleryPhoto[] = [
     {
       id: 'photo-1',
-      src: '/assets/praveena_thakur/Vibrant Temple Ceremony Portrait(1).png',
-      fallbackSrc: '/Vibrant Temple Ceremony Portrait(1).png',
+      src: '/assets/praveena_thakur/vibrant_ceremony.webp',
+      fallbackSrc: '/assets/praveena_thakur/vibrant_ceremony.webp',
       title: content.photo1Title,
       category: content.photo1Category,
       description: content.photo1Desc,
@@ -133,8 +133,8 @@ export const CeremonialGallery: React.FC<CeremonialGalleryProps> = ({
     },
     {
       id: 'photo-2',
-      src: '/assets/praveena_thakur/Ornate Umbrella Ceremony in the Courtyard(1).png',
-      fallbackSrc: '/Ornate Umbrella Ceremony in the Courtyard(1).png',
+      src: '/assets/praveena_thakur/devotional_ceremony.webp',
+      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
       title: content.photo2Title,
       category: content.photo2Category,
       description: content.photo2Desc,
@@ -142,8 +142,8 @@ export const CeremonialGallery: React.FC<CeremonialGalleryProps> = ({
     },
     {
       id: 'photo-3',
-      src: '/assets/praveena_thakur/Ornate Temple Procession with Red Parasol(1).png',
-      fallbackSrc: '/Ornate Temple Procession with Red Parasol(1).png',
+      src: '/assets/praveena_thakur/pink_sari_shrine.webp',
+      fallbackSrc: '/assets/praveena_thakur/pink_sari_shrine.webp',
       title: content.photo3Title,
       category: content.photo3Category,
       description: content.photo3Desc,
@@ -151,8 +151,8 @@ export const CeremonialGallery: React.FC<CeremonialGalleryProps> = ({
     },
     {
       id: 'photo-4',
-      src: '/assets/praveena_thakur/Procession Leader in Reflected Sunglasses(1).png',
-      fallbackSrc: '/Procession Leader in Reflected Sunglasses(1).png',
+      src: '/assets/praveena_thakur/charan_seva.webp',
+      fallbackSrc: '/assets/praveena_thakur/charan_seva.webp',
       title: content.photo4Title,
       category: content.photo4Category,
       description: content.photo4Desc,
@@ -161,8 +161,8 @@ export const CeremonialGallery: React.FC<CeremonialGalleryProps> = ({
   ];
 
   const handsOfSevaPhoto = {
-    src: '/assets/praveena_thakur/Praveena_Thakur_Dwarkadhish_Enhanced_4K(1)(1).png',
-    fallbackSrc: '/Praveena_Thakur_Dwarkadhish_Enhanced_4K(1)(1).png',
+    src: '/assets/praveena_thakur/charan_seva.webp',
+    fallbackSrc: '/assets/praveena_thakur/charan_seva.webp',
     title: content.handsOfSevaTitle,
     category: content.handsOfSevaBadge,
     description: content.handsOfSevaDesc,

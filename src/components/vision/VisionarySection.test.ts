@@ -62,16 +62,26 @@ test('Removal of Standalone Consecration and Volunteer Seva from App, Navbar and
   assert.strictEqual(footerCode.includes('#community'), false, 'Footer must not link to #community');
 });
 
-test('Devotional Contributions Interface in TempleDonationSection', () => {
+test('Official Contribution Portal Star Section in TempleDonationSection', () => {
   const donationCode = fs.readFileSync('src/components/TempleDonationSection.tsx', 'utf-8');
-  assert.ok(donationCode.includes('dwarkadhish.shirgaon@upi'), 'Must include direct UPI ID');
-  assert.ok(donationCode.includes('temple_donation_poster.png'), 'Must display authentic poster');
-  assert.ok(donationCode.includes('handleDownloadPoster'), 'Must include download poster function');
-  assert.ok(donationCode.includes('isLightboxOpen'), 'Must include full view lightbox modal');
-  // Check removal of old heavy administrative elements
-  assert.strictEqual(donationCode.includes('AUTHORIZED TEMPLE SEVA PORTAL'), false, 'Old banner must be eliminated');
-  assert.strictEqual(donationCode.includes('Return to Pending Verification'), false, 'Old toggle button must be eliminated');
-  assert.strictEqual(donationCode.includes('Sanctioned Seva Pillars'), false, 'Old administrative pillar list must be eliminated');
+  assert.ok(donationCode.includes('dwarkadhish_poster_clean_qr_blended.webp'), 'Must display the clean blended QR donation poster');
+  assert.ok(donationCode.includes('॥ श्री द्वारकाधीशाय नमः ॥'), 'Must feature elevated spiritual Sanskrit mantra crest heading');
+  assert.ok(donationCode.includes('calculateCardTiltAndLight'), 'Must include subtle 3D pointer-reactive card motion');
+  assert.ok(donationCode.includes('DonationSacredAtmosphere'), 'Must mount full motion-graphics & hanging bell atmosphere');
+
+  // Verify removal of unnecessary text, redundant VPA boxes, poster toggles, chronicle gallery, and seva cards
+  assert.strictEqual(donationCode.includes('Official UPI VPA'), false, 'Unnecessary Official UPI VPA label must be removed');
+  assert.strictEqual(donationCode.includes('dwarkadhish.shirgaon@upi'), false, 'Old redundant UPI VPA text must be removed');
+  assert.strictEqual(donationCode.includes('Copy UPI ID'), false, 'Redundant Copy UPI ID button must be removed');
+  assert.strictEqual(donationCode.includes('Security Notice'), false, 'Unnecessary Security Notice text must be removed');
+  assert.strictEqual(donationCode.includes('Ornate Seva Poster'), false, 'Old poster tab toggle must be removed');
+  assert.strictEqual(donationCode.includes('Monochrome QR Code'), false, 'Old QR tab toggle must be removed');
+  assert.strictEqual(donationCode.includes('Download Official Poster'), false, 'Download clutter button must be removed');
+  assert.strictEqual(donationCode.includes('Sacred Darshan & Devotional Seva Chronicle'), false, 'Chronicle gallery must be removed');
+  assert.strictEqual(donationCode.includes('How Your Sacred Contribution Sustains the Sanctuary'), false, 'Four seva cards block must be removed');
+  assert.strictEqual(donationCode.includes('Devotional Seva & Temple Upkeep'), false, 'Old left block heading must be removed');
+  assert.strictEqual(donationCode.includes('Receiving Entity'), false, 'Old Receiving Entity card must be removed');
+  assert.strictEqual(donationCode.includes('Presentation Preview:'), false, 'Old Presentation Preview notice must be removed');
 });
 
 test('Underlying Data Preserved in templeData.ts', () => {
@@ -85,15 +95,44 @@ test('Underlying Data Preserved in templeData.ts', () => {
   assert.strictEqual(PATRON_SUPPORT_TIERS[1].id, 'cleanliness_patron');
 });
 
-test('Ornate Temple Online Donation Poster: Asset existence and features in TempleDonationSection', () => {
-  const posterPath = path.resolve('public/temple_donation_poster.png');
-  assert.ok(fs.existsSync(posterPath), 'public/temple_donation_poster.png must exist');
-  
-  const posterStats = fs.statSync(posterPath);
-  assert.ok(posterStats.size > 1000000, 'Donation poster should be high resolution (> 1MB)');
+test('Blended Donation Poster Asset, Google Maps Directions & Build Size Discipline', () => {
+  const bannerPath = path.resolve('public/dwarkadhish_poster_clean_qr_blended.webp');
+  assert.ok(fs.existsSync(bannerPath), 'public/dwarkadhish_poster_clean_qr_blended.webp must exist');
+
+  const bannerStats = fs.statSync(bannerPath);
+  assert.ok(bannerStats.size > 100000 && bannerStats.size < 2000000, 'WebP donation poster must be crisp (>100KB) and compact (<2MB)');
 
   const donationSectionCode = fs.readFileSync('src/components/TempleDonationSection.tsx', 'utf-8');
-  assert.ok(donationSectionCode.includes('temple_donation_poster.png'), 'TempleDonationSection must reference temple_donation_poster.png');
-  assert.ok(donationSectionCode.includes('isLightboxOpen'), 'TempleDonationSection must support full resolution lightbox zoom');
-  assert.ok(donationSectionCode.includes('handleDownloadPoster'), 'TempleDonationSection must support direct download of poster');
+  assert.ok(donationSectionCode.includes('dwarkadhish_poster_clean_qr_blended.webp'), 'TempleDonationSection must reference dwarkadhish_poster_clean_qr_blended.webp');
+
+  const locationCode = fs.readFileSync('src/components/TempleLocationSection.tsx', 'utf-8');
+  assert.ok(locationCode.includes('getGoogleMapsDirectionsUrl'), 'TempleLocationSection must expose Google Maps directions URL');
+  assert.ok(locationCode.includes('directionsUrl'), 'TempleLocationSection must render direct Google Maps directions links');
+  assert.ok(locationCode.includes('busTitle') && locationCode.includes('commuteMetricFreq'), 'TempleLocationSection must display dedicated VVMT bus service & easy commute info');
+
+  const visionHeroCode = fs.readFileSync('src/components/vision/PravinaVisionHero.tsx', 'utf-8');
+  assert.ok(visionHeroCode.includes('golden_hour_namaste.webp'), 'Vision section must showcase golden_hour_namaste.webp as the first image');
+  assert.ok(visionHeroCode.includes('Vibrant_Temple_Ceremony_Portrait_8e2d2892.png'), 'Vision section must include uploaded Vibrant_Temple_Ceremony_Portrait_8e2d2892.png');
+  assert.ok(visionHeroCode.includes('Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png'), 'Vision section must include uploaded Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png');
+  assert.ok(visionHeroCode.includes('Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png'), 'Vision section must include uploaded Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png');
+  assert.ok(visionHeroCode.includes('dressed_dwarkadhish_splendour.webp'), 'Vision section must include dressed_dwarkadhish_splendour.webp');
+  assert.strictEqual(visionHeroCode.includes('{c.ceremonyCaption}'), false, 'Image cards must not render subtitle captions');
+  assert.strictEqual(visionHeroCode.includes('{c.goldenCaption}'), false, 'Golden hour card must not render subtitle caption');
+  assert.strictEqual(visionHeroCode.includes('{photo.caption}'), false, 'Vertical gallery cards must not render subtitle captions');
+  assert.strictEqual(visionHeroCode.includes('object-cover'), false, 'Vision section must strictly avoid object-cover to guarantee zero face or detail cropping');
+
+  for (const file of [
+    'Vibrant_Temple_Ceremony_Portrait_8e2d2892.png',
+    'Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png',
+    'Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png',
+    'golden_om_favicon_b8148356.png',
+  ]) {
+    assert.ok(fs.existsSync(path.join(process.cwd(), 'public/assets/aistudio', file)), `Missing ${file} in public/assets/aistudio`);
+  }
+
+  const indexHtml = fs.readFileSync('index.html', 'utf-8');
+  assert.ok(indexHtml.includes('golden_om_favicon_b8148356.png'), 'index.html must link the uploaded golden Om favicon');
+
+  const plannerCode = fs.readFileSync('src/components/PlannerModal.tsx', 'utf-8');
+  assert.ok(plannerCode.includes('getGoogleMapsDirectionsUrl'), 'PlannerModal must provide Google Maps directions URL');
 });

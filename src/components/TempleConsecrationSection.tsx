@@ -191,15 +191,15 @@ export const TempleConsecrationSection: React.FC<TempleConsecrationSectionProps>
 
   const bannerPhoto: LightboxPhotoData = {
     src: '/dwarkadhish_temple_widescreen_4k.webp',
-    fallbackSrc: '/assets/aistudio/dwarkadhish_temple_widescreen_4k.webp',
+    fallbackSrc: '/dwarkadhish_temple_widescreen_4k.webp',
     title: c.bannerTitle,
     caption: c.bannerCaption,
     tag: c.bannerTag,
   };
 
   const eventPhoto: LightboxPhotoData = {
-    src: '/assets/praveena_thakur/Vibrant Temple Ceremony Portrait(1).png',
-    fallbackSrc: '/Vibrant Temple Ceremony Portrait(1).png',
+    src: '/assets/praveena_thakur/vibrant_ceremony.webp',
+    fallbackSrc: '/assets/praveena_thakur/vibrant_ceremony.webp',
     title: c.eventPhotoTitle,
     caption: c.eventPhotoCaption,
     tag: c.eventPhotoTag,

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, ZoomIn, Award, Building, Calendar, Heart, Shield } from 'lucide-react';
+import { ZoomIn, Building, Calendar, Heart } from 'lucide-react';
 import { Language } from '../../data/templeData';
-import { PeacockFeather, FluteDivider, LotusOrnament, DiyaAccent } from '../KrishnaMotifs';
+import { PeacockFeather, LotusOrnament, DiyaAccent } from '../KrishnaMotifs';
 
 export interface LightboxPhotoData {
   src: string;
@@ -23,8 +23,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
   reducedMotion,
   onOpenLightbox,
 }) => {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-
   // Four-language verified editorial content matching the exact specification
   const contentRecord = {
     en: {
@@ -39,7 +37,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
         'She has been described as a guiding inspiration behind the temple’s spiritual journey. Her role is linked to nurturing a living sanctuary centered on divine darshan, selfless seva, traditional festivals, and community faith.',
       bioP3:
         'The consecration in November 2025 marked the realization of that sacred vision, creating an enduring spiritual landmark of peace and devotion in Shirgaon.',
-      // Three Historical Highlights
       highlight1Title: 'Public Service',
       highlight1Subtitle: 'Former Mayor of Vasai–Virar',
       highlight1Desc: 'Distinguished civic stewardship and dedicated leadership in the Vasai–Virar municipal region.',
@@ -49,19 +46,29 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       highlight3Title: 'Documented Milestone',
       highlight3Subtitle: 'November 2025 Milestone',
       highlight3Desc: 'Culmination of devotion in a landmark consecration that opened the temple gates to thousands of devotees.',
-      // Photo labels
-      portraitTag: 'Primary Portrait',
-      portraitTitle: 'Smt. Pravina H. Thakur',
-      portraitCaption: 'Devout prayer in red sari with folded hands (Namaste), inspiring the sacred temple sanctuary.',
-      templeTag: 'Shri Dwarkadhish Mandir',
-      templeTitle: 'Sandstone Shikhara & Sanctum',
-      templeCaption: 'Nagara-style pink sandstone temple rising gracefully in Shirgaon, Virar East.',
+      // Featured First Image: At Dwarkadhish Shikhara
+      goldenTag: 'Golden Hour',
+      goldenTitle: 'At Dwarkadhish Shikhara',
+      goldenCaption: 'Warm evening darshan standing before the hand-carved pink sandstone spire.',
+      // Featured Second Image: Vibrant Temple Ceremony Portrait
+      ceremonyTag: 'Pratishtha Utsav',
+      ceremonyTitle: 'Vibrant Temple Ceremony Portrait',
+      ceremonyCaption: 'Standing before the Shirgaon Dwarkadhish sandstone shrine during ceremonial celebrations.',
+      // Vertical 9:16 Gallery Heading & 4 Uncropped Moments
+      galleryHeading: 'Sacred Moments & Consecration Seva',
+      gallerySubheading: 'Full uncropped devotional photographs — click any portrait to inspect at full clarity',
       photo1Tag: 'Sanctum Darshan',
-      photo1Title: 'Prayer Before Deity',
-      photo1Caption: 'Offering devout prayers before the sacred sanctum idol of Lord Dwarkadhish.',
-      photo2Tag: 'Ritual Worship',
-      photo2Title: 'Vedic Consecration',
-      photo2Caption: 'Participating in sacred Pran Pratishtha ceremonies and Vedic yajnas.',
+      photo1Title: 'Offering Before the Deity',
+      photo1Caption: 'Adorning Bhagwan Dwarkadhish in the illuminated inner sanctum.',
+      photo2Tag: 'Vedic Abhishekam',
+      photo2Title: 'Consecration Abhishekam',
+      photo2Caption: 'Pouring sacred waters during Vedic Pran Pratishtha ceremonies.',
+      photo3Tag: 'Dwarkadhish Splendour',
+      photo3Title: 'Dressed Dwarkadhish in Temple Splendour',
+      photo3Caption: 'Offering sacred aarti thali before Lord Dwarkadhish adorned in royal silk vestments.',
+      photo4Tag: 'Charan Seva',
+      photo4Title: 'Humble Charan Seva',
+      photo4Caption: 'Bowing in quiet reverence at the lotus feet of Lord Dwarkadhish.',
     },
     hi: {
       eyebrow: 'श्री द्वारकाधीश धाम के पीछे का पावन संकल्प',
@@ -84,18 +91,26 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       highlight3Title: 'प्रलेखित ऐतिहासिक क्षण',
       highlight3Subtitle: 'नवंबर 2025 का ऐतिहासिक क्षण',
       highlight3Desc: 'भव्य प्राण प्रतिष्ठा के साथ मंदिर के कपाट हजारों श्रद्धालुओं के लिए खोले गए।',
-      portraitTag: 'प्रमुख छायाचित्र',
-      portraitTitle: 'श्रीमती प्रवीणा एच. ठाकुर',
-      portraitCaption: 'लाल साड़ी में हाथ जोड़कर प्रभु वंदन करती हुईं, मंदिर निर्माण की प्रेरक।',
-      templeTag: 'श्री द्वारकाधीश मंदिर',
-      templeTitle: 'बलुआ पत्थर शिखर एवं गर्भगृह',
-      templeCaption: 'शिरगांव (विरार पूर्व) में नागर शैली में निर्मित भव्य गुलाबी बलुआ पत्थर मंदिर।',
+      goldenTag: 'संध्या दर्शन',
+      goldenTitle: 'श्री द्वारकाधीश शिखर के समक्ष',
+      goldenCaption: 'शिरगांव के नक्काशीदार गुलाबी बलुआ पत्थर शिखर के सामने सायंकालीन पावन दर्शन।',
+      ceremonyTag: 'प्रतिष्ठा उत्सव',
+      ceremonyTitle: 'पावन मंदिर समारोह दर्शन',
+      ceremonyCaption: 'शिरगांव श्री द्वारकाधीश मंदिर के उत्सव समारोह में पावन उपस्थिति।',
+      galleryHeading: 'पावन भक्ति एवं प्राण प्रतिष्ठा छायाचित्र',
+      gallerySubheading: 'बिना किसी क्रॉप के पूर्ण सुरक्षित छायाचित्र — बड़े रूप में देखने हेतु क्लिक करें',
       photo1Tag: 'गर्भगृह वंदना',
-      photo1Title: 'प्रभु विग्रह के समक्ष प्रार्थना',
-      photo1Caption: 'श्री द्वारकाधीश भगवान के गर्भगृह में पूर्ण श्रद्धा के साथ वंदना।',
-      photo2Tag: 'अनुष्ठान पूजा',
-      photo2Title: 'वैदिक प्राण प्रतिष्ठा',
-      photo2Caption: 'वैदिक प्राण प्रतिष्ठा अनुष्ठान एवं पवित्र पूर्णाहुति उत्सव में सहभागिता।',
+      photo1Title: 'प्रभु विग्रह को अर्पण',
+      photo1Caption: 'श्री द्वारकाधीश भगवान के समक्ष श्रद्धापूर्वक पुष्पहार एवं वंदन।',
+      photo2Tag: 'वैदिक अभिषेक',
+      photo2Title: 'पावन जलाभिषेक अनुष्ठान',
+      photo2Caption: 'वैदिक प्राण प्रतिष्ठा के दौरान स्वर्ण कलश से पवित्र अभिषेक।',
+      photo3Tag: 'द्वारकाधीश श्रृंगार',
+      photo3Title: 'दिव्य राजसी श्रृंगार एवं आरती',
+      photo3Caption: 'रेशमी पीतांबर व आभूषणों से सुसज्जित भगवान द्वारकाधीश की पावन आरती सेवा।',
+      photo4Tag: 'चरण सेवा',
+      photo4Title: 'विनम्र चरण वंदना',
+      photo4Caption: 'श्री द्वारकाधीश भगवान के श्रीचरणों में गहन भक्ति और समर्पण।',
     },
     mr: {
       eyebrow: 'श्री द्वारकाधीश धामामागील पवित्र संकल्प',
@@ -118,18 +133,26 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       highlight3Title: 'नोंदवलेला ऐतिहासिक टप्पा',
       highlight3Subtitle: 'नोव्हेंबर २०२५ चा ऐतिहासिक टप्पा',
       highlight3Desc: 'भव्य प्राणप्रतिष्ठेसह मंदिराची कवाडे हजारो भाविकांसाठी खुली झाली.',
-      portraitTag: 'प्रमुख छायाचित्र',
-      portraitTitle: 'श्रीमती प्रवीणा एच. ठाकूर',
-      portraitCaption: 'लाल साडीमध्ये हात जोडून केलेली भावपूर्ण प्रार्थना, मंदिराच्या निर्मितीची प्रेरणा.',
-      templeTag: 'श्री द्वारकाधीश मंदिर',
-      templeTitle: 'दगडी शिखर व गर्भगृह',
-      templeCaption: 'शिरगाव (विरार पूर्व) येथे नागर शैलीत साकारलेले भव्य गुलाबी वालुकाश्म मंदिर.',
-      photo1Tag: 'गर्भगृह प्रार्थना',
-      photo1Title: 'मूर्तीसमोर प्रार्थना',
-      photo1Caption: 'श्री द्वारकाधीशांच्या विलोभनीय मूर्तीसमोर केलेली भावपूर्ण प्रार्थना.',
-      photo2Tag: 'विधीवत पूजा',
-      photo2Title: 'वैदिक प्राणप्रतिष्ठा',
-      photo2Caption: 'वैदिक प्राणप्रतिष्ठा विधी आणि मंगलमय धार्मिक अनुष्ठानात सहभाग.',
+      goldenTag: 'सायंकाळ दर्शन',
+      goldenTitle: 'श्री द्वारकाधीश शिखरासमोर',
+      goldenCaption: 'शिरगावच्या कोरीव गुलाबी वालुकाश्म शिखरासमोर संध्याकाळच्या मंगल क्षणाचे दर्शन.',
+      ceremonyTag: 'प्रतिष्ठा उत्सव',
+      ceremonyTitle: 'मंगल मंदिर सोहळा दर्शन',
+      ceremonyCaption: 'शिरगाव श्री द्वारकाधीश मंदिराच्या पवित्र समारंभातील भक्तीमय उपस्थिती.',
+      galleryHeading: 'पावन दर्शन आणि प्राणप्रतिष्ठा क्षणचित्रे',
+      gallerySubheading: 'कोणत्याही क्रॉपिंगशिवाय संपूर्ण सुरक्षित छायाचित्रे — पूर्ण पाहण्यासाठी क्लिक करा',
+      photo1Tag: 'गर्भगृह सेवा',
+      photo1Title: 'प्रभु विग्रहासमोर अर्पण',
+      photo1Caption: 'श्री द्वारकाधीश भगवान यांच्या गाभाऱ्यात श्रद्धेने केलेली प्रार्थना.',
+      photo2Tag: 'वैदिक अभिषेक',
+      photo2Title: 'पवित्र जलाभिषेक विधी',
+      photo2Caption: 'वैदिक प्राणप्रतिष्ठा प्रसंगी सुवर्ण कलशातून मंगल अभिषेक.',
+      photo3Tag: 'द्वारकाधीश ऐश्वर्य',
+      photo3Title: 'राजसी शृंगार व आरती सेवा',
+      photo3Caption: 'रेशमी वस्त्रे व अलंकारांनी सजलेल्या श्री द्वारकाधीशांची भक्तिभावाने केलेली आरती.',
+      photo4Tag: 'चरण सेवा',
+      photo4Title: 'विनम्र चरण वंदना',
+      photo4Caption: 'श्री द्वारकाधीशांच्या चरणकमलांशी संपूर्ण शरणागत भाव.',
     },
     gu: {
       eyebrow: 'શ્રી દ્વારકાધીશ ધામ પાછળનો પવિત્ર સંકલ્પ',
@@ -152,78 +175,119 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       highlight3Title: 'નોંધાયેલ ઐતિહાસિક પળ',
       highlight3Subtitle: 'નવેમ્બર ૨૦૨૫ ઐતિહાસિક પળ',
       highlight3Desc: 'મંગલ પ્રાણપ્રતિષ્ઠા સાથે મંદિરના દ્વાર હજારો ભક્તો માટે ખુલ્યા.',
-      portraitTag: 'પ્રમુખ તસવીર',
-      portraitTitle: 'શ્રીમતી પ્રવીણા એચ. ઠાકુર',
-      portraitCaption: 'લાલ સાડીમાં હાથ જોડીને પ્રણામ કરતા, મંદિર નિર્માણના પ્રેરક.',
-      templeTag: 'શ્રી દ્વારકાધીશ મંદિર',
-      templeTitle: 'પથ્થરનું શિખર અને ગર્ભગૃહ',
-      templeCaption: 'શિરગાવ (વિરાર પૂર્વ) ખાતે નાગર શૈલીમાં નિર્મિત ભવ્ય ગુલાબી પથ્થરનું મંદિર.',
-      photo1Tag: 'ગર્ભગૃહ વંદન',
-      photo1Title: 'મૂર્તિ સમક્ષ પ્રાર્થના',
-      photo1Caption: 'શ્રી દ્વારકાધીશ ભગવાનની મંગલમૂર્તિ સમક્ષ ભક્તિભાવપૂર્વક પ્રાર્થના.',
-      photo2Tag: 'પૂજન વિધિ',
-      photo2Title: 'વૈદિક પ્રાણપ્રતિષ્ઠા',
-      photo2Caption: 'વૈદિક પ્રાણપ્રતિષ્ઠા વિધિ અને મંગળ પૂજન સમારોહમાં સહભાગીતા.',
+      goldenTag: 'સંધ્યા દર્શન',
+      goldenTitle: 'શ્રી દ્વારકાધીશ શિખર સમક્ષ',
+      goldenCaption: 'શિરગાવના ગુલાબી પથ્થરના કોતરણીયુક્ત શિખર સમક્ષ સંધ્યા સમયે ભક્તિમય દર્શન.',
+      ceremonyTag: 'પ્રતિષ્ઠા ઉત્સવ',
+      ceremonyTitle: 'મંગલ મંદિર સમારોહ દર્શન',
+      ceremonyCaption: 'શિરગાવ શ્રી દ્વારકાધીશ મંદિરના પાવન સમારોહમાં ભક્તિમય ઉપસ્થિતિ.',
+      galleryHeading: 'પવિત્ર દર્શન અને પ્રાણપ્રતિષ્ઠા સેવા ઝલક',
+      gallerySubheading: 'સંપૂર્ણ અનક્રોપ્ડ તસવીરો — પૂર્ણ કદમાં જોવા માટે કોઈપણ તસવીર પર ક્લિક કરો',
+      photo1Tag: 'ગર્ભગૃહ સેવા',
+      photo1Title: 'પ્રભુ વિગ્રહ સમક્ષ અર્પણ',
+      photo1Caption: 'શ્રી દ્વારકાધીશ ભગવાનના ગર્ભગૃહમાં ભક્તિભાવપૂર્વક વંદન.',
+      photo2Tag: 'વૈદિક અભિષેક',
+      photo2Title: 'પવિત્ર જળાભિષેક વિધિ',
+      photo2Caption: 'વૈદિક પ્રાણપ્રતિષ્ઠા પ્રસંગે સુવર્ણ કળશ દ્વારા મંગળ અભિષેક.',
+      photo3Tag: 'દ્વારકાધીશ વૈભવ',
+      photo3Title: 'રાજસી શૃંગાર અને આરતી સેવા',
+      photo3Caption: 'રેશમી પીતાંબર અને સુવર્ણ આભૂષણોથી સજ્જ શ્રી દ્વારકાધીશની આરતી વંદના.',
+      photo4Tag: 'ચરણ સેવા',
+      photo4Title: 'વિનમ્ર ચરણ વંદના',
+      photo4Caption: 'શ્રી દ્વારકાધીશ પ્રભુના ચરણકમળમાં અનન્ય ભક્તિ અને શ્રદ્ધા.',
     },
   };
 
   const c = contentRecord[language] || contentRecord.en;
 
-  // Authentic image paths using the verified transparent cutout and uncropped assets
-  const portraitPhoto: LightboxPhotoData = {
-    src: '/pravina_thakur_cutout.png',
-    fallbackSrc: '/assets/praveena_thakur/pravina_thakur_cutout.png',
-    title: c.portraitTitle,
-    caption: c.portraitCaption,
-    tag: c.portraitTag,
+  // FIRST FEATURED IMAGE: At Dwarkadhish Shikhara (Golden Hour)
+  const goldenHourFirstPhoto: LightboxPhotoData = {
+    src: '/assets/praveena_thakur/golden_hour_namaste.webp',
+    fallbackSrc: '/dwarkadhish_temple_widescreen_4k.webp',
+    title: c.goldenTitle,
+    caption: c.goldenCaption,
+    tag: c.goldenTag,
   };
 
-  const templePhoto: LightboxPhotoData = {
-    src: '/dwarkadhish_temple_widescreen_4k.webp',
-    fallbackSrc: '/assets/aistudio/dwarkadhish_temple_widescreen_4k.webp',
-    title: c.templeTitle,
-    caption: c.templeCaption,
-    tag: c.templeTag,
-  };
+  // SECOND FEATURED BLOCK (EXACT PLACE BELOW GOLDEN HOUR): Three Uploaded Ceremony Photos
+  const ceremonyTriptychPhotos: (LightboxPhotoData & { layoutClass: string })[] = [
+    {
+      src: '/assets/aistudio/Vibrant_Temple_Ceremony_Portrait_8e2d2892.png',
+      fallbackSrc: '/assets/praveena_thakur/vibrant_ceremony.webp',
+      title: c.ceremonyTitle,
+      caption: c.ceremonyCaption,
+      tag: c.ceremonyTag,
+      layoutClass: 'col-span-2 aspect-[1672/941] sm:flex-[1.7768_1_0%]',
+    },
+    {
+      src: '/assets/aistudio/Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png',
+      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
+      title: 'Ornate Umbrella Ceremony in the Courtyard',
+      caption: 'Courtyard ceremony at Shri Dwarkadhish Mandir, Shirgaon.',
+      tag: c.ceremonyTag,
+      layoutClass: 'col-span-1 aspect-[953/1651] sm:flex-[0.5772_1_0%]',
+    },
+    {
+      src: '/assets/aistudio/Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png',
+      fallbackSrc: '/assets/praveena_thakur/charan_seva.webp',
+      title: 'Ornate Temple Procession with Red Parasol',
+      caption: 'Mandap ceremonial procession at Shri Dwarkadhish Mandir, Shirgaon.',
+      tag: c.ceremonyTag,
+      layoutClass: 'col-span-1 aspect-[933/1685] sm:flex-[0.5537_1_0%]',
+    },
+  ];
 
-  const supportingPhotoA: LightboxPhotoData = {
-    src: '/assets/praveena_thakur/Praveena Thakur Before the Dwarkadhish Idol(1).png',
-    fallbackSrc: '/Praveena Thakur Before the Dwarkadhish Idol(1).png',
-    title: c.photo1Title,
-    caption: c.photo1Caption,
-    tag: c.photo1Tag,
-  };
-
-  const supportingPhotoB: LightboxPhotoData = {
-    src: '/assets/praveena_thakur/Praveena_Thakur_Devotional_Ceremony_4K_Restored(2).png',
-    fallbackSrc: '/Praveena_Thakur_Devotional_Ceremony_4K_Restored(2).png',
-    title: c.photo2Title,
-    caption: c.photo2Caption,
-    tag: c.photo2Tag,
-  };
+  const verticalGalleryPhotos: LightboxPhotoData[] = [
+    {
+      src: '/assets/praveena_thakur/before_idol.webp',
+      fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
+      title: c.photo1Title,
+      caption: c.photo1Caption,
+      tag: c.photo1Tag,
+    },
+    {
+      src: '/assets/praveena_thakur/devotional_ceremony.webp',
+      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
+      title: c.photo2Title,
+      caption: c.photo2Caption,
+      tag: c.photo2Tag,
+    },
+    {
+      src: '/assets/praveena_thakur/dressed_dwarkadhish_splendour.webp',
+      fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
+      title: c.photo3Title,
+      caption: c.photo3Caption,
+      tag: c.photo3Tag,
+    },
+    {
+      src: '/assets/praveena_thakur/charan_seva.webp',
+      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
+      title: c.photo4Title,
+      caption: c.photo4Caption,
+      tag: c.photo4Tag,
+    },
+  ];
 
   return (
     <div className="relative w-full">
       {/* ===================================================================
-          PART 3 — CENTERED ROYAL HEADING (Full-Width Balance)
+          CENTERED ROYAL HEADING
          =================================================================== */}
-      <div className="text-center max-w-5xl mx-auto mb-12 sm:mb-16 px-4">
-        {/* Subtle Decorative Golden Expandable Rule */}
+      <div className="text-center max-w-5xl mx-auto mb-8 sm:mb-10 px-4">
         <motion.div
           initial={reducedMotion ? false : { scaleX: 0, opacity: 0 }}
           whileInView={reducedMotion ? undefined : { scaleX: 1, opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          className="w-32 sm:w-48 h-[2px] bg-gradient-to-r from-transparent via-[#C29A54] to-transparent mx-auto mb-5"
+          className="w-32 sm:w-48 h-[2px] bg-gradient-to-r from-transparent via-[#C29A54] to-transparent mx-auto mb-4"
         />
 
-        {/* Section Eyebrow */}
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="flex items-center justify-center gap-2.5 mb-3"
+          className="flex items-center justify-center gap-2.5 mb-2.5"
         >
           <PeacockFeather size={22} />
           <span className="font-cinzel text-xs sm:text-sm md:text-base uppercase tracking-widest text-[#C29A54] font-bold">
@@ -232,265 +296,142 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
           <PeacockFeather size={22} className="transform scale-x-[-1]" />
         </motion.div>
 
-        {/* Main Title: Pravina H. Thakur */}
         <motion.h2
           initial={reducedMotion ? false : { opacity: 0, y: 18 }}
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-          className="font-serif-royal text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#741C24] tracking-tight mb-3.5 drop-shadow-[0_2px_12px_rgba(116,28,36,0.08)]"
+          className="font-serif-royal text-3xl sm:text-5xl md:text-6xl font-bold text-[#741C24] tracking-tight mb-2.5 drop-shadow-[0_2px_12px_rgba(116,28,36,0.08)]"
         >
           {c.name}
         </motion.h2>
 
-        {/* Subtitle / Trustee Descriptor */}
         <motion.p
           initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.65, delay: 0.15, ease: 'easeOut' }}
-          className="text-sm sm:text-base md:text-lg text-[#3F291D]/90 font-serif font-medium tracking-wide mb-5 max-w-3xl mx-auto leading-relaxed"
+          className="text-sm sm:text-base md:text-lg text-[#3F291D]/90 font-serif font-medium tracking-wide mb-4 max-w-3xl mx-auto leading-relaxed"
         >
           {c.subtitle}
         </motion.p>
 
-        {/* Lotus Flourish & Flute Divider */}
         <div className="flex items-center justify-center gap-3">
           <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C29A54]/60 to-[#C29A54] w-16 sm:w-28" />
-          <LotusOrnament size={26} className="text-[#C29A54]" />
+          <LotusOrnament size={24} className="text-[#C29A54]" />
           <div className="h-[1px] bg-gradient-to-l from-transparent via-[#C29A54]/60 to-[#C29A54] w-16 sm:w-28" />
         </div>
       </div>
 
       {/* ===================================================================
-          PART 4 — PREMIUM MAIN EDITORIAL COMPOSITION (56% Left / 44% Right)
+          TOP EDITORIAL COMPOSITION
+          First Image: At Dwarkadhish Shikhara (16:9 Uncropped Lead)
+          Below It: 3 Uploaded Ceremony Photos (Uncropped Native Aspect Ratio)
          =================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-start mb-16 lg:mb-20">
-        
-        {/* =================================================================
-            LEFT VISUAL AREA (56% Desktop — lg:col-span-7)
-           ================================================================= */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
-          
-          {/* Main Visual Showcase: Temple Architecture + Smt. Pravina H. Thakur */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start mb-10">
+        {/* LEFT VISUAL COLUMN (lg:col-span-7) */}
+        <div className="lg:col-span-7 flex flex-col gap-3.5">
           <motion.div
-            initial={reducedMotion ? false : { opacity: 0, y: 25 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 20 }}
             whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="relative rounded-3xl p-4 sm:p-5 bg-gradient-to-b from-[#FFFDF8] via-[#F4E9D8]/50 to-[#FFFDF8] border-2 border-[#C29A54] shadow-[0_20px_50px_rgba(63,41,29,0.12)] overflow-hidden"
+            transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex flex-col gap-3.5 rounded-2xl p-3.5 sm:p-4 bg-gradient-to-b from-[#FFFDF8] via-[#F4E9D8]/50 to-[#FFFDF8] border-2 border-[#C29A54] shadow-[0_16px_40px_rgba(63,41,29,0.1)]"
           >
-            {/* Elegant Carved-Gold Decorative Corner Brackets */}
-            <div className="absolute top-2.5 left-2.5 w-6 h-6 border-t-2 border-l-2 border-[#C29A54] pointer-events-none rounded-tl-sm z-20" />
-            <div className="absolute top-2.5 right-2.5 w-6 h-6 border-t-2 border-r-2 border-[#C29A54] pointer-events-none rounded-tr-sm z-20" />
-            <div className="absolute bottom-2.5 left-2.5 w-6 h-6 border-b-2 border-l-2 border-[#C29A54] pointer-events-none rounded-bl-sm z-20" />
-            <div className="absolute bottom-2.5 right-2.5 w-6 h-6 border-b-2 border-r-2 border-[#C29A54] pointer-events-none rounded-br-sm z-20" />
-
-            {/* Split Composition: Temple Architecture + Smt. Pravina H. Thakur Transparent Portrait */}
-            <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-stretch">
-              
-              {/* Left Column (6/12): Authentic Temple Shikhara */}
-              <div
-                onClick={() => onOpenLightbox(templePhoto)}
-                className="sm:col-span-6 relative rounded-2xl overflow-hidden bg-[#3F291D] aspect-[4/5] min-h-[360px] sm:min-h-[440px] group cursor-pointer border border-[#C29A54]/60 shadow-md flex flex-col justify-end"
-              >
+            {/* FIRST FEATURED IMAGE: At Dwarkadhish Shikhara (Golden Hour, Pure Uncropped Image) */}
+            <div
+              onClick={() => onOpenLightbox(goldenHourFirstPhoto)}
+              className="group cursor-pointer rounded-xl bg-[#FAF4E8] border border-[#C29A54] shadow-sm overflow-hidden"
+            >
+              <div className="relative w-full aspect-video bg-[#1A100A] overflow-hidden">
                 <img
-                  src={templePhoto.src}
+                  src={goldenHourFirstPhoto.src}
                   onError={(e) => {
-                    if (templePhoto.fallbackSrc) {
-                      (e.target as HTMLImageElement).src = templePhoto.fallbackSrc;
+                    if (goldenHourFirstPhoto.fallbackSrc) {
+                      (e.target as HTMLImageElement).src = goldenHourFirstPhoto.fallbackSrc;
                     }
                   }}
-                  alt="Shri Dwarkadhish Mandir pink sandstone shikhara at Shirgaon, Virar East"
-                  className="w-full h-full object-cover object-center filter brightness-[1.01] transition-transform duration-700 ease-out group-hover:scale-104 absolute inset-0"
+                  alt="At Dwarkadhish Shikhara — warm evening darshan standing before the hand-carved pink sandstone spire"
+                  className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2B1317]/90 via-[#2B1317]/30 to-black/10 pointer-events-none" />
-                
-                {/* Badge & Caption */}
-                <div className="relative z-10 p-4 text-white">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-cinzel font-bold uppercase tracking-wider bg-[#741C24] text-[#E8C784] border border-[#C29A54]/60 mb-1.5">
-                    {c.templeTag}
-                  </span>
-                  <p className="text-xs text-[#FAF4E8] font-serif leading-snug line-clamp-2">
-                    {c.templeCaption}
-                  </p>
-                </div>
-
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onOpenLightbox(templePhoto);
+                    onOpenLightbox(goldenHourFirstPhoto);
                   }}
-                  className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md"
-                  aria-label="View temple photo in full screen"
+                  className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md"
+                  aria-label="Inspect At Dwarkadhish Shikhara photograph"
                 >
                   <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
                 </button>
               </div>
+            </div>
 
-              {/* Right Column (6/12): Primary Portrait — Smt. Pravina H. Thakur (Strictly Uncropped Transparent Cutout) */}
-              <div
-                onClick={() => onOpenLightbox(portraitPhoto)}
-                className="sm:col-span-6 relative rounded-2xl overflow-hidden bg-gradient-to-b from-[#FFFDF8] via-[#FAF4E8] to-[#F1E3CC] p-3 aspect-[4/5] min-h-[360px] sm:min-h-[440px] group cursor-pointer border-2 border-[#C29A54] shadow-md flex flex-col justify-between"
-              >
-                {/* Soft sacred halo glow behind the transparent cutout */}
-                <div className="absolute inset-x-8 top-12 bottom-20 bg-radial from-[#C29A54]/20 via-[#C29A54]/5 to-transparent rounded-full filter blur-xl pointer-events-none" />
-
-                {/* Inner Image Stage (Strict uncropped object-contain to preserve forehead, hair, bindi, folded hands, sari drape) */}
-                <div className="relative w-full flex-1 flex items-end justify-center overflow-hidden pt-2">
+            {/* THREE UPLOADED CEREMONY IMAGES (Proportional equal-height row on sm+, zero cropping, zero subtitles) */}
+            <div className="grid grid-cols-2 sm:flex sm:flex-row sm:items-stretch gap-3">
+              {ceremonyTriptychPhotos.map((photo) => (
+                <div
+                  key={photo.src}
+                  onClick={() => onOpenLightbox(photo)}
+                  className={`group relative cursor-pointer rounded-xl bg-[#1A100A] border border-[#C29A54] shadow-sm overflow-hidden ${photo.layoutClass}`}
+                >
                   <img
-                    src={portraitPhoto.src}
+                    src={photo.src}
                     onError={(e) => {
-                      if (portraitPhoto.fallbackSrc) {
-                        (e.target as HTMLImageElement).src = portraitPhoto.fallbackSrc;
+                      if (photo.fallbackSrc) {
+                        (e.target as HTMLImageElement).src = photo.fallbackSrc;
                       }
                     }}
-                    alt="Smt. Pravina H. Thakur in Namaste pose wearing red sari"
-                    className="max-h-full max-w-full object-contain object-bottom filter contrast-[1.02] drop-shadow-[0_12px_24px_rgba(63,41,29,0.18)] transition-transform duration-700 ease-out group-hover:scale-102"
+                    alt={photo.title}
+                    className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
                     loading="eager"
                   />
-
-                  {/* Corner Accent */}
-                  <span className="absolute top-1 left-1 px-2.5 py-0.5 rounded text-[10px] font-cinzel font-bold uppercase tracking-wider bg-[#C29A54] text-[#3F291D] shadow-xs">
-                    {c.portraitTag}
-                  </span>
-
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onOpenLightbox(portraitPhoto);
+                      onOpenLightbox(photo);
                     }}
-                    className="absolute top-1 right-1 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md"
-                    aria-label="View portrait in full screen"
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md"
+                    aria-label={`Inspect ${photo.title}`}
                   >
                     <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
                   </button>
                 </div>
-
-                {/* Portrait Caption & Identity */}
-                <div className="pt-2 text-center relative z-10 border-t border-[#C29A54]/40 mt-1">
-                  <h4 className="font-serif-royal text-base sm:text-lg font-bold text-[#741C24] leading-tight mb-0.5">
-                    {c.portraitTitle}
-                  </h4>
-                  <p className="text-[11px] sm:text-xs text-[#3F291D]/80 font-serif leading-snug line-clamp-2">
-                    {c.portraitCaption}
-                  </p>
-                </div>
-              </div>
-
+              ))}
             </div>
           </motion.div>
 
-          {/* ===============================================================
-              PART 5 — TWO SUPPORTING DEVOTIONAL PHOTOGRAPHS (Dedicated Row)
-              No negative margins; dedicated CSS Grid row beneath the hero
-             =============================================================== */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            {/* Supporting Photo A: Prayer Before Deity */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.65, delay: 0.1, ease: 'easeOut' }}
-              onClick={() => onOpenLightbox(supportingPhotoA)}
-              className="group relative rounded-2xl p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/70 hover:border-[#741C24] shadow-[0_8px_24px_rgba(63,41,29,0.08)] cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-            >
-              <div className="relative rounded-xl overflow-hidden aspect-[4/3] bg-[#3F291D]">
-                <img
-                  src={supportingPhotoA.src}
-                  onError={(e) => {
-                    if (supportingPhotoA.fallbackSrc) {
-                      (e.target as HTMLImageElement).src = supportingPhotoA.fallbackSrc;
-                    }
-                  }}
-                  alt="Smt. Pravina Thakur praying before Lord Dwarkadhish idol"
-                  className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                
-                <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-cinzel font-bold uppercase tracking-wider bg-[#3F291D]/80 text-[#E8C784] border border-[#C29A54]/50">
-                  {c.photo1Tag}
-                </span>
-
-                <div className="absolute bottom-2 left-2 right-2 text-white">
-                  <h5 className="font-serif-royal text-sm font-bold text-[#FFFDF8] leading-tight">
-                    {c.photo1Title}
-                  </h5>
-                  <p className="text-[11px] text-[#FAF4E8]/90 font-serif leading-snug truncate">
-                    {c.photo1Caption}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Supporting Photo B: Vedic Consecration Rites */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.65, delay: 0.2, ease: 'easeOut' }}
-              onClick={() => onOpenLightbox(supportingPhotoB)}
-              className="group relative rounded-2xl p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/70 hover:border-[#741C24] shadow-[0_8px_24px_rgba(63,41,29,0.08)] cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-            >
-              <div className="relative rounded-xl overflow-hidden aspect-[4/3] bg-[#3F291D]">
-                <img
-                  src={supportingPhotoB.src}
-                  onError={(e) => {
-                    if (supportingPhotoB.fallbackSrc) {
-                      (e.target as HTMLImageElement).src = supportingPhotoB.fallbackSrc;
-                    }
-                  }}
-                  alt="Smt. Pravina Thakur participating in Vedic Pran Pratishtha ceremonies"
-                  className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                
-                <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-cinzel font-bold uppercase tracking-wider bg-[#3F291D]/80 text-[#E8C784] border border-[#C29A54]/50">
-                  {c.photo2Tag}
-                </span>
-
-                <div className="absolute bottom-2 left-2 right-2 text-white">
-                  <h5 className="font-serif-royal text-sm font-bold text-[#FFFDF8] leading-tight">
-                    {c.photo2Title}
-                  </h5>
-                  <p className="text-[11px] text-[#FAF4E8]/90 font-serif leading-snug truncate">
-                    {c.photo2Caption}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
+          {/* Ceremonial Statement placed cleanly below the Left Showcase Images */}
+          <div className="bg-gradient-to-r from-[#FAF4E8] via-[#FFFDF8] to-[#FAF4E8] rounded-xl p-4 border-2 border-[#C29A54] text-center shadow-xs">
+            <p className="font-serif-royal text-sm sm:text-base font-bold text-[#741C24] italic leading-snug mb-1">
+              {c.statement}
+            </p>
+            <span className="font-cinzel text-[10px] text-[#C29A54] tracking-widest uppercase font-semibold">
+              {c.statementTag}
+            </span>
           </div>
-
         </div>
 
-        {/* =================================================================
-            RIGHT CONTENT AREA (44% Desktop — lg:col-span-5)
-           ================================================================= */}
-        <div className="lg:col-span-5 flex flex-col justify-center gap-6">
-          
-          {/* Section A — Main Biography */}
+        {/* RIGHT BIOGRAPHY & HIGHLIGHTS COLUMN (lg:col-span-5) */}
+        <div className="lg:col-span-5 flex flex-col justify-between gap-3.5">
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 18 }}
             whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="bg-[#FFFDF8] rounded-3xl p-6 sm:p-7 border-2 border-[#C29A54]/80 shadow-[0_12px_36px_rgba(194,154,84,0.1)] relative overflow-hidden"
+            className="bg-[#FFFDF8] rounded-2xl p-4 sm:p-5 border-2 border-[#C29A54]/80 shadow-[0_12px_32px_rgba(194,154,84,0.1)]"
           >
-            <div className="flex items-center gap-2 mb-3.5">
+            <div className="flex items-center gap-2 mb-2">
               <DiyaAccent animated={!reducedMotion} />
               <span className="font-cinzel text-xs uppercase tracking-widest text-[#741C24] font-bold">
                 HISTORICAL NARRATIVE · पावन गाथा
               </span>
             </div>
 
-            <div className="space-y-3.5 text-sm sm:text-base text-[#3F291D]/90 leading-relaxed font-serif">
+            <div className="space-y-2.5 text-sm sm:text-[14.5px] text-[#3F291D]/90 leading-relaxed font-serif">
               <p className="first-letter:text-3xl first-letter:font-serif-royal first-letter:font-bold first-letter:text-[#741C24] first-letter:mr-1">
                 {c.bioP1}
               </p>
@@ -501,107 +442,125 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
             </div>
           </motion.div>
 
-          {/* Section B — Three Historical Highlights (Compact Cards) */}
-          <div className="grid grid-cols-1 gap-3.5">
-            
-            {/* Card 1: Public Service */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, x: 20 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.55, delay: 0.1, ease: 'easeOut' }}
-              onMouseEnter={() => setHoveredCard(1)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="group relative rounded-2xl p-4 sm:p-4.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-4"
-            >
-              <div className="w-10 h-10 rounded-xl bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
-                <Building className="w-5 h-5" />
+          {/* Three Historical Highlights */}
+          <div className="grid grid-cols-1 gap-2.5">
+            <div className="group rounded-xl p-3 sm:p-3.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                <Building className="w-4 h-4" />
               </div>
               <div>
-                <span className="block text-xs font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
+                <span className="block text-[10.5px] font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
                   {c.highlight1Subtitle}
                 </span>
-                <h4 className="font-serif-royal text-base sm:text-lg font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
+                <h4 className="font-serif-royal text-[15px] font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
                   {c.highlight1Title}
                 </h4>
-                <p className="text-xs text-[#3F291D]/80 font-serif leading-relaxed mt-1">
+                <p className="text-xs text-[#3F291D]/80 font-serif leading-snug mt-0.5">
                   {c.highlight1Desc}
                 </p>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Card 2: Temple Vision */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, x: 20 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.55, delay: 0.18, ease: 'easeOut' }}
-              onMouseEnter={() => setHoveredCard(2)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="group relative rounded-2xl p-4 sm:p-4.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-4"
-            >
-              <div className="w-10 h-10 rounded-xl bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
-                <Heart className="w-5 h-5" />
+            <div className="group rounded-xl p-3 sm:p-3.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                <Heart className="w-4 h-4" />
               </div>
               <div>
-                <span className="block text-xs font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
+                <span className="block text-[10.5px] font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
                   {c.highlight2Subtitle}
                 </span>
-                <h4 className="font-serif-royal text-base sm:text-lg font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
+                <h4 className="font-serif-royal text-[15px] font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
                   {c.highlight2Title}
                 </h4>
-                <p className="text-xs text-[#3F291D]/80 font-serif leading-relaxed mt-1">
+                <p className="text-xs text-[#3F291D]/80 font-serif leading-snug mt-0.5">
                   {c.highlight2Desc}
                 </p>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Card 3: Temple Consecration */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, x: 20 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.55, delay: 0.26, ease: 'easeOut' }}
-              onMouseEnter={() => setHoveredCard(3)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="group relative rounded-2xl p-4 sm:p-4.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-4"
-            >
-              <div className="w-10 h-10 rounded-xl bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
-                <Calendar className="w-5 h-5" />
+            <div className="group rounded-xl p-3 sm:p-3.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                <Calendar className="w-4 h-4" />
               </div>
               <div>
-                <span className="block text-xs font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
+                <span className="block text-[10.5px] font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
                   {c.highlight3Subtitle}
                 </span>
-                <h4 className="font-serif-royal text-base sm:text-lg font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
+                <h4 className="font-serif-royal text-[15px] font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
                   {c.highlight3Title}
                 </h4>
-                <p className="text-xs text-[#3F291D]/80 font-serif leading-relaxed mt-1">
+                <p className="text-xs text-[#3F291D]/80 font-serif leading-snug mt-0.5">
                   {c.highlight3Desc}
                 </p>
               </div>
-            </motion.div>
-
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Section C — Ceremonial Statement */}
-          <motion.div
-            initial={reducedMotion ? false : { opacity: 0, y: 15 }}
-            whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.65, delay: 0.3, ease: 'easeOut' }}
-            className="relative bg-gradient-to-r from-[#FAF4E8] via-[#FFFDF8] to-[#FAF4E8] rounded-2xl p-5 border-2 border-[#C29A54] text-center shadow-xs"
-          >
-            <p className="font-serif-royal text-base sm:text-lg font-bold text-[#741C24] italic leading-snug mb-1.5">
-              {c.statement}
-            </p>
-            <span className="font-cinzel text-[11px] text-[#C29A54] tracking-widest uppercase font-semibold">
-              {c.statementTag}
-            </span>
-          </motion.div>
-
+      {/* ===================================================================
+          UNCROPPED 9:16 SANCTUM & CONSECRATION GALLERY ROW (4 Cards)
+          Exact aspect-[9/16] + object-contain = ZERO head/face/hand/idol cuts
+         =================================================================== */}
+      <div className="border-t border-[#C29A54]/40 pt-8">
+        <div className="text-center max-w-3xl mx-auto mb-6">
+          <h3 className="font-serif-royal text-2xl sm:text-3xl font-bold text-[#741C24] mb-1">
+            {c.galleryHeading}
+          </h3>
+          <p className="text-xs sm:text-sm text-[#3F291D]/75 font-serif">
+            {c.gallerySubheading}
+          </p>
         </div>
 
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {verticalGalleryPhotos.map((photo, idx) => (
+            <motion.div
+              key={photo.src}
+              initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.55, delay: idx * 0.08, ease: 'easeOut' }}
+              onClick={() => onOpenLightbox(photo)}
+              className="group cursor-pointer rounded-2xl p-2 sm:p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_8px_22px_rgba(63,41,29,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+            >
+              {/* Exact 9:16 portrait stage + object-contain guarantees zero face/detail cropping */}
+              <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]">
+                <img
+                  src={photo.src}
+                  onError={(e) => {
+                    if (photo.fallbackSrc) {
+                      (e.target as HTMLImageElement).src = photo.fallbackSrc;
+                    }
+                  }}
+                  alt={photo.title}
+                  className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
+                  loading="lazy"
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenLightbox(photo);
+                  }}
+                  className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md"
+                  aria-label={`Inspect ${photo.title}`}
+                >
+                  <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
+                </button>
+              </div>
+
+              {/* Clean Title Footer Without Subtitles */}
+              <div className="pt-2.5 px-1">
+                <span className="inline-block text-[10px] font-cinzel font-bold uppercase tracking-wider text-[#C29A54]">
+                  {photo.tag}
+                </span>
+                <h4 className="font-serif-royal text-sm sm:text-base font-bold text-[#741C24] leading-snug mt-0.5">
+                  {photo.title}
+                </h4>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
