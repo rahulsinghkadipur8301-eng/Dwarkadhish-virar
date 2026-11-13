@@ -3,64 +3,94 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
 import { useI18n } from './i18n/I18nContext';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { SacredAmbientBackground } from './components/SacredAmbientBackground';
 
+/**
+ * Retries transient dynamic import failures (e.g., mobile network drops or edge cache rollover
+ * on Vercel) before surfacing cleanly to the ErrorBoundary instead of crashing or auto-reloading.
+ */
+function lazyWithRetry<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+  retries = 2,
+  delayMs = 400
+) {
+  return lazy(async () => {
+    let lastError: unknown;
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        return await factory();
+      } catch (err) {
+        lastError = err;
+        if (attempt < retries) {
+          await new Promise((res) => window.setTimeout(res, delayMs * (attempt + 1)));
+        }
+      }
+    }
+    throw lastError;
+  });
+}
+
 // Code-split below-the-fold sections & modals so above-the-fold Hero renders immediately
-const DevotionalPresenceSection = lazy(() =>
+const DevotionalPresenceSection = lazyWithRetry(() =>
   import('./components/DevotionalPresenceSection').then((m) => ({
     default: m.DevotionalPresenceSection,
   }))
 );
-const VisionarySection = lazy(() =>
+const VisionarySection = lazyWithRetry(() =>
   import('./components/VisionarySection').then((m) => ({
     default: m.VisionarySection,
   }))
 );
-const DarshanSection = lazy(() =>
+const TempleGallerySection = lazyWithRetry(() =>
+  import('./components/TempleGallerySection').then((m) => ({
+    default: m.TempleGallerySection,
+  }))
+);
+const DarshanSection = lazyWithRetry(() =>
   import('./components/DarshanSection').then((m) => ({
     default: m.DarshanSection,
   }))
 );
-const TempleLocationSection = lazy(() =>
+const TempleLocationSection = lazyWithRetry(() =>
   import('./components/TempleLocationSection').then((m) => ({
     default: m.TempleLocationSection,
   }))
 );
-const FestivalsSection = lazy(() =>
+const FestivalsSection = lazyWithRetry(() =>
   import('./components/FestivalsSection').then((m) => ({
     default: m.FestivalsSection,
   }))
 );
-const SevaSection = lazy(() =>
+const SevaSection = lazyWithRetry(() =>
   import('./components/SevaSection').then((m) => ({
     default: m.SevaSection,
   }))
 );
-const TempleDonationSection = lazy(() =>
+const TempleDonationSection = lazyWithRetry(() =>
   import('./components/TempleDonationSection').then((m) => ({
     default: m.TempleDonationSection,
   }))
 );
-const TempleSocialConnectSection = lazy(() =>
+const TempleSocialConnectSection = lazyWithRetry(() =>
   import('./components/TempleSocialConnectSection').then((m) => ({
     default: m.TempleSocialConnectSection,
   }))
 );
-const PlannerModal = lazy(() =>
+const PlannerModal = lazyWithRetry(() =>
   import('./components/PlannerModal').then((m) => ({
     default: m.PlannerModal,
   }))
 );
-const AdminDashboard = lazy(() =>
+const AdminDashboard = lazyWithRetry(() =>
   import('./components/AdminDashboard').then((m) => ({
     default: m.AdminDashboard,
   }))
 );
-const Footer = lazy(() =>
+const Footer = lazyWithRetry(() =>
   import('./components/Footer').then((m) => ({
     default: m.Footer,
   }))
@@ -75,13 +105,46 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [plannerOpen, setPlannerOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
-  // Check system prefers-reduced-motion on initial mount
+  // Sync system prefers-reduced-motion changes dynamically
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setReducedMotion(true);
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  // Warm below-the-fold JS chunks during browser idle time for zero-jank scrolling
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const preloadNearbySections = () => {
+      import('./components/DevotionalPresenceSection').catch(() => {});
+      import('./components/VisionarySection').catch(() => {});
+      import('./components/TempleGallerySection').catch(() => {});
+      import('./components/DarshanSection').catch(() => {});
+      import('./components/TempleLocationSection').catch(() => {});
+    };
+
+    const win = window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof win.requestIdleCallback === 'function') {
+      const idleId = win.requestIdleCallback(preloadNearbySections, { timeout: 1800 });
+      return () => {
+        if (typeof win.cancelIdleCallback === 'function') {
+          win.cancelIdleCallback(idleId);
+        }
+      };
     }
+
+    const timerId = window.setTimeout(preloadNearbySections, 1200);
+    return () => window.clearTimeout(timerId);
   }, []);
 
   // Accurate active-section scroll spy accounting for sticky header
@@ -92,6 +155,7 @@ export default function App() {
       'overview',
       'presence',
       'vision',
+      'gallery',
       'darshan',
       'location',
       'festivals',
@@ -105,7 +169,8 @@ export default function App() {
         const visibleEntries = entries.filter((e) => e.isIntersecting);
         if (visibleEntries.length > 0) {
           visibleEntries.sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
-          setActiveTab(visibleEntries[0].target.id);
+          const nextId = visibleEntries[0].target.id;
+          setActiveTab((prev) => (prev === nextId ? prev : nextId));
         }
       },
       {
@@ -130,12 +195,12 @@ export default function App() {
     };
   }, [adminOpen]);
 
-  const handleTabChange = (tabId: string) => {
+  const handleTabChange = useCallback((tabId: string) => {
     if (tabId === 'admin') {
       setAdminOpen(true);
       return;
     }
-    setActiveTab(tabId);
+    setActiveTab((prev) => (prev === tabId ? prev : tabId));
     setAdminOpen(false);
 
     if (tabId === 'overview') {
@@ -153,11 +218,19 @@ export default function App() {
         behavior: 'smooth',
       });
     }
-  };
+  }, []);
 
-  const handleOpenSeva = () => {
+  const handleOpenSeva = useCallback(() => {
     handleTabChange('seva');
-  };
+  }, [handleTabChange]);
+
+  const handleOpenPlanner = useCallback(() => {
+    setPlannerOpen(true);
+  }, []);
+
+  const handleToggleReducedMotion = useCallback(() => {
+    setReducedMotion((prev) => !prev);
+  }, []);
 
   if (adminOpen) {
     return (
@@ -178,9 +251,9 @@ export default function App() {
         onLanguageChange={setLanguage}
         activeTab={activeTab}
         onTabChange={handleTabChange}
-        onOpenPlanner={() => setPlannerOpen(true)}
+        onOpenPlanner={handleOpenPlanner}
         reducedMotion={reducedMotion}
-        onToggleReducedMotion={() => setReducedMotion(!reducedMotion)}
+        onToggleReducedMotion={handleToggleReducedMotion}
       />
 
       <main className="flex-1">
@@ -188,7 +261,7 @@ export default function App() {
         <HeroSection
           language={language}
           onExplore={handleTabChange}
-          onOpenPlanner={() => setPlannerOpen(true)}
+          onOpenPlanner={handleOpenPlanner}
           onOpenSevaModal={handleOpenSeva}
           reducedMotion={reducedMotion}
         />
@@ -203,24 +276,29 @@ export default function App() {
           <VisionarySection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 4. Darshan & Aarti Schedule */}
+        {/* 4. Temple Gallery — Sacred Moments & Consecration Seva */}
+        <Suspense fallback={<SectionPlaceholder id="gallery" />}>
+          <TempleGallerySection language={language} reducedMotion={reducedMotion} />
+        </Suspense>
+
+        {/* 5. Darshan & Aarti Schedule */}
         <Suspense fallback={<SectionPlaceholder id="darshan" />}>
-          <DarshanSection language={language} />
+          <DarshanSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 5. Plan Your Visit — Google Maps & Practical Location */}
+        {/* 6. Plan Your Visit — Google Maps & Practical Location */}
         <Suspense fallback={<SectionPlaceholder id="location" />}>
-          <TempleLocationSection language={language} />
+          <TempleLocationSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 6. Festivals & Annual Celebrations */}
+        {/* 7. Festivals & Annual Celebrations */}
         <Suspense fallback={<SectionPlaceholder id="festivals" />}>
-          <FestivalsSection language={language} />
+          <FestivalsSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 7. Devotional Seva Offerings */}
+        {/* 8. Devotional Seva Offerings */}
         <Suspense fallback={<SectionPlaceholder id="seva" />}>
-          <SevaSection language={language} />
+          <SevaSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
         {/* 8. Official Contribution Portal */}
@@ -250,7 +328,7 @@ export default function App() {
         <Footer
           language={language}
           onNavigate={handleTabChange}
-          onOpenPlanner={() => setPlannerOpen(true)}
+          onOpenPlanner={handleOpenPlanner}
         />
       </Suspense>
     </div>

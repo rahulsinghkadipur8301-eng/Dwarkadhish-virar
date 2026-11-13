@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { Language, FESTIVALS_DATA, FestivalEvent } from '../data/templeData';
 import { Calendar, Clock, Bell, Check, ArrowRight, X } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 interface FestivalsSectionProps {
   language: Language;
+  reducedMotion?: boolean;
 }
 
-export const FestivalsSection: React.FC<FestivalsSectionProps> = ({ language }) => {
+export const FestivalsSection: React.FC<FestivalsSectionProps> = ({
+  language,
+  reducedMotion = false,
+}) => {
   const { tDict } = useI18n();
   const [selectedFestival, setSelectedFestival] = useState<FestivalEvent | null>(null);
   const [remindState, setRemindState] = useState<Record<string, boolean>>({});
@@ -32,8 +37,9 @@ export const FestivalsSection: React.FC<FestivalsSectionProps> = ({ language }) 
   };
 
   return (
-    <section id="festivals" className="py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
-      <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <section id="festivals" className="relative overflow-hidden py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
+      <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="max-w-3xl mb-12 sm:mb-14">
           <div className="text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold mb-2.5 font-cinzel">
             {tDict.festivals.kicker}

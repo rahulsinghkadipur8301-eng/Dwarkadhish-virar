@@ -1010,7 +1010,7 @@ export interface DivineFlowerShowerProps {
  * - Deterministic, reversible scroll-synchronized trajectory
  * - Receding into background phase with desaturation, size reduction, and dissolve
  */
-export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
+export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = React.memo(({
   ceremonyProgress,
   layer = 'all',
   reducedMotion = false,
@@ -1018,19 +1018,25 @@ export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
   const [tier, setTier] = useState<DeviceTier>('desktop');
 
   useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 639px)');
+    const tabletQuery = window.matchMedia('(max-width: 1023px)');
+
     const updateTier = () => {
-      const width = window.innerWidth;
-      if (width < 640) {
+      if (mobileQuery.matches) {
         setTier('mobile');
-      } else if (width < 1024) {
+      } else if (tabletQuery.matches) {
         setTier('tablet');
       } else {
         setTier('desktop');
       }
     };
     updateTier();
-    window.addEventListener('resize', updateTier, { passive: true });
-    return () => window.removeEventListener('resize', updateTier);
+    mobileQuery.addEventListener('change', updateTier);
+    tabletQuery.addEventListener('change', updateTier);
+    return () => {
+      mobileQuery.removeEventListener('change', updateTier);
+      tabletQuery.removeEventListener('change', updateTier);
+    };
   }, []);
 
   const state = useMemo(
@@ -1054,40 +1060,30 @@ export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
       data-testid={`flower-shower-${layer}`}
     >
       {filteredPetals.map((petal) => {
-        // Individual petal receding factor and opacity
         const recedeInfo = calculatePetalRecedeState(petal.id, ceremonyProgress);
         const petalEffectiveRecede = recedeInfo.recedingFactor;
         const individualOpacity = recedeInfo.individualOpacity;
 
-        // Skip completely dissolved petals
         if (individualOpacity <= 0.005) {
           return null;
         }
 
-        // Calculate deterministic position from ceremonyProgress
-        // Petals begin descending once ceremonyProgress passes 0.12
         const effectiveT = Math.max(0, (ceremonyProgress - 0.12) / 0.88);
-        
-        // Travel down: y from yStartOffset% down past bottom (up to 135%)
         const totalTravel = 135;
         const currentY = petal.yStartOffset + effectiveT * totalTravel * petal.fallSpeed;
 
-        // Sideways sway: sinusoidal based on y progress and fixed frequency
         const swayPhase = (currentY / 100) * petal.swayFrequency * Math.PI * 2 + petal.swayPhase;
         const currentX = petal.xBasePercent + Math.sin(swayPhase) * petal.swayAmplitude;
 
-        // 3D rotation and tumble
         const rotationDeg = (currentY / 100) * petal.rotationSpeed;
         const tiltXDeg = Math.sin(swayPhase * 1.5) * 45;
 
-        // Receding effect (65% to 100%): shrink, desaturate, blur
         const scaleFactor = 1.0 - petalEffectiveRecede * 0.45;
         const scale = petal.baseScale * scaleFactor;
         const blurPx = petalEffectiveRecede * 2.2;
         const saturatePercent = Math.max(25, 100 - petalEffectiveRecede * 75);
         const opacity = petal.baseOpacity * state.globalPetalOpacity * individualOpacity;
 
-        // Petal dimensions (responsive base size: ~14px to 24px)
         const baseWidth = petal.layer === 'fg' ? 18 : petal.layer === 'mid' ? 14 : 10;
         const baseHeight = baseWidth * petal.aspectRatio;
 
@@ -1104,7 +1100,10 @@ export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
               height: `${baseHeight}px`,
               transform: `translate(-50%, -50%) rotate(${rotationDeg.toFixed(1)}deg) rotateX(${tiltXDeg.toFixed(1)}deg) scale(${scale.toFixed(2)})`,
               opacity: opacity.toFixed(3),
-              filter: `saturate(${saturatePercent.toFixed(0)}%) blur(${blurPx.toFixed(1)}px)`,
+              filter:
+                tier === 'desktop' && petalEffectiveRecede > 0.02
+                  ? `saturate(${saturatePercent.toFixed(0)}%) blur(${blurPx.toFixed(1)}px)`
+                  : undefined,
             }}
           >
             {/* SVG Organic Petal Path with Shading */}
@@ -1112,7 +1111,7 @@ export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
               viewBox="0 0 20 28"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-full h-full drop-shadow-[0_2px_4px_rgba(40,15,5,0.45)]"
+              className="w-full h-full"
             >
               <defs>
                 <linearGradient id={`petalGrad-${petal.id}`} x1="0" y1="0" x2="1" y2="1">
@@ -1121,12 +1120,10 @@ export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
                   <stop offset="100%" stopColor={petal.colorShade} />
                 </linearGradient>
               </defs>
-              {/* Organic curved petal shape with delicate tip and soft base */}
               <path
                 d="M 10,0 C 16,3 20,11 19,19 C 18,25 13,28 10,28 C 7,28 2,25 1,19 C 0,11 4,3 10,0 Z"
                 fill={`url(#petalGrad-${petal.id})`}
               />
-              {/* Subtle natural central vein line */}
               <path
                 d="M 10,4 Q 10.5,14 10,24"
                 stroke={petal.colorShade}
@@ -1140,4 +1137,4 @@ export const DivineFlowerShower: React.FC<DivineFlowerShowerProps> = ({
       })}
     </div>
   );
-};
+});

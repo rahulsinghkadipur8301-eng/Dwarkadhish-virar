@@ -30,6 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'overview', labelEn: 'Overview', labelHi: 'परिचय', labelMr: 'परिचय', labelGu: 'પરિચય' },
     { id: 'presence', labelEn: 'Divine Presence', labelHi: 'दिव्य स्वरूप', labelMr: 'दिव्य स्वरूप', labelGu: 'દિવ્ય દર્શન' },
     { id: 'vision', labelEn: 'Sacred Vision', labelHi: 'पावन संकल्प', labelMr: 'पवित्र संकल्प', labelGu: 'પવિત્ર સંકલ્પ' },
+    { id: 'gallery', labelEn: 'Gallery', labelHi: 'चित्र दीर्घा', labelMr: 'चित्रदालन', labelGu: 'ચિત્ર દર્શન' },
     { id: 'darshan', labelEn: 'Darshan Timings', labelHi: 'दर्शन समय', labelMr: 'दर्शन वेळ', labelGu: 'દર્શન સમય' },
     { id: 'location', labelEn: 'Plan Your Visit', labelHi: 'स्थान व मार्ग', labelMr: 'स्थान व नकाशा', labelGu: 'સ્થાન અને નકશો' },
     { id: 'festivals', labelEn: 'Festivals', labelHi: 'उत्सव', labelMr: 'उत्सव', labelGu: 'ઉત્સવ' },

@@ -4,6 +4,7 @@ import { ExternalLink, QrCode, Sparkles, Smartphone, CheckCircle2 } from 'lucide
 import { PeacockFeather, FluteDivider, DiyaAccent } from './KrishnaMotifs';
 import { useI18n } from '../i18n/I18nContext';
 import { calculateCardTiltAndLight } from '../utils/motionUtils';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 export interface TempleSocialConnectSectionProps {
   reducedMotion?: boolean;
@@ -151,22 +152,8 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
       aria-labelledby="social-section-heading"
       className="relative w-full bg-[#FAF5EC] border-b border-[#E5D1B6] py-20 sm:py-24 lg:py-28 select-none overflow-hidden scroll-mt-20"
     >
-      {/* Background Indian Sacred Geometry Motifs */}
-      <div className="absolute top-10 left-6 w-80 h-80 opacity-[0.035] pointer-events-none transform -rotate-12">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="90" stroke="#B68A45" strokeWidth="2" strokeDasharray="8 6" />
-          <circle cx="100" cy="100" r="70" stroke="#6B4832" strokeWidth="1.5" />
-          <polygon points="100,20 180,140 20,140" stroke="#B68A45" strokeWidth="1.2" />
-          <polygon points="100,180 180,60 20,60" stroke="#921B2C" strokeWidth="1.2" />
-        </svg>
-      </div>
-      <div className="absolute bottom-8 right-8 w-72 h-72 opacity-[0.035] pointer-events-none transform rotate-45">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="85" stroke="#C59B56" strokeWidth="2" />
-          <circle cx="100" cy="100" r="55" stroke="#B68A45" strokeWidth="1.5" strokeDasharray="6 4" />
-          <path d="M100 10V190M10 100H190" stroke="#3C2A20" strokeWidth="1" />
-        </svg>
-      </div>
+      {/* Centered Rotating Sacred Background Chakra */}
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
 
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative z-10">
         

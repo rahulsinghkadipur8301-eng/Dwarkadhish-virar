@@ -181,6 +181,36 @@
   animation: bellRing 1.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
 }
 
+@keyframes chakraSpinClockwise {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes chakraSpinCounter {
+  from {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+.animate-chakra-cw {
+  animation: chakraSpinClockwise 56s linear infinite;
+}
+
+.animate-chakra-ccw {
+  animation: chakraSpinCounter 40s linear infinite;
+}
+
+.chakra-static-center {
+  transform: translate(-50%, -50%);
+}
+
 /* Reduced motion preference support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -192,5 +222,10 @@
   .animate-subtle-zoom {
     animation: none !important;
     transform: scale(1.0) !important;
+  }
+  .animate-chakra-cw,
+  .animate-chakra-ccw {
+    animation: none !important;
+    transform: translate(-50%, -50%) !important;
   }
 }

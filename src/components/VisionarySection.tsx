@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Language } from '../data/templeData';
 import { PravinaVisionHero, LightboxPhotoData } from './vision/PravinaVisionHero';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 export interface VisionarySectionProps {
   language: Language;
@@ -40,23 +41,8 @@ export const VisionarySection: React.FC<VisionarySectionProps> = ({
       aria-label="The Vision Behind Shree Dwarkadhish Dham — Smt. Pravina H. Thakur"
       className="relative w-full bg-[#FAF4E8] text-[#3F291D] py-12 sm:py-14 lg:py-16 border-b-2 border-[#C29A54]/60 overflow-hidden scroll-mt-20"
     >
-      {/* Subtle Sandstone & Sacred Geometry Ambient Watermarks */}
-      <div className="absolute top-12 left-6 w-80 h-80 opacity-[0.03] pointer-events-none transform -rotate-12">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="90" stroke="#C29A54" strokeWidth="2" strokeDasharray="8 6" />
-          <circle cx="100" cy="100" r="70" stroke="#741C24" strokeWidth="1.5" />
-          <polygon points="100,20 180,140 20,140" stroke="#C29A54" strokeWidth="1.2" />
-          <polygon points="100,180 180,60 20,60" stroke="#741C24" strokeWidth="1.2" />
-        </svg>
-      </div>
-
-      <div className="absolute bottom-16 right-8 w-72 h-72 opacity-[0.03] pointer-events-none transform rotate-45">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="85" stroke="#C29A54" strokeWidth="2" />
-          <circle cx="100" cy="100" r="55" stroke="#741C24" strokeWidth="1.5" strokeDasharray="6 4" />
-          <path d="M100 10V190M10 100H190" stroke="#3F291D" strokeWidth="1" />
-        </svg>
-      </div>
+      {/* Centered Rotating Sacred Background Chakra */}
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
 
       {/* Main Fluid Content Container */}
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">

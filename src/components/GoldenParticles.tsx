@@ -16,7 +16,7 @@ interface Particle {
   color: string;
 }
 
-export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
+export const GoldenParticles: React.FC<GoldenParticlesProps> = React.memo(({
   reducedMotion = false,
   className = '',
 }) => {
@@ -38,8 +38,14 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
 
     const handleResize = () => {
       if (!canvas) return;
-      width = canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
-      height = canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
+      const newWidth = canvas.parentElement?.clientWidth || window.innerWidth;
+      const newHeight = canvas.parentElement?.clientHeight || window.innerHeight;
+      // Ignore small vertical height jitter caused by mobile browser URL bar show/hide on scroll
+      if (Math.abs(newWidth - width) <= 6 && Math.abs(newHeight - height) <= 85) {
+        return;
+      }
+      width = canvas.width = newWidth;
+      height = canvas.height = newHeight;
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
@@ -52,7 +58,7 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
       'rgba(243, 231, 214, ',
     ];
 
-    const particleCount = Math.min(20, Math.floor(width / 55));
+    const particleCount = Math.min(18, Math.floor(width / 60));
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
@@ -69,7 +75,7 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
     }
 
     const render = () => {
-      if (!isInView) {
+      if (!isInView || document.hidden) {
         animationFrameId = 0;
         return;
       }
@@ -93,7 +99,6 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
         if (p.x < -10) p.x = width + 10;
         if (p.x > width + 10) p.x = -10;
 
-        // Soft outer halo + crisp core (much faster than radial gradient allocation per frame)
         ctx.fillStyle = `${p.color}${(p.opacity * 0.28).toFixed(2)})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius * 2.2, 0, Math.PI * 2);
@@ -112,8 +117,11 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
       (entries) => {
         for (const entry of entries) {
           isInView = entry.isIntersecting;
-          if (isInView && !animationFrameId) {
+          if (isInView && !document.hidden && !animationFrameId) {
             animationFrameId = requestAnimationFrame(render);
+          } else if (!isInView && animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = 0;
           }
         }
       },
@@ -121,11 +129,24 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
     );
     observer.observe(canvas);
 
-    animationFrameId = requestAnimationFrame(render);
+    const onVisibilityChange = () => {
+      if (document.hidden && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      } else if (!document.hidden && isInView && !animationFrameId) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    if (!document.hidden) {
+      animationFrameId = requestAnimationFrame(render);
+    }
 
     return () => {
       observer.disconnect();
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [reducedMotion]);
@@ -139,4 +160,4 @@ export const GoldenParticles: React.FC<GoldenParticlesProps> = ({
       aria-hidden="true"
     />
   );
-};
+});

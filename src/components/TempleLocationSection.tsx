@@ -3,12 +3,16 @@ import { Language, TEMPLE_LOCATION_RECORD, getGoogleMapsSearchUrl, getGoogleMaps
 import { MapPin, Navigation, Copy, Check, ExternalLink, Info, Train, Car, Clock, Bus } from 'lucide-react';
 import { FluteDivider, LotusOrnament } from './KrishnaMotifs';
 import { useI18n } from '../i18n/I18nContext';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 interface TempleLocationSectionProps {
   language: Language;
+  reducedMotion?: boolean;
 }
 
-export const TempleLocationSection: React.FC<TempleLocationSectionProps> = () => {
+export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
+  reducedMotion = false,
+}) => {
   const { tDict } = useI18n();
   const [copied, setCopied] = useState(false);
   const loc = TEMPLE_LOCATION_RECORD;
@@ -25,8 +29,9 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = () =>
   const directionsUrl = getGoogleMapsDirectionsUrl(loc);
 
   return (
-    <section id="location" className="py-12 sm:py-16 bg-[#F3E7D6] border-b border-[#E5D1B6]">
-      <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <section id="location" className="relative overflow-hidden py-12 sm:py-16 bg-[#F3E7D6] border-b border-[#E5D1B6]">
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
+      <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-6 sm:mb-8">
           <LotusOrnament className="mb-2 text-[#A67C57]" size={28} />
           <div className="text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold mb-1.5 font-cinzel">

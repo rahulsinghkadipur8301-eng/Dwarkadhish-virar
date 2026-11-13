@@ -37,7 +37,7 @@ export interface TempleSanctumFrameProps {
  * - Supported sandstone & brass plinth base containing the sacred attribution and curtain toggle
  * - Depth order: Shadowed interior -> Deity Photo -> Velvet Curtains -> Gold Inner Lip -> Carved Frame -> Base
  */
-export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = ({
+export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(({
   shrineRef,
   leftX,
   rightX,
@@ -93,9 +93,9 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = ({
         <div className="relative flex flex-col items-center">
           {/* Soft Golden Halo Behind Finial */}
           <div
-            className="absolute -top-3 w-20 h-20 rounded-full blur-md opacity-40 pointer-events-none"
+            className="absolute -top-3 w-20 h-20 rounded-full opacity-40 pointer-events-none"
             style={{
-              background: 'radial-gradient(circle, #F5D77F 0%, #C59B56 50%, transparent 80%)',
+              background: 'radial-gradient(circle, #F5D77F 0%, #C59B56 42%, transparent 72%)',
             }}
           />
 
@@ -162,10 +162,10 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = ({
         
         {/* Soft Ambient Radial Warm Halo behind entire sanctum */}
         <div
-          className="absolute -inset-4 pointer-events-none z-0 blur-xl opacity-50"
+          className="absolute -inset-4 pointer-events-none z-0 opacity-50"
           style={{
             background:
-              'radial-gradient(ellipse at 50% 35%, rgba(229, 190, 117, 0.45) 0%, rgba(197, 155, 86, 0.18) 55%, transparent 75%)',
+              'radial-gradient(ellipse at 50% 35%, rgba(229, 190, 117, 0.42) 0%, rgba(197, 155, 86, 0.16) 52%, transparent 72%)',
           }}
         />
 
@@ -408,6 +408,6 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default TempleSanctumFrame;

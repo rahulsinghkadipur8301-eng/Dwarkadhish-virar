@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-const templeBellImage = '/assets/temple_bell.png';
+const TEMPLE_BELL_WEBP = '/assets/temple_bell.webp';
+const TEMPLE_BELL_PNG = '/assets/temple_bell.png';
 
 interface BellDef {
   id: number;
@@ -378,7 +379,7 @@ export interface HeroBellAtmosphereProps {
  * - Physics-driven damped pendulum response to mouse movements (directionally correct)
  * - Self-contained within HeroSection; completely fades to 0 before the section leaves the viewport
  */
-export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
+export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = React.memo(({
   reducedMotion = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -394,7 +395,6 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reduceMotion = reducedMotion || motionQuery.matches;
 
-    // Physics state per bell: theta (radians), omega (rad/s)
     const physics = BELL_DEFINITIONS.map(() => ({
       theta: 0,
       omega: 0,
@@ -403,12 +403,79 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
     let lastMouseX: number | null = null;
     let isHeroInView = true;
     let lastTime = 0;
-    let animId = 0;
+    let animId: number | null = null;
+    let lastActivityAt = performance.now();
 
     const clamp = (val: number, min: number, max: number) =>
       Math.max(min, Math.min(max, val));
 
-    // Pointer move listener: mouse movement left/right imparts signed impulse
+    const getHeroProgress = (): number => {
+      const rect = heroSection.getBoundingClientRect();
+      const heroHeight = rect.height || window.innerHeight;
+      const rawProgress = -rect.top / heroHeight;
+      return clamp(rawProgress, 0, 1.2);
+    };
+
+    const tick = (timestamp: number) => {
+      if (!isHeroInView || document.hidden) {
+        animId = null;
+        return;
+      }
+
+      if (!lastTime) lastTime = timestamp;
+      const dt = clamp((timestamp - lastTime) / 1000, 0, 0.033);
+      lastTime = timestamp;
+
+      const progress = getHeroProgress();
+      const globalOpacityMultiplier = calculateHeroBellOpacity(progress);
+      let anyMoving = false;
+
+      BELL_DEFINITIONS.forEach((bell, idx) => {
+        const el = bellRefs.current[idx];
+        if (!el) return;
+
+        const state = physics[idx];
+
+        if (!reduceMotion) {
+          const accel = -bell.stiffness * state.theta - bell.damping * state.omega;
+          state.omega += accel * dt;
+          const maxRad = (bell.maxAngleDeg * Math.PI) / 180;
+          state.theta = clamp(state.theta + state.omega * dt, -maxRad, maxRad);
+
+          if (Math.abs(state.theta) < 0.0002 && Math.abs(state.omega) < 0.0002) {
+            state.theta = 0;
+            state.omega = 0;
+          } else {
+            anyMoving = true;
+          }
+        } else {
+          state.theta = 0;
+          state.omega = 0;
+        }
+
+        const parallaxY = -progress * 120 * bell.parallaxSpeed;
+        const deg = (state.theta * 180) / Math.PI;
+
+        el.style.transform = `translate3d(0, ${parallaxY.toFixed(1)}px, 0) rotate(${deg.toFixed(2)}deg)`;
+        el.style.opacity = (bell.baseOpacity * globalOpacityMultiplier).toFixed(3);
+      });
+
+      // Keep RAF alive while bells swing or user recently scrolled; sleep when completely idle
+      if (anyMoving || timestamp - lastActivityAt < 220) {
+        animId = window.requestAnimationFrame(tick);
+      } else {
+        animId = null;
+      }
+    };
+
+    const startLoop = () => {
+      lastActivityAt = performance.now();
+      if (animId === null && isHeroInView && !document.hidden) {
+        lastTime = 0;
+        animId = window.requestAnimationFrame(tick);
+      }
+    };
+
     const onPointerMove = (e: PointerEvent) => {
       if (reduceMotion || e.pointerType === 'touch' || !isHeroInView) return;
       if (lastMouseX === null) {
@@ -420,104 +487,73 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
 
       if (Math.abs(dx) < 1 || Math.abs(dx) > 180) return;
 
-      // Essential contract:
-      // dx > 0 (mouse right) -> omega increases -> rotates clockwise -> bell bottom moves right
-      // dx < 0 (mouse left) -> omega decreases -> rotates counter-clockwise -> bell bottom moves left
       BELL_DEFINITIONS.forEach((bell, idx) => {
         const state = physics[idx];
         const impulse = dx * bell.impulseSensitivity;
         state.omega = clamp(state.omega * 0.92 + impulse, -3.5, 3.5);
       });
+      startLoop();
     };
 
     const onPointerLeave = () => {
       lastMouseX = null;
     };
 
-    // Calculate Hero scroll progress (0.0 at top of hero, 1.0 when hero bottom leaves viewport)
-    const getHeroProgress = (): number => {
-      const rect = heroSection.getBoundingClientRect();
-      const heroHeight = rect.height || window.innerHeight;
-      // When rect.top is 0, progress is 0.
-      // When rect.bottom is 0 (hero scrolled past top), rect.top is -heroHeight, progress is 1.0.
-      const rawProgress = -rect.top / heroHeight;
-      return clamp(rawProgress, 0, 1.2);
+    const onScroll = () => {
+      if (isHeroInView) {
+        startLoop();
+      }
     };
 
-    // Update bell DOM elements (transform and opacity) directly in RAF
-    const tick = (timestamp: number) => {
-      if (!lastTime) lastTime = timestamp;
-      const dt = clamp((timestamp - lastTime) / 1000, 0, 0.033);
-      lastTime = timestamp;
-
-      const progress = getHeroProgress();
-      const globalOpacityMultiplier = isHeroInView ? calculateHeroBellOpacity(progress) : 0;
-
-      BELL_DEFINITIONS.forEach((bell, idx) => {
-        const el = bellRefs.current[idx];
-        if (!el) return;
-
-        const state = physics[idx];
-
-        if (isHeroInView && !reduceMotion) {
-          // Damped pendulum physics
-          const accel = -bell.stiffness * state.theta - bell.damping * state.omega;
-          state.omega += accel * dt;
-          const maxRad = (bell.maxAngleDeg * Math.PI) / 180;
-          state.theta = clamp(state.theta + state.omega * dt, -maxRad, maxRad);
-
-          // Settle threshold
-          if (Math.abs(state.theta) < 0.0002 && Math.abs(state.omega) < 0.0002) {
-            state.theta = 0;
-            state.omega = 0;
-          }
-        } else if (!isHeroInView) {
-          state.theta = 0;
-          state.omega = 0;
-        }
-
-        // Parallax displacement based on scroll progress and depth
-        const parallaxY = -progress * 120 * bell.parallaxSpeed;
-        const deg = (state.theta * 180) / Math.PI;
-
-        // Apply composited transform and computed opacity
-        el.style.transform = `translate3d(0, ${parallaxY.toFixed(1)}px, 0) rotate(${deg.toFixed(2)}deg)`;
-        el.style.opacity = (bell.baseOpacity * globalOpacityMultiplier).toFixed(3);
-      });
-
-      animId = window.requestAnimationFrame(tick);
-    };
-
-    // IntersectionObserver to pause loop and zero opacity when Hero is off-screen
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           isHeroInView = entry.isIntersecting;
           if (!entry.isIntersecting) {
+            if (animId !== null) {
+              window.cancelAnimationFrame(animId);
+              animId = null;
+            }
             bellRefs.current.forEach((el) => {
               if (el) el.style.opacity = '0';
             });
+          } else {
+            startLoop();
           }
         });
       },
-      { threshold: [0, 0.05, 0.2, 0.5, 1.0] }
+      { threshold: [0, 0.05] }
     );
     observer.observe(heroSection);
 
     const onMotionChange = () => {
       reduceMotion = reducedMotion || motionQuery.matches;
+      startLoop();
     };
-    motionQuery.addEventListener('change', onMotionChange);
 
+    const onVisibilityChange = () => {
+      if (document.hidden && animId !== null) {
+        window.cancelAnimationFrame(animId);
+        animId = null;
+      } else if (!document.hidden && isHeroInView) {
+        startLoop();
+      }
+    };
+
+    motionQuery.addEventListener('change', onMotionChange);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('pointerleave', onPointerLeave);
-    animId = window.requestAnimationFrame(tick);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    startLoop();
 
     return () => {
-      window.cancelAnimationFrame(animId);
+      if (animId !== null) window.cancelAnimationFrame(animId);
       observer.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('pointerleave', onPointerLeave);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       motionQuery.removeEventListener('change', onMotionChange);
     };
   }, [reducedMotion]);
@@ -598,18 +634,19 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
             {/* 2. Hanging Brass Temple Bell */}
             <div className="relative w-full -mt-1 flex justify-center">
               {bell.layer === 'fg' || bell.layer === 'mid' ? (
-                <img
-                  src={templeBellImage}
-                  alt=""
-                  draggable={false}
-                  className="w-full h-auto object-contain block select-none pointer-events-none drop-shadow-[0_8px_16px_rgba(20,10,5,0.6)]"
-                  style={{
-                    filter:
-                      bell.layer === 'mid'
-                        ? 'brightness(0.92) contrast(1.05) drop-shadow(0 6px 12px rgba(25,12,6,0.45))'
-                        : 'drop-shadow(0 10px 20px rgba(20,8,4,0.75))',
-                  }}
-                />
+                <picture className="w-full block">
+                  <source type="image/webp" srcSet={TEMPLE_BELL_WEBP} />
+                  <img
+                    src={TEMPLE_BELL_PNG}
+                    alt=""
+                    draggable={false}
+                    loading="eager"
+                    decoding="async"
+                    className={`w-full h-auto object-contain block select-none pointer-events-none ${
+                      bell.layer === 'mid' ? 'opacity-85' : ''
+                    }`}
+                  />
+                </picture>
               ) : (
                 /* Background Layer: Delicate Antique Brass Silhouette */
                 <svg
@@ -617,7 +654,7 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
                   height={bell.widthPx * 1.25}
                   viewBox="0 0 60 75"
                   fill="none"
-                  className="w-full h-auto drop-shadow-xs opacity-90"
+                  className="w-full h-auto opacity-90"
                 >
                   <defs>
                     <linearGradient id={`bgBellGrad-${bell.id}`} x1="0" y1="0" x2="1" y2="0">
@@ -647,6 +684,6 @@ export const HeroBellAtmosphere: React.FC<HeroBellAtmosphereProps> = ({
       })}
     </div>
   );
-};
+});
 
 export default HeroBellAtmosphere;

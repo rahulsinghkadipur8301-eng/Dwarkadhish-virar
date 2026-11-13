@@ -4,6 +4,7 @@ import { Sparkles, BookOpen } from 'lucide-react';
 import { PeacockFeather, FluteDivider, DiyaAccent } from './KrishnaMotifs';
 import { TempleSanctumFrame } from './TempleSanctumFrame';
 import { useI18n } from '../i18n/I18nContext';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 interface DevotionalPresenceSectionProps {
   reducedMotion?: boolean;
@@ -32,7 +33,7 @@ export function calculateExactCurtainOpening(P: number): number {
   }
 }
 
-export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps> = ({
+export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps> = React.memo(({
   reducedMotion = false,
 }) => {
   const { tDict } = useI18n();
@@ -60,9 +61,10 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
     ? (currentP - 0.42) / (0.65 - 0.42)
     : 1.0;
 
-  // Track scroll position changes deterministically
+  // Quantize state updates to avoid re-rendering 48 flower petals at 120fps on scroll
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    setCurrentP(latest);
+    const quantized = latest < 0.12 ? 0 : latest > 0.95 ? 1 : Math.round(latest * 45) / 45;
+    setCurrentP((prev) => (prev === quantized ? prev : quantized));
   });
 
   // Apple-grade secondary motion transforms linked directly to viewport scroll progress:
@@ -126,14 +128,8 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
       id="presence"
       className="relative w-full bg-[#FBF6ED] border-b border-[#E5D1B6] py-14 sm:py-18 lg:py-24 select-none overflow-hidden"
     >
-      {/* Subtle Background Traditional Indian Mandala Accent */}
-      <div className="absolute top-6 right-6 w-72 h-72 opacity-[0.035] pointer-events-none transform rotate-12">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="85" stroke="#A67C57" strokeWidth="2" strokeDasharray="6 4" />
-          <circle cx="100" cy="100" r="65" stroke="#C59B56" strokeWidth="1.5" />
-          <path d="M100 20V180M20 100H180" stroke="#A67C57" strokeWidth="1" />
-        </svg>
-      </div>
+      {/* Centered Rotating Sacred Background Chakra */}
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
 
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative z-10">
         
@@ -261,6 +257,6 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
       </div>
     </section>
   );
-};
+});
 
 export default DevotionalPresenceSection;

@@ -115,6 +115,15 @@ export const Footer: React.FC<FooterProps> = ({ language, onNavigate, onOpenPlan
               <li>
                 <button
                   type="button"
+                  onClick={() => onNavigate('gallery')}
+                  className="hover:text-[#C98945] hover:translate-x-0.5 transition-all cursor-pointer"
+                >
+                  {tDict.nav.gallery}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
                   onClick={() => onNavigate('darshan')}
                   className="hover:text-[#C98945] hover:translate-x-0.5 transition-all cursor-pointer"
                 >

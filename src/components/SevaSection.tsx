@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { Language, SEVA_OFFERINGS, SevaOffering } from '../data/templeData';
 import { Check, Info, ArrowRight, X } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 interface SevaSectionProps {
   language: Language;
+  reducedMotion?: boolean;
 }
 
-export const SevaSection: React.FC<SevaSectionProps> = ({ language }) => {
+export const SevaSection: React.FC<SevaSectionProps> = ({
+  language,
+  reducedMotion = false,
+}) => {
   const { tDict } = useI18n();
   const [selectedSeva, setSelectedSeva] = useState<SevaOffering | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -49,8 +54,9 @@ export const SevaSection: React.FC<SevaSectionProps> = ({ language }) => {
   };
 
   return (
-    <section id="seva" className="py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
-      <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <section id="seva" className="relative overflow-hidden py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
+      <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="max-w-3xl mb-12 sm:mb-14">
           <div className="text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold mb-2.5 font-cinzel">
             {tDict.seva.kicker}

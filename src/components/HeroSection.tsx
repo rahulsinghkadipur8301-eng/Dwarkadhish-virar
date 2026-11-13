@@ -13,7 +13,7 @@ interface HeroSectionProps {
   reducedMotion?: boolean;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({
+export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
   onExplore,
   onOpenPlanner,
   reducedMotion = false,
@@ -220,48 +220,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       ) : (
         /* =========================================================================
            MOBILE & TABLET SCREENS (< lg):
-           Scaled +15% typography & buttons while preserving first-screen fit.
+           Generous 50svh (min 320px) unobstructed temple showcase so the glowing
+           sandstone shikhara, yellow dhwaja, and entrance facade are prominently visible.
            ========================================================================= */
-        <div className="w-full min-h-[calc(100svh-5rem)] flex flex-col justify-between">
-          {/* 1. Mobile & Tablet Unobstructed Temple Showcase */}
-          <div className="relative w-full h-[200px] sm:h-[265px] md:h-[315px] overflow-hidden bg-[#180E09]">
+        <div className="w-full flex flex-col justify-between bg-[#20140D]">
+          {/* 1. Mobile & Tablet Generous Unobstructed Temple Showcase */}
+          <div className="relative w-full h-[50svh] min-h-[320px] max-h-[440px] sm:h-[400px] md:h-[460px] overflow-hidden bg-[#180E09]">
             <img
               src="/dwarkadhish_temple_widescreen_4k.webp"
               alt="Shri Dwarkadhish Mandir at sunset in Shirgaon, Virar East showing intricate sandstone carved shikhara spire and flying yellow dhwaja flag"
-              className={`w-full h-full object-cover object-[70%_25%] ${
+              className={`w-full h-full object-cover object-[72%_20%] ${
                 !reducedMotion ? 'animate-subtle-zoom' : ''
               }`}
               loading="eager"
-              decoding="sync"
+              decoding="async"
               fetchPriority="high"
             />
 
-            {/* Top and Bottom Edge Blends */}
-            <div className="absolute top-0 inset-x-0 h-14 bg-gradient-to-b from-[#20140D]/70 to-transparent pointer-events-none" />
-            <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#20140D] via-[#20140D]/60 to-transparent pointer-events-none" />
+            {/* Top and Soft Bottom Vignette Blending Cleanly Into Text Band */}
+            <div className="absolute top-0 inset-x-0 h-14 bg-gradient-to-b from-[#20140D]/65 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#20140D] via-[#20140D]/55 to-transparent pointer-events-none" />
 
             {/* Single Active Mobile Particle & Bell Instance */}
-            <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-60" />
+            <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-55" />
             <HeroBellAtmosphere reducedMotion={reducedMotion} />
 
-            {/* Location Badge (+15% scaled) */}
-            <div className="absolute top-2.5 left-2.5 z-20">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#20140D]/80 border border-[#B68A45]/50 backdrop-blur-md text-[10.5px] font-cinzel text-[#F8F1E5]">
+            {/* Location Badge */}
+            <div className="absolute top-3 left-3 z-20">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#20140D]/80 border border-[#B68A45]/50 backdrop-blur-sm text-[10.5px] font-cinzel text-[#F8F1E5]">
                 <Sparkles className="w-2.5 h-2.5 text-[#B68A45]" />
                 <span className="font-semibold">{tDict.hero.kickerLocality}</span>
               </div>
             </div>
           </div>
 
-          {/* 2. Mobile Stacked Content Section (+15% scaled typography) */}
-          <div className="relative z-20 px-4 sm:px-6 md:px-10 pt-2.5 pb-3.5 bg-[#20140D] flex-1 flex flex-col justify-center">
+          {/* 2. Mobile Stacked Content Section */}
+          <div className="relative z-20 px-4 sm:px-6 md:px-10 -mt-4 pt-1 pb-2.5 bg-[#20140D] flex flex-col justify-center">
             {/* Main Primary Heading */}
             <h1 className="font-devanagari text-[1.45rem] sm:text-[1.75rem] md:text-[2.15rem] font-bold tracking-tight text-[#FFFCF7] leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               {tDict.hero.heading}
             </h1>
 
             {/* Compact Golden Line */}
-            <div className="flex items-center gap-1.5 my-1.5">
+            <div className="flex items-center gap-1.5 my-1">
               <div className="h-[1.5px] w-14 bg-gradient-to-r from-transparent via-[#B68A45] to-[#B68A45]" />
               <span className="w-1.5 h-1.5 rotate-45 bg-[#B68A45]" />
               <div className="h-[1.5px] w-14 bg-gradient-to-l from-transparent via-[#B68A45] to-[#B68A45]" />
@@ -273,21 +274,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Supporting Line */}
-            <p className="font-serif-royal italic text-base sm:text-lg text-[#F8F1E5] font-medium tracking-wide mb-1.5">
+            <p className="font-serif-royal italic text-base sm:text-lg text-[#F8F1E5] font-medium tracking-wide mb-1">
               {tDict.hero.tagline}
             </p>
 
             {/* Concise Context */}
-            <p className="text-[12.5px] sm:text-[13.5px] text-[#D8C2A4] leading-snug sm:leading-relaxed mb-3.5 max-w-xl">
+            <p className="text-[12px] sm:text-[13.5px] text-[#D8C2A4] leading-snug sm:leading-relaxed mb-2.5 max-w-xl">
               {tDict.hero.description}
             </p>
 
-            {/* Primary Buttons on Mobile (+15% larger) */}
+            {/* Primary Buttons on Mobile */}
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 type="button"
                 onClick={() => onExplore('darshan')}
-                className="w-full sm:w-auto px-4 py-2.5 text-[12.5px] font-semibold tracking-wide text-[#FFFCF7] bg-[#4A3022] hover:bg-[#382317] border border-[#B68A45] rounded-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all"
+                className="w-full sm:w-auto px-4 py-2 text-[12.5px] font-semibold tracking-wide text-[#FFFCF7] bg-[#4A3022] hover:bg-[#382317] border border-[#B68A45] rounded-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all"
               >
                 <Clock className="w-4 h-4 text-[#D8C2A4]" />
                 <span className="font-medium">{tDict.hero.btnDarshanInfo}</span>
@@ -300,7 +301,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 href={directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-4 py-2.5 text-[12.5px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all"
+                className="w-full sm:w-auto px-4 py-2 text-[12.5px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all"
               >
                 <Navigation className="w-4 h-4 text-[#20140D]" />
                 <span>{tDict.hero.btnPlanVisit}</span>
@@ -311,11 +312,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Guide Link */}
-            <div className="mt-2 text-center sm:text-left">
+            <div className="mt-1.5 text-center sm:text-left">
               <button
                 type="button"
                 onClick={onOpenPlanner}
-                className="text-[12.5px] text-[#D8C2A4] hover:text-[#FFFCF7] underline inline-flex items-center gap-1.5 cursor-pointer py-0.5"
+                className="text-[12px] text-[#D8C2A4] hover:text-[#FFFCF7] underline inline-flex items-center gap-1.5 cursor-pointer py-0.5"
               >
                 <Compass className="w-3.5 h-3.5 text-[#B68A45]" />
                 <span>{tDict.hero.btnGuide}</span>
@@ -324,7 +325,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* 3. Mobile Utility Strip */}
-          <div className="w-full border-t border-[#B68A45]/30 bg-[#180E09] text-[#F8F1E5] px-4 py-2">
+          <div className="w-full border-t border-[#B68A45]/30 bg-[#180E09] text-[#F8F1E5] px-4 py-1.5">
             <div className="grid grid-cols-2 gap-2 text-[10.5px]">
               <div className="flex items-center gap-1.5">
                 <Clock className="w-3 h-3 text-[#B68A45] shrink-0" />
@@ -347,4 +348,4 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       )}
     </section>
   );
-};
+});

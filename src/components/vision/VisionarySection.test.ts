@@ -115,10 +115,9 @@ test('Blended Donation Poster Asset, Google Maps Directions & Build Size Discipl
   assert.ok(visionHeroCode.includes('Vibrant_Temple_Ceremony_Portrait_8e2d2892.png'), 'Vision section must include uploaded Vibrant_Temple_Ceremony_Portrait_8e2d2892.png');
   assert.ok(visionHeroCode.includes('Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png'), 'Vision section must include uploaded Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png');
   assert.ok(visionHeroCode.includes('Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png'), 'Vision section must include uploaded Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png');
-  assert.ok(visionHeroCode.includes('dressed_dwarkadhish_splendour.webp'), 'Vision section must include dressed_dwarkadhish_splendour.webp');
+  assert.strictEqual(visionHeroCode.includes('Sacred Moments & Consecration Seva'), false, 'Moved gallery block must not be duplicated inside PravinaVisionHero.tsx');
   assert.strictEqual(visionHeroCode.includes('{c.ceremonyCaption}'), false, 'Image cards must not render subtitle captions');
   assert.strictEqual(visionHeroCode.includes('{c.goldenCaption}'), false, 'Golden hour card must not render subtitle caption');
-  assert.strictEqual(visionHeroCode.includes('{photo.caption}'), false, 'Vertical gallery cards must not render subtitle captions');
   assert.strictEqual(visionHeroCode.includes('object-cover'), false, 'Vision section must strictly avoid object-cover to guarantee zero face or detail cropping');
 
   for (const file of [
@@ -135,4 +134,68 @@ test('Blended Donation Poster Asset, Google Maps Directions & Build Size Discipl
 
   const plannerCode = fs.readFileSync('src/components/PlannerModal.tsx', 'utf-8');
   assert.ok(plannerCode.includes('getGoogleMapsDirectionsUrl'), 'PlannerModal must provide Google Maps directions URL');
+});
+
+test('Dedicated TempleGallerySection & SectionBackgroundChakra across every section except main homepage', () => {
+  const galleryCode = fs.readFileSync('src/components/TempleGallerySection.tsx', 'utf-8');
+  assert.ok(galleryCode.includes('id="gallery"'), 'TempleGallerySection must define id="gallery"');
+  assert.ok(galleryCode.includes('Sacred Moments & Consecration Seva'), 'Must include heading Sacred Moments & Consecration Seva');
+  assert.ok(
+    galleryCode.includes('Full uncropped devotional photographs — click any portrait to inspect at full clarity'),
+    'Must include subheading for uncropped devotional portraits'
+  );
+
+  for (const expectedText of [
+    'Offering Before the Deity',
+    'Sanctum Darshan',
+    'Consecration Abhishekam',
+    'Vedic Abhishekam',
+    'Dressed Dwarkadhish in Temple Splendour',
+    'Dwarkadhish Splendour',
+    'Humble Charan Seva',
+    'Charan Seva',
+    '/assets/praveena_thakur/before_idol.webp',
+    '/assets/praveena_thakur/devotional_ceremony.webp',
+    '/assets/praveena_thakur/dressed_dwarkadhish_splendour.webp',
+    '/assets/praveena_thakur/charan_seva.webp',
+  ]) {
+    assert.ok(galleryCode.includes(expectedText), `TempleGallerySection must include ${expectedText}`);
+  }
+
+  assert.ok(galleryCode.includes('aspect-[9/16]') && galleryCode.includes('object-contain'), 'Gallery portraits must be uncropped 9:16 object-contain');
+  assert.strictEqual(galleryCode.includes('object-cover'), false, 'TempleGallerySection must not use object-cover');
+  assert.ok(galleryCode.includes('SectionBackgroundChakra'), 'TempleGallerySection must mount rotating SectionBackgroundChakra');
+
+  const appCode = fs.readFileSync('src/App.tsx', 'utf-8');
+  assert.ok(appCode.includes('<TempleGallerySection'), 'App.tsx must mount TempleGallerySection');
+  assert.ok(appCode.includes("'gallery'"), 'App.tsx scroll spy must include gallery section id');
+
+  const navCode = fs.readFileSync('src/components/Navbar.tsx', 'utf-8');
+  assert.ok(navCode.includes("id: 'gallery'"), 'Navbar must include gallery navigation link');
+
+  const footerCode = fs.readFileSync('src/components/Footer.tsx', 'utf-8');
+  assert.ok(footerCode.includes("onNavigate('gallery')"), 'Footer must include gallery navigation link');
+
+  // Verify SectionBackgroundChakra is mounted in every non-homepage content section (with donation having its dedicated Mandala/Chakra)
+  for (const componentPath of [
+    'src/components/DevotionalPresenceSection.tsx',
+    'src/components/VisionarySection.tsx',
+    'src/components/TempleGallerySection.tsx',
+    'src/components/DarshanSection.tsx',
+    'src/components/TempleLocationSection.tsx',
+    'src/components/FestivalsSection.tsx',
+    'src/components/SevaSection.tsx',
+    'src/components/TempleSocialConnectSection.tsx',
+  ]) {
+    const code = fs.readFileSync(componentPath, 'utf-8');
+    assert.ok(code.includes('<SectionBackgroundChakra'), `${componentPath} must mount <SectionBackgroundChakra`);
+  }
+
+  // Strictly verify HeroSection (main homepage) does NOT mount SectionBackgroundChakra
+  const heroSectionCode = fs.readFileSync('src/components/HeroSection.tsx', 'utf-8');
+  assert.strictEqual(
+    heroSectionCode.includes('SectionBackgroundChakra'),
+    false,
+    'HeroSection (main homepage) must NOT include background chakra'
+  );
 });

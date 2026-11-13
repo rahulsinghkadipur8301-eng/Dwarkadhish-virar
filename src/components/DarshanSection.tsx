@@ -2,12 +2,17 @@ import React from 'react';
 import { Language, AARTI_SCHEDULE } from '../data/templeData';
 import { Info, CheckCircle2, Clock } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
+import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 
 interface DarshanSectionProps {
   language: Language;
+  reducedMotion?: boolean;
 }
 
-export const DarshanSection: React.FC<DarshanSectionProps> = ({ language }) => {
+export const DarshanSection: React.FC<DarshanSectionProps> = ({
+  language,
+  reducedMotion = false,
+}) => {
   const { tDict } = useI18n();
 
   const getAartiName = (item: typeof AARTI_SCHEDULE[0]) => {
@@ -25,8 +30,9 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({ language }) => {
   };
 
   return (
-    <section id="darshan" className="py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
-      <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <section id="darshan" className="relative overflow-hidden py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
+      <SectionBackgroundChakra reducedMotion={reducedMotion} />
+      <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Section Header */}
         <div className="max-w-3xl mb-12 sm:mb-14">
           <div className="text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold mb-2.5 font-cinzel">

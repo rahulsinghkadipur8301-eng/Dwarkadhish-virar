@@ -12,7 +12,7 @@ export interface TempleDonationSectionProps {
 
 const DONATION_BANNER_SRC = '/dwarkadhish_poster_clean_qr_blended.webp';
 
-export const TempleDonationSection: React.FC<TempleDonationSectionProps> = ({
+export const TempleDonationSection: React.FC<TempleDonationSectionProps> = React.memo(({
   language,
   reducedMotion = false,
 }) => {
@@ -90,7 +90,7 @@ export const TempleDonationSection: React.FC<TempleDonationSectionProps> = ({
           {/* Soft Radiant Gold Aura Behind Title Crest */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-6 -top-2 -bottom-2 bg-[radial-gradient(ellipse_at_50%_50%,rgba(255,250,235,0.85)_0%,rgba(232,199,132,0.28)_52%,transparent_78%)] blur-xl pointer-events-none"
+            className="absolute inset-x-6 -top-2 -bottom-2 bg-[radial-gradient(ellipse_at_50%_50%,rgba(255,250,235,0.85)_0%,rgba(232,199,132,0.28)_52%,transparent_75%)] pointer-events-none"
           />
 
           <div className="relative z-10 flex flex-col items-center">
@@ -143,7 +143,7 @@ export const TempleDonationSection: React.FC<TempleDonationSectionProps> = ({
           {/* Soft radiant halo blending framed artwork cleanly into the rotating mandala */}
           <div
             aria-hidden="true"
-            className="absolute -inset-6 sm:-inset-8 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_50%,rgba(232,199,132,0.52)_0%,rgba(255,253,248,0.4)_48%,transparent_76%)] blur-2xl pointer-events-none"
+            className="absolute -inset-6 sm:-inset-8 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_50%,rgba(232,199,132,0.48)_0%,rgba(255,253,248,0.36)_46%,transparent_74%)] pointer-events-none"
           />
 
           <motion.div
@@ -217,4 +217,4 @@ export const TempleDonationSection: React.FC<TempleDonationSectionProps> = ({
       </div>
     </section>
   );
-};
+});

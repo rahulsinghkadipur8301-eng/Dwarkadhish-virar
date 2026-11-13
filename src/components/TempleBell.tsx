@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
-const templeBell = '/assets/temple_bell.png';
+const TEMPLE_BELL_WEBP = '/assets/temple_bell.webp';
+const TEMPLE_BELL_PNG = '/assets/temple_bell.png';
 
 export interface TempleBellProps {
   scrollVelocity?: number;
@@ -14,14 +15,11 @@ export interface TempleBellProps {
  * TempleBell (Foreground Sanctum Bell)
  *
  * Physically anchored to a fixed gold hook at the upper central beam of the
- * temple sanctum frame. The chain links and bell swing together as one pendulum
- * from the fixed top pivot (50% 0%). The beam and hook never move.
- *
- * Uses the authentic high-resolution transparent temple_bell.png artwork with
- * warm-gold reflections and subtle contact shadow. Devotees can tap to ring the bell,
- * with opt-in authentic Panchadhatu bronze chime audio (432 Hz fundamental + harmonics).
+ * temple sanctum frame. Drives rotation via direct DOM transform mutation so
+ * swinging never causes 60fps React re-renders, and automatically rests RAF
+ * when settled, off-screen, or when the browser tab is hidden.
  */
-export const TempleBell: React.FC<TempleBellProps> = ({
+export const TempleBell: React.FC<TempleBellProps> = React.memo(({
   scrollVelocity = 0,
   reducedMotion = false,
   size = 'md',
@@ -29,15 +27,25 @@ export const TempleBell: React.FC<TempleBellProps> = ({
 }) => {
   const [isRinging, setIsRinging] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
-  const [angle, setAngle] = useState(0);
 
+  const rootRef = useRef<HTMLDivElement>(null);
+  const bellButtonRef = useRef<HTMLButtonElement>(null);
   const angleRef = useRef(0);
   const velocityRef = useRef(0);
+  const targetAngleRef = useRef(0);
   const audioContextRef = useRef<AudioContext | null>(null);
   const animFrameRef = useRef<number | null>(null);
+  const kickLoopRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    targetAngleRef.current = Math.max(-10, Math.min(10, scrollVelocity * 10));
+    if (Math.abs(targetAngleRef.current) > 0.01) {
+      kickLoopRef.current();
+    }
+  }, [scrollVelocity]);
 
   // Initialize Web Audio API on explicit user gesture
-  const initAudio = () => {
+  const initAudio = useCallback(() => {
     if (!audioContextRef.current && typeof window !== 'undefined') {
       const AudioCtx =
         window.AudioContext ||
@@ -47,12 +55,12 @@ export const TempleBell: React.FC<TempleBellProps> = ({
       }
     }
     if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-      audioContextRef.current.resume();
+      audioContextRef.current.resume().catch(() => {});
     }
-  };
+  }, []);
 
   // Synthesize an authentic Indian temple bronze bell chime (432 Hz fundamental + overtone harmonics)
-  const playSacredBellSound = () => {
+  const playSacredBellSound = useCallback(() => {
     if (!audioEnabled) return;
     initAudio();
     const ctx = audioContextRef.current;
@@ -84,24 +92,39 @@ export const TempleBell: React.FC<TempleBellProps> = ({
       osc.start(now);
       osc.stop(now + decay);
     });
-  };
+  }, [audioEnabled, initAudio]);
 
-  // Spring-damper physics loop for the foreground shrine bell
+  // On-demand spring-damper physics loop: stops completely once settled or off-screen
   useEffect(() => {
     if (reducedMotion) {
-      setAngle(0);
+      angleRef.current = 0;
+      velocityRef.current = 0;
+      if (bellButtonRef.current) {
+        bellButtonRef.current.style.transform = 'rotate(0deg)';
+      }
       return;
     }
 
+    let isInView = true;
     let lastTime = performance.now();
 
+    const stopLoop = () => {
+      if (animFrameRef.current !== null) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
+    };
+
     const updatePhysics = (now: number) => {
+      if (!isInView || document.hidden) {
+        animFrameRef.current = null;
+        return;
+      }
+
       const dt = Math.min((now - lastTime) / 1000, 0.033);
       lastTime = now;
 
-      // Small deflection from scroll velocity (max ±10 degrees)
-      const targetAngle = Math.max(-10, Math.min(10, scrollVelocity * 10));
-
+      const targetAngle = targetAngleRef.current;
       const springK = 32.0;
       const dampingC = 4.8;
       const displacement = targetAngle - angleRef.current;
@@ -111,44 +134,102 @@ export const TempleBell: React.FC<TempleBellProps> = ({
       velocityRef.current -= dampingC * velocityRef.current * dt;
       angleRef.current += velocityRef.current * dt;
 
-      // Settle if micro-movement
-      if (Math.abs(angleRef.current) < 0.01 && Math.abs(velocityRef.current) < 0.05) {
+      const settled =
+        Math.abs(targetAngle - angleRef.current) < 0.02 &&
+        Math.abs(velocityRef.current) < 0.04 &&
+        Math.abs(targetAngle) < 0.02;
+
+      if (settled) {
         angleRef.current = 0;
         velocityRef.current = 0;
+        if (bellButtonRef.current) {
+          bellButtonRef.current.style.transform = 'rotate(0deg)';
+        }
+        animFrameRef.current = null;
+        return;
       }
 
-      setAngle(angleRef.current);
+      if (bellButtonRef.current) {
+        bellButtonRef.current.style.transform = `rotate(${angleRef.current.toFixed(2)}deg)`;
+      }
       animFrameRef.current = requestAnimationFrame(updatePhysics);
     };
 
-    animFrameRef.current = requestAnimationFrame(updatePhysics);
-
-    return () => {
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
+    const startLoop = () => {
+      if (animFrameRef.current === null && isInView && !document.hidden) {
+        lastTime = performance.now();
+        animFrameRef.current = requestAnimationFrame(updatePhysics);
       }
     };
-  }, [scrollVelocity, reducedMotion]);
 
-  const handleRingBell = () => {
+    kickLoopRef.current = startLoop;
+
+    const observer =
+      typeof IntersectionObserver !== 'undefined' && rootRef.current
+        ? new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                isInView = entry.isIntersecting;
+                if (isInView) {
+                  if (
+                    Math.abs(angleRef.current) > 0.02 ||
+                    Math.abs(velocityRef.current) > 0.04 ||
+                    Math.abs(targetAngleRef.current) > 0.02
+                  ) {
+                    startLoop();
+                  }
+                } else {
+                  stopLoop();
+                }
+              }
+            },
+            { threshold: 0 }
+          )
+        : null;
+
+    if (observer && rootRef.current) {
+      observer.observe(rootRef.current);
+    }
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (Math.abs(angleRef.current) > 0.02 || Math.abs(velocityRef.current) > 0.04) {
+        startLoop();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      stopLoop();
+      observer?.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      kickLoopRef.current = () => {};
+    };
+  }, [reducedMotion]);
+
+  const handleRingBell = useCallback(() => {
     setIsRinging(true);
-    // Add realistic rotational impulse to pendulum
     velocityRef.current += Math.random() > 0.5 ? 24 : -24;
+    kickLoopRef.current();
     playSacredBellSound();
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       setIsRinging(false);
     }, 1200);
-  };
+  }, [playSacredBellSound]);
 
-  const toggleAudio = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const nextState = !audioEnabled;
-    setAudioEnabled(nextState);
-    if (nextState) {
-      initAudio();
-    }
-  };
+  const toggleAudio = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const nextState = !audioEnabled;
+      setAudioEnabled(nextState);
+      if (nextState) {
+        initAudio();
+      }
+    },
+    [audioEnabled, initAudio]
+  );
 
   const dimensions = {
     sm: { width: 44, height: 64 },
@@ -157,7 +238,7 @@ export const TempleBell: React.FC<TempleBellProps> = ({
   }[size];
 
   return (
-    <div className={`relative flex flex-col items-center select-none ${className}`}>
+    <div ref={rootRef} className={`relative flex flex-col items-center select-none ${className}`}>
       {/* 1. FIXED ARCHITECTURAL HOOK / ANCHOR BRACKET (Never moves) */}
       <div className="relative z-30 flex items-center justify-center -mb-1">
         <svg
@@ -189,12 +270,13 @@ export const TempleBell: React.FC<TempleBellProps> = ({
 
       {/* 2. HANGING CHAIN & BELL ASSEMBLY (Swings from top center pivot where chain meets the hook) */}
       <button
+        ref={bellButtonRef}
         type="button"
         onClick={handleRingBell}
         className="relative flex flex-col items-center cursor-pointer focus:outline-hidden group"
         style={{
           transformOrigin: '50% 0%',
-          transform: `rotate(${angle}deg)`,
+          transform: 'rotate(0deg)',
           width: dimensions.width,
         }}
         title="पवित्र मंदिर घंटा वाजवा — Tap to ring sacred temple bell"
@@ -208,13 +290,18 @@ export const TempleBell: React.FC<TempleBellProps> = ({
           </div>
         )}
 
-        {/* High-Resolution Transparent Bell Artwork */}
-        <img
-          src={templeBell}
-          alt="Shri Dwarkadhish temple bell"
-          draggable={false}
-          className="w-full h-auto object-contain block drop-shadow-[0_8px_16px_rgba(42,28,18,0.55)] transition-transform duration-200 group-hover:scale-103"
-        />
+        {/* Optimized WebP + PNG Fallback Bell Artwork */}
+        <picture className="w-full block">
+          <source type="image/webp" srcSet={TEMPLE_BELL_WEBP} />
+          <img
+            src={TEMPLE_BELL_PNG}
+            alt="Shri Dwarkadhish temple bell"
+            draggable={false}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-contain block drop-shadow-[0_8px_16px_rgba(42,28,18,0.55)] transition-transform duration-200 group-hover:scale-103"
+          />
+        </picture>
 
         {/* Devotee Tap Hint */}
         <span className="sr-only">Ring Sacred Temple Bell</span>
@@ -248,6 +335,7 @@ export const TempleBell: React.FC<TempleBellProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default TempleBell;
+

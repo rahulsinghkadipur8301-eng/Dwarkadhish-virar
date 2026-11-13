@@ -6,6 +6,7 @@ import { PeacockFeather, LotusOrnament, DiyaAccent } from '../KrishnaMotifs';
 
 export interface LightboxPhotoData {
   src: string;
+  webpSrc?: string;
   fallbackSrc?: string;
   title: string;
   caption: string;
@@ -18,7 +19,7 @@ export interface PravinaVisionHeroProps {
   onOpenLightbox: (photo: LightboxPhotoData) => void;
 }
 
-export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
+export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
   language,
   reducedMotion,
   onOpenLightbox,
@@ -54,21 +55,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       ceremonyTag: 'Pratishtha Utsav',
       ceremonyTitle: 'Vibrant Temple Ceremony Portrait',
       ceremonyCaption: 'Standing before the Shirgaon Dwarkadhish sandstone shrine during ceremonial celebrations.',
-      // Vertical 9:16 Gallery Heading & 4 Uncropped Moments
-      galleryHeading: 'Sacred Moments & Consecration Seva',
-      gallerySubheading: 'Full uncropped devotional photographs — click any portrait to inspect at full clarity',
-      photo1Tag: 'Sanctum Darshan',
-      photo1Title: 'Offering Before the Deity',
-      photo1Caption: 'Adorning Bhagwan Dwarkadhish in the illuminated inner sanctum.',
-      photo2Tag: 'Vedic Abhishekam',
-      photo2Title: 'Consecration Abhishekam',
-      photo2Caption: 'Pouring sacred waters during Vedic Pran Pratishtha ceremonies.',
-      photo3Tag: 'Dwarkadhish Splendour',
-      photo3Title: 'Dressed Dwarkadhish in Temple Splendour',
-      photo3Caption: 'Offering sacred aarti thali before Lord Dwarkadhish adorned in royal silk vestments.',
-      photo4Tag: 'Charan Seva',
-      photo4Title: 'Humble Charan Seva',
-      photo4Caption: 'Bowing in quiet reverence at the lotus feet of Lord Dwarkadhish.',
     },
     hi: {
       eyebrow: 'श्री द्वारकाधीश धाम के पीछे का पावन संकल्प',
@@ -97,20 +83,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       ceremonyTag: 'प्रतिष्ठा उत्सव',
       ceremonyTitle: 'पावन मंदिर समारोह दर्शन',
       ceremonyCaption: 'शिरगांव श्री द्वारकाधीश मंदिर के उत्सव समारोह में पावन उपस्थिति।',
-      galleryHeading: 'पावन भक्ति एवं प्राण प्रतिष्ठा छायाचित्र',
-      gallerySubheading: 'बिना किसी क्रॉप के पूर्ण सुरक्षित छायाचित्र — बड़े रूप में देखने हेतु क्लिक करें',
-      photo1Tag: 'गर्भगृह वंदना',
-      photo1Title: 'प्रभु विग्रह को अर्पण',
-      photo1Caption: 'श्री द्वारकाधीश भगवान के समक्ष श्रद्धापूर्वक पुष्पहार एवं वंदन।',
-      photo2Tag: 'वैदिक अभिषेक',
-      photo2Title: 'पावन जलाभिषेक अनुष्ठान',
-      photo2Caption: 'वैदिक प्राण प्रतिष्ठा के दौरान स्वर्ण कलश से पवित्र अभिषेक।',
-      photo3Tag: 'द्वारकाधीश श्रृंगार',
-      photo3Title: 'दिव्य राजसी श्रृंगार एवं आरती',
-      photo3Caption: 'रेशमी पीतांबर व आभूषणों से सुसज्जित भगवान द्वारकाधीश की पावन आरती सेवा।',
-      photo4Tag: 'चरण सेवा',
-      photo4Title: 'विनम्र चरण वंदना',
-      photo4Caption: 'श्री द्वारकाधीश भगवान के श्रीचरणों में गहन भक्ति और समर्पण।',
     },
     mr: {
       eyebrow: 'श्री द्वारकाधीश धामामागील पवित्र संकल्प',
@@ -139,20 +111,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       ceremonyTag: 'प्रतिष्ठा उत्सव',
       ceremonyTitle: 'मंगल मंदिर सोहळा दर्शन',
       ceremonyCaption: 'शिरगाव श्री द्वारकाधीश मंदिराच्या पवित्र समारंभातील भक्तीमय उपस्थिती.',
-      galleryHeading: 'पावन दर्शन आणि प्राणप्रतिष्ठा क्षणचित्रे',
-      gallerySubheading: 'कोणत्याही क्रॉपिंगशिवाय संपूर्ण सुरक्षित छायाचित्रे — पूर्ण पाहण्यासाठी क्लिक करा',
-      photo1Tag: 'गर्भगृह सेवा',
-      photo1Title: 'प्रभु विग्रहासमोर अर्पण',
-      photo1Caption: 'श्री द्वारकाधीश भगवान यांच्या गाभाऱ्यात श्रद्धेने केलेली प्रार्थना.',
-      photo2Tag: 'वैदिक अभिषेक',
-      photo2Title: 'पवित्र जलाभिषेक विधी',
-      photo2Caption: 'वैदिक प्राणप्रतिष्ठा प्रसंगी सुवर्ण कलशातून मंगल अभिषेक.',
-      photo3Tag: 'द्वारकाधीश ऐश्वर्य',
-      photo3Title: 'राजसी शृंगार व आरती सेवा',
-      photo3Caption: 'रेशमी वस्त्रे व अलंकारांनी सजलेल्या श्री द्वारकाधीशांची भक्तिभावाने केलेली आरती.',
-      photo4Tag: 'चरण सेवा',
-      photo4Title: 'विनम्र चरण वंदना',
-      photo4Caption: 'श्री द्वारकाधीशांच्या चरणकमलांशी संपूर्ण शरणागत भाव.',
     },
     gu: {
       eyebrow: 'શ્રી દ્વારકાધીશ ધામ પાછળનો પવિત્ર સંકલ્પ',
@@ -181,20 +139,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       ceremonyTag: 'પ્રતિષ્ઠા ઉત્સવ',
       ceremonyTitle: 'મંગલ મંદિર સમારોહ દર્શન',
       ceremonyCaption: 'શિરગાવ શ્રી દ્વારકાધીશ મંદિરના પાવન સમારોહમાં ભક્તિમય ઉપસ્થિતિ.',
-      galleryHeading: 'પવિત્ર દર્શન અને પ્રાણપ્રતિષ્ઠા સેવા ઝલક',
-      gallerySubheading: 'સંપૂર્ણ અનક્રોપ્ડ તસવીરો — પૂર્ણ કદમાં જોવા માટે કોઈપણ તસવીર પર ક્લિક કરો',
-      photo1Tag: 'ગર્ભગૃહ સેવા',
-      photo1Title: 'પ્રભુ વિગ્રહ સમક્ષ અર્પણ',
-      photo1Caption: 'શ્રી દ્વારકાધીશ ભગવાનના ગર્ભગૃહમાં ભક્તિભાવપૂર્વક વંદન.',
-      photo2Tag: 'વૈદિક અભિષેક',
-      photo2Title: 'પવિત્ર જળાભિષેક વિધિ',
-      photo2Caption: 'વૈદિક પ્રાણપ્રતિષ્ઠા પ્રસંગે સુવર્ણ કળશ દ્વારા મંગળ અભિષેક.',
-      photo3Tag: 'દ્વારકાધીશ વૈભવ',
-      photo3Title: 'રાજસી શૃંગાર અને આરતી સેવા',
-      photo3Caption: 'રેશમી પીતાંબર અને સુવર્ણ આભૂષણોથી સજ્જ શ્રી દ્વારકાધીશની આરતી વંદના.',
-      photo4Tag: 'ચરણ સેવા',
-      photo4Title: 'વિનમ્ર ચરણ વંદના',
-      photo4Caption: 'શ્રી દ્વારકાધીશ પ્રભુના ચરણકમળમાં અનન્ય ભક્તિ અને શ્રદ્ધા.',
     },
   };
 
@@ -212,6 +156,7 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
   // SECOND FEATURED BLOCK (EXACT PLACE BELOW GOLDEN HOUR): Three Uploaded Ceremony Photos
   const ceremonyTriptychPhotos: (LightboxPhotoData & { layoutClass: string })[] = [
     {
+      webpSrc: '/assets/aistudio/Vibrant_Temple_Ceremony_Portrait_8e2d2892.webp',
       src: '/assets/aistudio/Vibrant_Temple_Ceremony_Portrait_8e2d2892.png',
       fallbackSrc: '/assets/praveena_thakur/vibrant_ceremony.webp',
       title: c.ceremonyTitle,
@@ -220,6 +165,7 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       layoutClass: 'col-span-2 aspect-[1672/941] sm:flex-[1.7768_1_0%]',
     },
     {
+      webpSrc: '/assets/aistudio/Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.webp',
       src: '/assets/aistudio/Ornate_Umbrella_Ceremony_in_the_Courtyard_bb340f83.png',
       fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
       title: 'Ornate Umbrella Ceremony in the Courtyard',
@@ -228,43 +174,13 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
       layoutClass: 'col-span-1 aspect-[953/1651] sm:flex-[0.5772_1_0%]',
     },
     {
+      webpSrc: '/assets/aistudio/Ornate_Temple_Procession_with_Red_Parasol_6d479e42.webp',
       src: '/assets/aistudio/Ornate_Temple_Procession_with_Red_Parasol_6d479e42.png',
       fallbackSrc: '/assets/praveena_thakur/charan_seva.webp',
       title: 'Ornate Temple Procession with Red Parasol',
       caption: 'Mandap ceremonial procession at Shri Dwarkadhish Mandir, Shirgaon.',
       tag: c.ceremonyTag,
       layoutClass: 'col-span-1 aspect-[933/1685] sm:flex-[0.5537_1_0%]',
-    },
-  ];
-
-  const verticalGalleryPhotos: LightboxPhotoData[] = [
-    {
-      src: '/assets/praveena_thakur/before_idol.webp',
-      fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
-      title: c.photo1Title,
-      caption: c.photo1Caption,
-      tag: c.photo1Tag,
-    },
-    {
-      src: '/assets/praveena_thakur/devotional_ceremony.webp',
-      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
-      title: c.photo2Title,
-      caption: c.photo2Caption,
-      tag: c.photo2Tag,
-    },
-    {
-      src: '/assets/praveena_thakur/dressed_dwarkadhish_splendour.webp',
-      fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
-      title: c.photo3Title,
-      caption: c.photo3Caption,
-      tag: c.photo3Tag,
-    },
-    {
-      src: '/assets/praveena_thakur/charan_seva.webp',
-      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
-      title: c.photo4Title,
-      caption: c.photo4Caption,
-      tag: c.photo4Tag,
     },
   ];
 
@@ -353,7 +269,8 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
                   }}
                   alt="At Dwarkadhish Shikhara — warm evening darshan standing before the hand-carved pink sandstone spire"
                   className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
-                  loading="eager"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <button
                   type="button"
@@ -377,17 +294,21 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
                   onClick={() => onOpenLightbox(photo)}
                   className={`group relative cursor-pointer rounded-xl bg-[#1A100A] border border-[#C29A54] shadow-sm overflow-hidden ${photo.layoutClass}`}
                 >
-                  <img
-                    src={photo.src}
-                    onError={(e) => {
-                      if (photo.fallbackSrc) {
-                        (e.target as HTMLImageElement).src = photo.fallbackSrc;
-                      }
-                    }}
-                    alt={photo.title}
-                    className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
-                    loading="eager"
-                  />
+                  <picture className="w-full h-full block">
+                    {photo.webpSrc && <source type="image/webp" srcSet={photo.webpSrc} />}
+                    <img
+                      src={photo.src}
+                      onError={(e) => {
+                        if (photo.fallbackSrc) {
+                          (e.target as HTMLImageElement).src = photo.fallbackSrc;
+                        }
+                      }}
+                      alt={photo.title}
+                      className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                   <button
                     type="button"
                     onClick={(e) => {
@@ -497,71 +418,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = ({
           </div>
         </div>
       </div>
-
-      {/* ===================================================================
-          UNCROPPED 9:16 SANCTUM & CONSECRATION GALLERY ROW (4 Cards)
-          Exact aspect-[9/16] + object-contain = ZERO head/face/hand/idol cuts
-         =================================================================== */}
-      <div className="border-t border-[#C29A54]/40 pt-8">
-        <div className="text-center max-w-3xl mx-auto mb-6">
-          <h3 className="font-serif-royal text-2xl sm:text-3xl font-bold text-[#741C24] mb-1">
-            {c.galleryHeading}
-          </h3>
-          <p className="text-xs sm:text-sm text-[#3F291D]/75 font-serif">
-            {c.gallerySubheading}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {verticalGalleryPhotos.map((photo, idx) => (
-            <motion.div
-              key={photo.src}
-              initial={reducedMotion ? false : { opacity: 0, y: 18 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.55, delay: idx * 0.08, ease: 'easeOut' }}
-              onClick={() => onOpenLightbox(photo)}
-              className="group cursor-pointer rounded-2xl p-2 sm:p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_8px_22px_rgba(63,41,29,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
-            >
-              {/* Exact 9:16 portrait stage + object-contain guarantees zero face/detail cropping */}
-              <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]">
-                <img
-                  src={photo.src}
-                  onError={(e) => {
-                    if (photo.fallbackSrc) {
-                      (e.target as HTMLImageElement).src = photo.fallbackSrc;
-                    }
-                  }}
-                  alt={photo.title}
-                  className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
-                  loading="lazy"
-                />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenLightbox(photo);
-                  }}
-                  className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md"
-                  aria-label={`Inspect ${photo.title}`}
-                >
-                  <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
-                </button>
-              </div>
-
-              {/* Clean Title Footer Without Subtitles */}
-              <div className="pt-2.5 px-1">
-                <span className="inline-block text-[10px] font-cinzel font-bold uppercase tracking-wider text-[#C29A54]">
-                  {photo.tag}
-                </span>
-                <h4 className="font-serif-royal text-sm sm:text-base font-bold text-[#741C24] leading-snug mt-0.5">
-                  {photo.title}
-                </h4>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
     </div>
   );
-};
+});

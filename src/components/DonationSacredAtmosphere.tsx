@@ -8,6 +8,7 @@ import {
   BellPendulumState,
 } from '../utils/donationAtmosphereUtils';
 
+const TEMPLE_BELL_WEBP = '/assets/temple_bell.webp';
 const TEMPLE_BELL_SRC = '/assets/temple_bell.png';
 
 export interface DonationSacredAtmosphereProps {
@@ -19,14 +20,10 @@ export interface DonationSacredAtmosphereProps {
  * DonationSacredAtmosphere
  *
  * Full-bleed motion-graphics & interactive temple bell backdrop dedicated to `#donation`.
- * Layers (all compositor-only transform/opacity animations):
- * 1. Radiant breathing golden aura & dual counter-rotating conic light beams behind center portal
- * 2. Concentric rotating Sacred Mandala & Ashtadal lotus geometry centered around the portal
- * 3. Rising golden deepam embers, sparks, and drifting devotional flower petals
- * 4. 12 physically hung multi-depth brass temple bells with breeze sway, mouse-impulse pendulum
- *    physics, and clickable foreground ring waves
+ * Strictly gates requestAnimationFrame, infinite ember/petal particles, and mandala CSS spin
+ * behind IntersectionObserver + document.hidden so it consumes 0% CPU/GPU off-screen.
  */
-export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> = ({
+export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> = React.memo(({
   reducedMotion = false,
   onBellRing,
 }) => {
@@ -36,9 +33,11 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
     DONATION_BELL_LAYOUT.map(() => ({ thetaRad: 0, omegaRadPerSec: 0 }))
   );
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const kickLoopRef = useRef<() => void>(() => {});
 
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [ringingBells, setRingingBells] = useState<Record<number, number>>({});
-  const particles = useMemo(() => createSacredParticles(26), []);
+  const particles = useMemo(() => createSacredParticles(20), []);
 
   // Subtle synthesized Panchadhatu bell resonance triggered strictly on user click
   const triggerChime = useCallback(() => {
@@ -86,10 +85,10 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
     (bellId: number, idx: number, side: 'left' | 'right') => {
       const state = physicsRef.current[idx];
       if (state) {
-        // Strike toward center so left bells swing inward-left/right cleanly
         const direction = side === 'left' ? 1 : -1;
         state.omegaRadPerSec = clampValue(state.omegaRadPerSec + direction * 5.8, -10, 10);
       }
+      kickLoopRef.current();
       const waveStamp = Date.now();
       setRingingBells((prev) => ({ ...prev, [bellId]: waveStamp }));
       triggerChime();
@@ -107,7 +106,7 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
     [onBellRing, triggerChime]
   );
 
-  // Continuous gentle breeze + pointer impulse physics loop (paused off-screen & under reducedMotion)
+  // Viewport-gated gentle breeze + pointer impulse physics loop (0% CPU when off-screen or hidden)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -115,10 +114,50 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
 
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let isReduced = reducedMotion || motionQuery.matches;
-    let isInView = true;
+    let isInView = false;
     let lastMouseX: number | null = null;
     let lastFrameMs = 0;
-    let rafId = 0;
+    let rafId: number | null = null;
+
+    const stopLoop = () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    const tick = (nowMs: number) => {
+      if (!isInView || isReduced || document.hidden) {
+        rafId = null;
+        return;
+      }
+
+      if (!lastFrameMs) lastFrameMs = nowMs;
+      const dtSec = clampValue((nowMs - lastFrameMs) / 1000, 0.004, 0.033);
+      lastFrameMs = nowMs;
+      const timeSec = nowMs / 1000;
+
+      DONATION_BELL_LAYOUT.forEach((spec, idx) => {
+        const el = bellRefs.current[idx];
+        if (!el) return;
+
+        const nextState = stepPendulumBell(physicsRef.current[idx], spec, timeSec, dtSec);
+        physicsRef.current[idx] = nextState;
+        const deg = (nextState.thetaRad * 180) / Math.PI;
+        el.style.transform = `translate3d(-50%, 0, 0) rotate(${deg.toFixed(2)}deg)`;
+      });
+
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    const startLoop = () => {
+      if (rafId === null && isInView && !isReduced && !document.hidden) {
+        lastFrameMs = 0;
+        rafId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    kickLoopRef.current = startLoop;
 
     const onPointerMove = (e: PointerEvent) => {
       if (isReduced || !isInView || e.pointerType === 'touch') return;
@@ -139,53 +178,59 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
           6
         );
       });
-    };
-
-    const tick = (nowMs: number) => {
-      if (!lastFrameMs) lastFrameMs = nowMs;
-      const dtSec = clampValue((nowMs - lastFrameMs) / 1000, 0.004, 0.033);
-      lastFrameMs = nowMs;
-      const timeSec = nowMs / 1000;
-
-      DONATION_BELL_LAYOUT.forEach((spec, idx) => {
-        const el = bellRefs.current[idx];
-        if (!el) return;
-
-        if (!isReduced && isInView) {
-          const nextState = stepPendulumBell(physicsRef.current[idx], spec, timeSec, dtSec);
-          physicsRef.current[idx] = nextState;
-          const deg = (nextState.thetaRad * 180) / Math.PI;
-          el.style.transform = `translate3d(-50%, 0, 0) rotate(${deg.toFixed(2)}deg)`;
-        } else {
-          el.style.transform = 'translate3d(-50%, 0, 0) rotate(0deg)';
-        }
-      });
-
-      rafId = window.requestAnimationFrame(tick);
+      startLoop();
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           isInView = entry.isIntersecting;
+          setIsSectionVisible(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            startLoop();
+          } else {
+            stopLoop();
+            bellRefs.current.forEach((el) => {
+              if (el) el.style.transform = 'translate3d(-50%, 0, 0) rotate(0deg)';
+            });
+          }
         }
       },
-      { threshold: [0, 0.05] }
+      { rootMargin: '160px 0px', threshold: 0 }
     );
     observer.observe(parentSection);
 
     const onMotionChange = () => {
       isReduced = reducedMotion || motionQuery.matches;
+      if (isReduced) {
+        stopLoop();
+        bellRefs.current.forEach((el) => {
+          if (el) el.style.transform = 'translate3d(-50%, 0, 0) rotate(0deg)';
+        });
+      } else {
+        startLoop();
+      }
     };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else {
+        startLoop();
+      }
+    };
+
     motionQuery.addEventListener('change', onMotionChange);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
-    rafId = window.requestAnimationFrame(tick);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      window.cancelAnimationFrame(rafId);
+      stopLoop();
       observer.disconnect();
       motionQuery.removeEventListener('change', onMotionChange);
       window.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      kickLoopRef.current = () => {};
     };
   }, [reducedMotion]);
 
@@ -235,7 +280,7 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
       <motion.div
         aria-hidden="true"
         animate={
-          reducedMotion
+          reducedMotion || !isSectionVisible
             ? undefined
             : {
                 scale: [0.96, 1.07, 0.96],
@@ -264,6 +309,7 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
           WebkitMaskImage:
             'radial-gradient(circle, black 22%, rgba(0,0,0,0.45) 50%, transparent 72%)',
           animation: reducedMotion ? 'none' : 'donationRaySpin 64s linear infinite',
+          animationPlayState: isSectionVisible && !reducedMotion ? 'running' : 'paused',
         }}
       />
 
@@ -274,6 +320,7 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
         style={{
           transform: 'translate(-50%, -50%)',
           animation: reducedMotion ? 'none' : 'donationRaySpin 52s linear infinite',
+          animationPlayState: isSectionVisible && !reducedMotion ? 'running' : 'paused',
         }}
       >
         <svg viewBox="0 0 800 800" fill="none" className="w-full h-full">
@@ -305,6 +352,7 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
         style={{
           transform: 'translate(-50%, -50%)',
           animation: reducedMotion ? 'none' : 'donationRaySpinReverse 38s linear infinite',
+          animationPlayState: isSectionVisible && !reducedMotion ? 'running' : 'paused',
         }}
       >
         <svg viewBox="0 0 600 600" fill="none" className="w-full h-full">
@@ -346,8 +394,9 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
 
       {/* =====================================================================
           LAYER 3: FLOATING GOLDEN DEEPAM EMBERS, SPARKS & DEVOTIONAL PETALS
+          Rendered strictly when section enters/nears viewport
          ===================================================================== */}
-      {!reducedMotion && (
+      {!reducedMotion && isSectionVisible && (
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
           {particles.map((p) => (
             <span
@@ -496,21 +545,31 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
                   aria-label={`Ring temple bell ${bell.id}`}
                   title="Tap to ring sacred temple bell"
                 >
-                  <img
-                    src={TEMPLE_BELL_SRC}
-                    alt="Hanging brass temple bell"
-                    draggable={false}
-                    className="w-full h-auto object-contain block drop-shadow-[0_14px_24px_rgba(63,41,29,0.42)]"
-                  />
+                  <picture className="w-full block">
+                    <source type="image/webp" srcSet={TEMPLE_BELL_WEBP} />
+                    <img
+                      src={TEMPLE_BELL_SRC}
+                      alt="Hanging brass temple bell"
+                      draggable={false}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-auto object-contain block drop-shadow-[0_14px_24px_rgba(63,41,29,0.42)]"
+                    />
+                  </picture>
                 </button>
               ) : bell.layer === 'mid' ? (
-                <img
-                  src={TEMPLE_BELL_SRC}
-                  alt=""
-                  aria-hidden="true"
-                  draggable={false}
-                  className="w-full h-auto object-contain block drop-shadow-[0_8px_14px_rgba(63,41,29,0.28)] brightness-95 opacity-90"
-                />
+                <picture className="w-full block">
+                  <source type="image/webp" srcSet={TEMPLE_BELL_WEBP} />
+                  <img
+                    src={TEMPLE_BELL_SRC}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-auto object-contain block drop-shadow-[0_8px_14px_rgba(63,41,29,0.28)] opacity-85"
+                  />
+                </picture>
               ) : (
                 <svg
                   width={bell.widthPx}
@@ -542,6 +601,6 @@ export const DonationSacredAtmosphere: React.FC<DonationSacredAtmosphereProps> =
       })}
     </div>
   );
-};
+});
 
 export default DonationSacredAtmosphere;
