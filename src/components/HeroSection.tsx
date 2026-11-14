@@ -9,7 +9,6 @@ interface HeroSectionProps {
   language: Language;
   onExplore: (tab: string) => void;
   onOpenPlanner: () => void;
-  onOpenSevaModal: () => void;
   reducedMotion?: boolean;
 }
 
@@ -39,7 +38,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
   return (
     <section
       id="overview"
-      className="relative w-full min-h-[calc(100svh-5rem)] flex flex-col overflow-hidden bg-[#20140D] text-[#FFFCF7]"
+      className="relative w-full min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)] flex flex-col overflow-hidden bg-[#20140D] text-[#FFFCF7]"
     >
       {/* =========================================================================
           DESKTOP & LARGE SCREENS (lg+):
@@ -231,12 +230,13 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
       ) : (
         /* =========================================================================
            MOBILE & TABLET SCREENS (< lg):
-           Full-bleed borderless background photograph filling 100% of the first
-           viewport (min-h-[calc(100svh-5rem)]), leaving the upper ~70%+ temple
-           shikhara, sunrise sky, stairs & gardens completely clear while showing
-           only essential opening info cleanly along the bottom edge.
+           Full-bleed borderless architectural temple photograph occupying 100%
+           of the opening viewport (min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)]),
+           with no upper particles or hanging-bell silhouettes obstructing the sky
+           or shikhara, and only the essential heading, 2 quick buttons, and
+           single-row 20% opacity schedule strip along the bottom edge.
            ========================================================================= */
-        <div className="relative flex-1 flex flex-col justify-end min-h-[calc(100svh-5rem)] overflow-hidden">
+        <div className="relative flex-1 flex flex-col justify-end min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)] overflow-hidden">
           {/* Full-Bleed Borderless Mobile Background Photograph */}
           <div className="absolute inset-0 z-0 overflow-hidden">
             <picture className="block w-full h-full">
@@ -246,46 +246,42 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
                 alt="Shri Dwarkadhish Mandir at golden sunrise in Shirgaon, Virar East showing the full temple complex, manicured gardens, flying yellow dhwaja flag, carved sandstone shikhara, and grand entrance staircase"
                 width={1869}
                 height={842}
-                className="w-full h-full object-cover object-[70%_30%] sm:object-[72%_38%]"
+                className="w-full h-full object-cover object-[70%_46%] sm:object-[72%_44%]"
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
               />
             </picture>
 
-            {/* Compact Bottom-Only Scrim keeping the Temple Complex, Dhwaja & Sky bright */}
+            {/* Minimal Bottom-Only Scrim keeping 80%+ of Temple Complex, Dhwaja & Sky bright */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  'linear-gradient(to top, rgba(20, 12, 8, 0.90) 0%, rgba(20, 12, 8, 0.58) 24%, transparent 46%)',
+                  'linear-gradient(to top, rgba(18, 10, 6, 0.84) 0%, rgba(18, 10, 6, 0.44) 17%, transparent 34%)',
               }}
             />
           </div>
 
-          {/* Subtle Non-Obscuring Atmosphere */}
-          <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-40" />
-          <HeroBellAtmosphere reducedMotion={reducedMotion} />
+          {/* Clear Upper Temple Showcase Spacer — leaves Golden Temple unobstructed */}
+          <div className="flex-1 min-h-[54svh]" aria-hidden="true" />
 
-          {/* Clear Upper Temple Showcase Spacer — leaves Golden Temple clearly visible */}
-          <div className="flex-1 min-h-[42svh]" aria-hidden="true" />
-
-          {/* Minimal Mobile Bottom Overlay — Title, Virtues, 2 Compact Buttons & Translucent Hours */}
+          {/* Ultra-Compact Mobile Critical Overlay */}
           <div
             data-testid="mobile-hero-compact-overlay"
-            className="relative z-20 px-4 sm:px-6 md:px-10 pt-3 pb-3 flex flex-col justify-end"
+            className="relative z-20 px-4 sm:px-6 md:px-10 pt-2 pb-2.5 flex flex-col justify-end"
           >
             {/* Main Primary Heading */}
-            <h1 className="font-devanagari text-[1.45rem] sm:text-[1.75rem] font-bold tracking-tight text-[#FFFCF7] leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+            <h1 className="font-devanagari text-[1.3rem] sm:text-[1.65rem] font-bold tracking-tight text-[#FFFCF7] leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.92)]">
               {tDict.hero.heading}
             </h1>
 
-            {/* Compact Golden Line & Values Sub-heading */}
-            <div className="flex items-center gap-2 mt-1 mb-2.5">
-              <div className="font-devanagari text-[11.5px] sm:text-[13px] font-medium tracking-[0.16em] text-[#E6D6C0] drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+            {/* Compact Values Line */}
+            <div className="flex items-center gap-2 mt-0.5 mb-2">
+              <div className="font-devanagari text-[10.5px] sm:text-[12.5px] font-medium tracking-[0.16em] text-[#E6D6C0] drop-shadow-[0_1px_6px_rgba(0,0,0,0.92)]">
                 {tDict.hero.virtues}
               </div>
-              <span className="h-[1px] flex-1 max-w-[64px] bg-gradient-to-r from-[#B68A45] to-transparent" aria-hidden="true" />
+              <span className="h-[1px] flex-1 max-w-[56px] bg-gradient-to-r from-[#B68A45] to-transparent" aria-hidden="true" />
             </div>
 
             {/* Compact 2-Button Action Row */}
@@ -293,7 +289,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
               <button
                 type="button"
                 onClick={() => onExplore('darshan')}
-                className="w-full px-3 py-2 text-[11.5px] sm:text-[12.5px] font-semibold tracking-wide text-[#FFFCF7] bg-[#3B2518]/90 hover:bg-[#4A3022] border border-[#B68A45]/80 rounded-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
+                className="w-full px-2.5 py-1.5 text-[11px] sm:text-[12px] font-semibold tracking-wide text-[#FFFCF7] bg-[#3B2518]/90 hover:bg-[#4A3022] border border-[#B68A45]/80 rounded-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
               >
                 <Clock className="w-3.5 h-3.5 text-[#D8C2A4] shrink-0" aria-hidden="true" />
                 <span className="truncate">{tDict.hero.btnDarshanInfo}</span>
@@ -303,29 +299,26 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
                 href={directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full px-3 py-2 text-[11.5px] sm:text-[12.5px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
+                className="w-full px-2.5 py-1.5 text-[11px] sm:text-[12px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
               >
                 <Navigation className="w-3.5 h-3.5 text-[#20140D] shrink-0" aria-hidden="true" />
                 <span className="truncate">{tDict.hero.btnPlanVisit}</span>
               </a>
             </div>
 
-            {/* Compact Operational Utility Strip with 20% Background Opacity */}
-            <div className="mt-2.5 px-3 py-2 rounded-sm bg-[#160D08]/20 border border-[#FFFCF7]/20 grid grid-cols-2 gap-2 text-[10px] text-[#F8F1E5] [text-shadow:0_1px_3px_rgba(0,0,0,0.95)]">
-              <div className="flex items-center gap-1.5">
+            {/* Ultra-Slim Single-Row Operational Utility Strip (20% Background Opacity) */}
+            <div className="mt-1.5 px-2.5 py-1.5 rounded-sm bg-[#160D08]/20 border border-[#FFFCF7]/20 flex items-center justify-between gap-2 text-[9.5px] sm:text-[10.5px] text-[#F8F1E5] [text-shadow:0_1px_3px_rgba(0,0,0,0.95)]">
+              <div className="flex items-center gap-1.5 min-w-0">
                 <Clock className="w-3 h-3 text-[#B68A45] shrink-0" aria-hidden="true" />
-                <div>
-                  <span className="block text-[8px] text-[#D8C2A4] uppercase">{tDict.hero.statDailyDarshan}</span>
-                  <span className="font-semibold text-[#FFFCF7]">{tDict.hero.statDailyHours}</span>
-                </div>
+                <span className="font-semibold text-[#FFFCF7] truncate">{tDict.hero.statDailyHours}</span>
               </div>
 
-              <div className="flex items-center gap-1.5">
+              <span className="text-[#FFFCF7]/30 shrink-0" aria-hidden="true">|</span>
+
+              <div className="flex items-center gap-1.5 min-w-0">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#B68A45] shadow-[0_0_4px_#B68A45] shrink-0" aria-hidden="true" />
-                <div>
-                  <span className="block text-[8px] text-[#D8C2A4] uppercase">{tDict.hero.statSandhyaAarti}</span>
-                  <span className="font-semibold text-[#FFFCF7]">{tDict.hero.statSandhyaTime}</span>
-                </div>
+                <span className="text-[#D8C2A4] uppercase text-[8.5px] shrink-0">{tDict.hero.statSandhyaAarti}:</span>
+                <span className="font-semibold text-[#FFFCF7] truncate">{tDict.hero.statSandhyaTime}</span>
               </div>
             </div>
           </div>

@@ -220,10 +220,6 @@ export default function App() {
     }
   }, []);
 
-  const handleOpenSeva = useCallback(() => {
-    handleTabChange('seva');
-  }, [handleTabChange]);
-
   const handleOpenPlanner = useCallback(() => {
     setPlannerOpen(true);
   }, []);
@@ -242,8 +238,10 @@ export default function App() {
 
   return (
     <div className={`min-h-screen flex flex-col bg-[#FBF6ED] text-[#3C2A20] relative ${reducedMotion ? 'motion-reduce' : ''}`}>
-      {/* Site-Wide Subtle Sacred Ambient Background Animation */}
-      <SacredAmbientBackground reducedMotion={reducedMotion} />
+      {/* Site-Wide Subtle Sacred Ambient Background Animation (Desktop+ so mobile hero photograph renders cleanly) */}
+      <div className="hidden lg:block">
+        <SacredAmbientBackground reducedMotion={reducedMotion} />
+      </div>
 
       {/* Top Navigation */}
       <Navbar
@@ -262,7 +260,6 @@ export default function App() {
           language={language}
           onExplore={handleTabChange}
           onOpenPlanner={handleOpenPlanner}
-          onOpenSevaModal={handleOpenSeva}
           reducedMotion={reducedMotion}
         />
 

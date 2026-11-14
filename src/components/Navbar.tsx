@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'vision', labelEn: 'Sacred Vision', labelHi: 'पावन संकल्प', labelMr: 'पवित्र संकल्प', labelGu: 'પવિત્ર સંકલ્પ' },
     { id: 'gallery', labelEn: 'Gallery', labelHi: 'चित्र दीर्घा', labelMr: 'चित्रदालन', labelGu: 'ચિત્ર દર્શન' },
     { id: 'darshan', labelEn: 'Darshan Timings', labelHi: 'दर्शन समय', labelMr: 'दर्शन वेळ', labelGu: 'દર્શન સમય' },
-    { id: 'location', labelEn: 'Plan Your Visit', labelHi: 'स्थान व मार्ग', labelMr: 'स्थान व नकाशा', labelGu: 'સ્થાન અને નકશો' },
+    { id: 'location', labelEn: 'Way to Mandir', labelHi: 'मंदिर का मार्ग', labelMr: 'मंदिराचा मार्ग', labelGu: 'મંદિરનો માર્ગ' },
     { id: 'festivals', labelEn: 'Festivals', labelHi: 'उत्सव', labelMr: 'उत्सव', labelGu: 'ઉત્સવ' },
     { id: 'seva', labelEn: 'Seva Offerings', labelHi: 'सेवा', labelMr: 'सेवा', labelGu: 'સેવા' },
     { id: 'donation', labelEn: 'Contributions', labelHi: 'सेवा सहयोग', labelMr: 'देणगी सहकार्य', labelGu: 'સેવા સહયોગ' },
@@ -54,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       {/* Primary Navigation Bar in Warm Ivory */}
       <header className="sticky top-0 z-40 bg-[#FFFDF8]/98 border-b border-[#E5D1B6] transition-colors duration-200">
-        <div className="w-full max-w-[min(98vw,1920px)] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8 h-20 flex items-center justify-between gap-3 xl:gap-4">
+        <div className="w-full max-w-[min(98vw,1920px)] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 xl:gap-4">
           {/* Zone 1: Identity Lockup */}
           <button
             type="button"
@@ -62,9 +62,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               onTabChange('overview');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-3 text-left shrink-0 group focus:outline-none"
+            className="flex items-center gap-2.5 sm:gap-3 text-left shrink-0 group focus:outline-none"
           >
-            <div className="w-10 h-10 xl:w-11 xl:h-11 rounded-full bg-[#F3E7D6] border border-[#A67C57] flex items-center justify-center text-[#6B4832] font-cinzel font-bold text-lg xl:text-xl shadow-xs group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 xl:w-11 xl:h-11 rounded-full bg-[#F3E7D6] border border-[#A67C57] flex items-center justify-center text-[#6B4832] font-cinzel font-bold text-base sm:text-lg xl:text-xl shadow-xs group-hover:scale-105 transition-transform">
               ॐ
             </div>
             <div className="flex flex-col">

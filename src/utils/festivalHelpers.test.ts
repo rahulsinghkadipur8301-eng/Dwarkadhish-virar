@@ -133,7 +133,15 @@ test('HeroSection utility bar uses 20% opacity, Darshan & Seva headers are cente
   );
 
   assert.ok(
-    heroSrc.includes('mobile-hero-compact-overlay') && heroSrc.includes('min-h-[42svh]'),
-    'HeroSection mobile opening page should keep upper temple image open and display compact bottom info'
+    heroSrc.includes('mobile-hero-compact-overlay') && heroSrc.includes('min-h-[54svh]'),
+    'HeroSection mobile opening page should keep upper temple image open and display ultra-compact bottom info'
   );
+
+  const enSrc = readFileSync('src/i18n/en.ts', 'utf8');
+  assert.ok(
+    enSrc.includes("planYourVisit: 'Way to Mandir'") && enSrc.includes("btnPlanVisit: 'Way to Mandir'"),
+    'English dictionary should use Way to Mandir instead of Plan Your Visit'
+  );
+  const navSrc = readFileSync('src/components/Navbar.tsx', 'utf8');
+  assert.ok(navSrc.includes("labelEn: 'Way to Mandir'"), 'Navbar location link should say Way to Mandir');
 });

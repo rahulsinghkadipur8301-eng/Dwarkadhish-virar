@@ -1014,7 +1014,7 @@ export const UI_TRANSLATIONS = {
     heroTagline: 'A Spiritual Landmark in Virar',
     devotionalStatement: 'Where devotion meets divine grace.',
     discoverTemple: 'Discover the Temple',
-    planVisit: 'Plan Your Visit',
+    planVisit: 'Way to Mandir',
     exploreSeva: 'Explore Seva Offerings',
     conceptDisclaimer: 'Independent Concept Demonstration — Not Official',
     disclaimerBanner: 'Independent Concept Demonstration — Not the official platform. Timings and offerings are proposed for review.',
