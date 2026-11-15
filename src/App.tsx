@@ -8,6 +8,7 @@ import { useI18n } from './i18n/I18nContext';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { SacredAmbientBackground } from './components/SacredAmbientBackground';
+import { GoldenCursorTrail } from './components/GoldenCursorTrail';
 
 /**
  * Retries transient dynamic import failures (e.g., mobile network drops or edge cache rollover
@@ -43,6 +44,11 @@ const DevotionalPresenceSection = lazyWithRetry(() =>
 const VisionarySection = lazyWithRetry(() =>
   import('./components/VisionarySection').then((m) => ({
     default: m.VisionarySection,
+  }))
+);
+const KnowTheStorySection = lazyWithRetry(() =>
+  import('./components/KnowTheStorySection').then((m) => ({
+    default: m.KnowTheStorySection,
   }))
 );
 const TempleGallerySection = lazyWithRetry(() =>
@@ -124,7 +130,7 @@ export default function App() {
     const preloadNearbySections = () => {
       import('./components/DevotionalPresenceSection').catch(() => {});
       import('./components/VisionarySection').catch(() => {});
-      import('./components/TempleGallerySection').catch(() => {});
+      import('./components/KnowTheStorySection').catch(() => {});
       import('./components/DarshanSection').catch(() => {});
       import('./components/TempleLocationSection').catch(() => {});
     };
@@ -155,12 +161,13 @@ export default function App() {
       'overview',
       'presence',
       'vision',
-      'gallery',
+      'know-the-story',
       'darshan',
       'location',
       'festivals',
       'seva',
       'donation',
+      'gallery',
       'social',
     ];
 
@@ -243,6 +250,9 @@ export default function App() {
         <SacredAmbientBackground reducedMotion={reducedMotion} />
       </div>
 
+      {/* Subtle Champagne-Gold Glitter & Sparkle Cursor Trail (fine-pointer desktop only) */}
+      <GoldenCursorTrail reducedMotion={reducedMotion} />
+
       {/* Top Navigation */}
       <Navbar
         language={language}
@@ -273,9 +283,9 @@ export default function App() {
           <VisionarySection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 4. Temple Gallery — Sacred Moments & Consecration Seva */}
-        <Suspense fallback={<SectionPlaceholder id="gallery" />}>
-          <TempleGallerySection language={language} reducedMotion={reducedMotion} />
+        {/* 4. A 14-Part Documentary Journey — Know the Story */}
+        <Suspense fallback={<SectionPlaceholder id="know-the-story" />}>
+          <KnowTheStorySection reducedMotion={reducedMotion} />
         </Suspense>
 
         {/* 5. Darshan & Aarti Schedule */}
@@ -283,7 +293,7 @@ export default function App() {
           <DarshanSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 6. Plan Your Visit — Google Maps & Practical Location */}
+        {/* 6. Way to Mandir — Google Maps & Practical Location */}
         <Suspense fallback={<SectionPlaceholder id="location" />}>
           <TempleLocationSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
@@ -302,12 +312,17 @@ export default function App() {
           />
         </Suspense>
 
-        {/* 8. Official Contribution Portal */}
+        {/* 9. Official Contribution Portal */}
         <Suspense fallback={<SectionPlaceholder id="donation" />}>
           <TempleDonationSection language={language} reducedMotion={reducedMotion} />
         </Suspense>
 
-        {/* 9. Official Temple Social Connect */}
+        {/* 10. Sacred Ritual Videos / Gallery */}
+        <Suspense fallback={<SectionPlaceholder id="gallery" />}>
+          <TempleGallerySection language={language} reducedMotion={reducedMotion} />
+        </Suspense>
+
+        {/* 11. Official Temple Social Connect */}
         <Suspense fallback={<SectionPlaceholder id="social" />}>
           <TempleSocialConnectSection reducedMotion={reducedMotion} />
         </Suspense>

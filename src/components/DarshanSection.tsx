@@ -32,7 +32,7 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
   };
 
   return (
-    <section id="darshan" className="relative overflow-hidden py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6]">
+    <section id="darshan" className="relative overflow-hidden py-14 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6]">
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Centered Section Header matching other Temple Sections */}
@@ -41,7 +41,7 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
-          className="text-center max-w-4xl mx-auto mb-10 sm:mb-12"
+          className="text-center max-w-4xl mx-auto mb-8 sm:mb-10"
         >
           <div className="flex items-center justify-center gap-2.5 mb-2.5">
             <PeacockFeather size={24} />
@@ -67,7 +67,7 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
         </motion.div>
 
         {/* Mandatory Verification & Notice Box */}
-        <div className="mb-10 p-5 sm:p-6 bg-[#FFFDF8] border border-[#C8AB88] flex items-start gap-4 rounded-xs shadow-xs">
+        <div className="mb-8 p-5 sm:p-6 bg-[#FFFDF8] border border-[#C8AB88] flex items-start gap-4 rounded-xs shadow-xs">
           <Info className="w-5 h-5 text-[#A67C57] shrink-0 mt-0.5" />
           <div className="text-sm sm:text-base text-[#3C2A20] leading-relaxed">
             <span className="font-bold text-[#6B4832] block sm:inline mr-2">

@@ -57,7 +57,9 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
                 alt="Shri Dwarkadhish Mandir at golden sunrise in Shirgaon, Virar East showing the full temple complex, manicured gardens, flying yellow dhwaja flag, carved sandstone shikhara, and grand entrance staircase"
                 width={1869}
                 height={842}
-                className="w-full h-full object-cover object-[76%_50%]"
+                className={`w-full h-full object-cover object-[76%_50%] ${
+                  reducedMotion ? '' : 'animate-hero-zoom origin-[74%_48%]'
+                }`}
                 loading="eager"
                 decoding="sync"
                 fetchPriority="high"
@@ -83,8 +85,8 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
             />
           </div>
 
-          {/* Floating Golden Particles (Single active desktop instance) */}
-          <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-65" />
+          {/* Floating Luminous Small Golden Dots */}
+          <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-90" />
 
           {/* Cinematic Multi-Layer Temple Bell Atmosphere (Single active desktop instance) */}
           <HeroBellAtmosphere reducedMotion={reducedMotion} />
@@ -246,7 +248,9 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
                 alt="Shri Dwarkadhish Mandir at golden sunrise in Shirgaon, Virar East showing the full temple complex, manicured gardens, flying yellow dhwaja flag, carved sandstone shikhara, and grand entrance staircase"
                 width={1869}
                 height={842}
-                className="w-full h-full object-cover object-[70%_46%] sm:object-[72%_44%]"
+                className={`w-full h-full object-cover object-[70%_46%] sm:object-[72%_44%] ${
+                  reducedMotion ? '' : 'animate-hero-zoom origin-[70%_44%]'
+                }`}
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
@@ -262,6 +266,9 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
               }}
             />
           </div>
+
+          {/* Fine Luminous Floating Golden Dots over Morning Sky */}
+          <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-85" />
 
           {/* Clear Upper Temple Showcase Spacer — leaves Golden Temple unobstructed */}
           <div className="flex-1 min-h-[54svh]" aria-hidden="true" />

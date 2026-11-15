@@ -55,6 +55,7 @@ export interface TranslationDictionary {
     overview: string;
     divinePresence: string;
     vision: string;
+    knowTheStory: string;
     darshanTimings: string;
     location: string;
     architecture: string;
@@ -122,6 +123,10 @@ export interface TranslationDictionary {
     gitaReflectionText: string;
     gitaOriginalTextLabel: string;
     gitaTransliterationLabel: string;
+    touchFeetCta: string;
+    touchFeetActive: string;
+    touchFeetTapHint: string;
+    ashirwadActiveBadge: string;
   };
   vision: {
     kicker: string;
@@ -412,6 +417,10 @@ export interface TranslationDictionary {
   };
   footer: {
     dedication: string;
+    templeInfoHeading: string;
+    templeOverview: string;
+    addressHeading: string;
+    addressText: string;
     attributionNoteTitle: string;
     attributionNoteBody: string;
     navHeading: string;
@@ -421,5 +430,26 @@ export interface TranslationDictionary {
     instagramAria: string;
     copyright: string;
     disclaimer: string;
+  };
+  story: {
+    kicker: string;
+    title: string;
+    subtitle: string;
+    ctaExplore: string;
+    supportingCount: string;
+    collectionKicker: string;
+    collectionTitle: string;
+    partPrefix: string;
+    watchEpisode: string;
+    backToEpisodes: string;
+    closeModal: string;
+    muteAudio: string;
+    unmuteAudio: string;
+    play: string;
+    pause: string;
+    prevEpisode: string;
+    nextEpisode: string;
+    seekTimeline: string;
+    toggleFullscreen: string;
   };
 }

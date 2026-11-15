@@ -1,19 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ZoomIn, X, ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
 import { Language } from '../data/templeData';
-import { PeacockFeather, LotusOrnament } from './KrishnaMotifs';
+import { PeacockFeather, LotusOrnament, DiyaAccent } from './KrishnaMotifs';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
+import dwarikaVideo1 from '../dwarika 1.mp4';
+import dwarikaVideo2 from '../dwarika 2.mp4';
+import dwarikaVideo3 from '../dwarika 3.mp4';
+import dwarikaVideo4 from '../dwarika 4.mp4';
 
 export interface TempleGallerySectionProps {
   language: Language;
   reducedMotion?: boolean;
 }
 
-interface GalleryPortraitItem {
+interface GalleryVideoItem {
   id: string;
   src: string;
-  fallbackSrc: string;
   tag: string;
   title: string;
   caption: string;
@@ -24,114 +27,153 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = ({
   reducedMotion = false,
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [unmutedId, setUnmutedId] = useState<string | null>(null);
+  const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
 
   const contentRecord = {
     en: {
       kicker: 'SHRINE PHOTOGRAPH ARCHIVE',
       heading: 'Sacred Moments & Consecration Seva',
-      subheading: 'Full uncropped devotional photographs — click any portrait to inspect at full clarity',
-      photo1Tag: 'Sanctum Darshan',
-      photo1Title: 'Offering Before the Deity',
-      photo1Caption: 'Adorning Bhagwan Dwarkadhish in the illuminated inner sanctum.',
-      photo2Tag: 'Vedic Abhishekam',
-      photo2Title: 'Consecration Abhishekam',
-      photo2Caption: 'Pouring sacred waters during Vedic Pran Pratishtha ceremonies.',
-      photo3Tag: 'Dwarkadhish Splendour',
-      photo3Title: 'Dressed Dwarkadhish in Temple Splendour',
-      photo3Caption: 'Offering sacred aarti thali before Lord Dwarkadhish adorned in royal silk vestments.',
-      photo4Tag: 'Charan Seva',
-      photo4Title: 'Humble Charan Seva',
-      photo4Caption: 'Bowing in quiet reverence at the lotus feet of Lord Dwarkadhish.',
+      subheading: 'Continuous uncropped devotional darshan videos — tap sound on any frame to listen',
+      muteLabel: 'Mute',
+      unmuteLabel: 'Unmute',
+      photo1Tag: 'Festival Seva',
+      photo1Title: 'Diwali Puja',
+      photo1Caption: 'Deepotsav prayers and sacred offerings before Lord Dwarkadhish on Diwali.',
+      photo2Tag: 'Devi Aradhana',
+      photo2Title: 'Devi Puja',
+      photo2Caption: 'Sacred Devi worship and Vedic offerings at Shri Dwarkadhish Mandir, Shirgaon.',
+      photo3Tag: 'Vedic Abhishekam',
+      photo3Title: 'Rudrabhishek',
+      photo3Caption: 'Solemn Vedic Rudrabhishek prayers and sacred panchamrit offerings at the shrine.',
+      photo4Tag: 'Bhakti Utsav',
+      photo4Title: 'Vitthal Puja',
+      photo4Caption: 'Devotional Vitthal puja and serene evening worship at Shri Dwarkadhish Mandir.',
     },
     hi: {
-      kicker: 'पावन चित्र दीर्घा',
-      heading: 'पावन भक्ति एवं प्राण प्रतिष्ठा छायाचित्र',
-      subheading: 'बिना किसी क्रॉप के पूर्ण सुरक्षित छायाचित्र — बड़े रूप में देखने हेतु क्लिक करें',
-      photo1Tag: 'गर्भगृह वंदना',
-      photo1Title: 'प्रभु विग्रह को अर्पण',
-      photo1Caption: 'श्री द्वारकाधीश भगवान के समक्ष श्रद्धापूर्वक पुष्पहार एवं वंदन।',
-      photo2Tag: 'वैदिक अभिषेक',
-      photo2Title: 'पावन जलाभिषेक अनुष्ठान',
-      photo2Caption: 'वैदिक प्राण प्रतिष्ठा के दौरान स्वर्ण कलश से पवित्र अभिषेक।',
-      photo3Tag: 'द्वारकाधीश श्रृंगार',
-      photo3Title: 'दिव्य राजसी श्रृंगार एवं आरती',
-      photo3Caption: 'रेशमी पीतांबर व आभूषणों से सुसज्जित भगवान द्वारकाधीश की पावन आरती सेवा।',
-      photo4Tag: 'चरण सेवा',
-      photo4Title: 'विनम्र चरण वंदना',
-      photo4Caption: 'श्री द्वारकाधीश भगवान के श्रीचरणों में गहन भक्ति और समर्पण।',
+      kicker: 'पावन मंदिर दर्शन दीर्घा',
+      heading: 'पावन भक्ति एवं प्राण प्रतिष्ठा चलचित्र',
+      subheading: 'बिना किसी क्रॉप के निरंतर दिव्य दर्शन वीडियो — ध्वनि सुनने के लिए नीचे म्यूट/अनम्यूट बटन दबाएं',
+      muteLabel: 'म्यूट',
+      unmuteLabel: 'ध्वनि',
+      photo1Tag: 'पावन पर्व पूजा',
+      photo1Title: 'दीवाली पूजा',
+      photo1Caption: 'श्री द्वारकाधीश मंदिर में दीपोत्सव एवं पावन दीवाली पूजन।',
+      photo2Tag: 'देवी आराधना',
+      photo2Title: 'देवी पूजा',
+      photo2Caption: 'शिरगांव मंदिर परिसर में श्रद्धापूर्वक संपन्न पावन देवी पूजन।',
+      photo3Tag: 'वैदिक अभिषेक',
+      photo3Title: 'रुद्राभिषेक',
+      photo3Caption: 'वैदिक मंत्रोच्चार के साथ संपन्न पावन रुद्राभिषेक अनुष्ठान।',
+      photo4Tag: 'भक्ति उपासना',
+      photo4Title: 'विठ्ठल पूजा',
+      photo4Caption: 'श्री द्वारकाधीश मंदिर में भक्तिभाव से संपन्न पावन विठ्ठल पूजन।',
     },
     mr: {
-      kicker: 'पावन चित्रदालन',
-      heading: 'पावन दर्शन आणि प्राणप्रतिष्ठा क्षणचित्रे',
-      subheading: 'कोणत्याही क्रॉपिंगशिवाय संपूर्ण सुरक्षित छायाचित्रे — पूर्ण पाहण्यासाठी क्लिक करा',
-      photo1Tag: 'गर्भगृह सेवा',
-      photo1Title: 'प्रभु विग्रहासमोर अर्पण',
-      photo1Caption: 'श्री द्वारकाधीश भगवान यांच्या गाभाऱ्यात श्रद्धेने केलेली प्रार्थना.',
-      photo2Tag: 'वैदिक अभिषेक',
-      photo2Title: 'पवित्र जलाभिषेक विधी',
-      photo2Caption: 'वैदिक प्राणप्रतिष्ठा प्रसंगी सुवर्ण कलशातून मंगल अभिषेक.',
-      photo3Tag: 'द्वारकाधीश ऐश्वर्य',
-      photo3Title: 'राजसी शृंगार व आरती सेवा',
-      photo3Caption: 'रेशमी वस्त्रे व अलंकारांनी सजलेल्या श्री द्वारकाधीशांची भक्तिभावाने केलेली आरती.',
-      photo4Tag: 'चरण सेवा',
-      photo4Title: 'विनम्र चरण वंदना',
-      photo4Caption: 'श्री द्वारकाधीशांच्या चरणकमलांशी संपूर्ण शरणागत भाव.',
+      kicker: 'पावन मंदिर दर्शन दालन',
+      heading: 'पावन दर्शन आणि प्राणप्रतिष्ठा चलचित्रे',
+      subheading: 'कोणत्याही क्रॉपिंगशिवाय अखंड दिव्य दर्शन व्हिडिओ — ध्वनीसाठी खालील बटणावर क्लिक करा',
+      muteLabel: 'म्यूट',
+      unmuteLabel: 'ध्वनी',
+      photo1Tag: 'सण उत्सव सेवा',
+      photo1Title: 'दिवाळी पूजा',
+      photo1Caption: 'श्री द्वारकाधीश मंदिरात मंगल दीपोत्सव आणि दिवाळी पूजन.',
+      photo2Tag: 'देवी आराधना',
+      photo2Title: 'देवी पूजा',
+      photo2Caption: 'शिरगाव मंदिरात भक्तिभावाने पार पडलेली पवित्र देवी पूजा.',
+      photo3Tag: 'वैदिक अभिषेक',
+      photo3Title: 'रुद्राभिषेक',
+      photo3Caption: 'वैदिक मंत्रघोषात संपन्न झालेला पावन रुद्राभिषेक सोहळा.',
+      photo4Tag: 'भक्ती उपासना',
+      photo4Title: 'विठ्ठल पूजा',
+      photo4Caption: 'श्री द्वारकाधीश मंदिरात श्रद्धापूर्वक केलेली विठ्ठल पूजा.',
     },
     gu: {
-      kicker: 'પવિત્ર ચિત્ર દર્શન',
-      heading: 'પવિત્ર દર્શન અને પ્રાણપ્રતિષ્ઠા સેવા ઝલક',
-      subheading: 'સંપૂર્ણ અનક્રોપ્ડ તસવીરો — પૂર્ણ કદમાં જોવા માટે કોઈપણ તસવીર પર ક્લિક કરો',
-      photo1Tag: 'ગર્ભગૃહ સેવા',
-      photo1Title: 'પ્રભુ વિગ્રહ સમક્ષ અર્પણ',
-      photo1Caption: 'શ્રી દ્વારકાધીશ ભગવાનના ગર્ભગૃહમાં ભક્તિભાવપૂર્વક વંદન.',
-      photo2Tag: 'વૈદિક અભિષેક',
-      photo2Title: 'પવિત્ર જળાભિષેક વિધિ',
-      photo2Caption: 'વૈદિક પ્રાણપ્રતિષ્ઠા પ્રસંગે સુવર્ણ કળશ દ્વારા મંગળ અભિષેક.',
-      photo3Tag: 'દ્વારકાધીશ વૈભવ',
-      photo3Title: 'રાજસી શૃંગાર અને આરતી સેવા',
-      photo3Caption: 'રેશમી પીતાંબર અને સુવર્ણ આભૂષણોથી સજ્જ શ્રી દ્વારકાધીશની આરતી વંદના.',
-      photo4Tag: 'ચરણ સેવા',
-      photo4Title: 'વિનમ્ર ચરણ વંદના',
-      photo4Caption: 'શ્રી દ્વારકાધીશ પ્રભુના ચરણકમળમાં અનન્ય ભક્તિ અને શ્રદ્ધા.',
+      kicker: 'પવિત્ર મંદિર દર્શન ઝલક',
+      heading: 'પવિત્ર દર્શન અને પ્રાણપ્રતિષ્ઠા સેવા ચલચિત્રો',
+      subheading: 'સંપૂર્ણ અનક્રોપ્ડ નિરંતર દર્શન વિડિયો — અવાજ સાંભળવા નીચેનું બટન દબાવો',
+      muteLabel: 'મ્યૂટ',
+      unmuteLabel: 'અવાજ',
+      photo1Tag: 'ઉત્સવ પૂજા',
+      photo1Title: 'દિવાળી પૂજા',
+      photo1Caption: 'શ્રી દ્વારકાધીશ મંદિરમાં દીપોત્સવ અને પાવન દિવાળી પૂજન.',
+      photo2Tag: 'દેવી આરાધના',
+      photo2Title: 'દેવી પૂજા',
+      photo2Caption: 'શિરગાવ મંદિરમાં ભક્તિભાવપૂર્વક સંપન્ન પવિત્ર દેવી પૂજા.',
+      photo3Tag: 'વૈદિક અભિષેક',
+      photo3Title: 'રુદ્રાભિષેક',
+      photo3Caption: 'વૈદિક મંત્રોચ્ચાર સાથે સંપન્ન પવિત્ર રુદ્રાભિષેક વિધિ.',
+      photo4Tag: 'ભક્તિ ઉપાસના',
+      photo4Title: 'વિઠ્ઠલ પૂજા',
+      photo4Caption: 'શ્રી દ્વારકાધીશ મંદિરમાં શ્રદ્ધાપૂર્વક થયેલી પવિત્ર વિઠ્ઠલ પૂજા.',
     },
   };
 
   const c = contentRecord[language] || contentRecord.en;
 
-  const galleryPhotos: GalleryPortraitItem[] = [
+  const galleryVideos: GalleryVideoItem[] = [
     {
-      id: 'offering-before-deity',
-      src: '/assets/praveena_thakur/before_idol.webp',
-      fallbackSrc: '/dwarkadhish_temple_widescreen_4k.webp',
+      id: 'dwarika-1',
+      src: dwarikaVideo1,
       tag: c.photo1Tag,
       title: c.photo1Title,
       caption: c.photo1Caption,
     },
     {
-      id: 'consecration-abhishekam',
-      src: '/assets/praveena_thakur/devotional_ceremony.webp',
-      fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
+      id: 'dwarika-2',
+      src: dwarikaVideo2,
       tag: c.photo2Tag,
       title: c.photo2Title,
       caption: c.photo2Caption,
     },
     {
-      id: 'dressed-dwarkadhish-splendour',
-      src: '/assets/praveena_thakur/dressed_dwarkadhish_splendour.webp',
-      fallbackSrc: '/assets/praveena_thakur/before_idol.webp',
+      id: 'dwarika-3',
+      src: dwarikaVideo3,
       tag: c.photo3Tag,
       title: c.photo3Title,
       caption: c.photo3Caption,
     },
     {
-      id: 'humble-charan-seva',
-      src: '/assets/praveena_thakur/charan_seva.webp',
-      fallbackSrc: '/assets/praveena_thakur/devotional_ceremony.webp',
+      id: 'dwarika-4',
+      src: dwarikaVideo4,
       tag: c.photo4Tag,
       title: c.photo4Title,
       caption: c.photo4Caption,
     },
   ];
+
+  // Ensure every grid video always syncs its muted DOM property cleanly
+  useEffect(() => {
+    for (const item of galleryVideos) {
+      const vid = videoRefs.current[item.id];
+      if (!vid) continue;
+      const shouldMute = activeIndex !== null || unmutedId !== item.id;
+      vid.muted = shouldMute;
+      if (vid.paused) {
+        vid.play().catch(() => {
+          // Ignore browser autoplay policy interruptions silently
+        });
+      }
+    }
+  }, [unmutedId, activeIndex, galleryVideos]);
+
+  const handleToggleMute = useCallback(
+    (id: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      const nextId = unmutedId === id ? null : id;
+      for (const item of galleryVideos) {
+        const vid = videoRefs.current[item.id];
+        if (!vid) continue;
+        const shouldMute = activeIndex !== null || nextId !== item.id;
+        vid.muted = shouldMute;
+        if (!shouldMute && vid.paused) {
+          vid.play().catch(() => {});
+        }
+      }
+      setUnmutedId(nextId);
+    },
+    [unmutedId, activeIndex, galleryVideos]
+  );
 
   const handleClose = useCallback(() => {
     setActiveIndex(null);
@@ -139,21 +181,17 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = ({
 
   const handlePrev = useCallback(() => {
     setActiveIndex((prev) =>
-      prev === null ? null : (prev - 1 + galleryPhotos.length) % galleryPhotos.length
+      prev === null ? null : (prev - 1 + galleryVideos.length) % galleryVideos.length
     );
-  }, [galleryPhotos.length]);
+  }, [galleryVideos.length]);
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => (prev === null ? null : (prev + 1) % galleryPhotos.length));
-  }, [galleryPhotos.length]);
+    setActiveIndex((prev) => (prev === null ? null : (prev + 1) % galleryVideos.length));
+  }, [galleryVideos.length]);
 
+  // Keyboard navigation only (never lock document.body.style.overflow so website scrolling stays active)
   useEffect(() => {
-    if (activeIndex === null) {
-      document.body.style.overflow = '';
-      return;
-    }
-
-    document.body.style.overflow = 'hidden';
+    if (activeIndex === null) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
       else if (e.key === 'ArrowLeft') handlePrev();
@@ -163,11 +201,10 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = ({
     window.addEventListener('keydown', onKeyDown);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = '';
     };
   }, [activeIndex, handleClose, handlePrev, handleNext]);
 
-  const activePhoto = activeIndex !== null ? galleryPhotos[activeIndex] : null;
+  const activeVideo = activeIndex !== null ? galleryVideos[activeIndex] : null;
 
   return (
     <section
@@ -207,75 +244,111 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = ({
           </div>
         </div>
 
-        {/* Uncropped 9:16 4-Card Portrait Row */}
+        {/* Uncropped 9:16 4-Card Portrait Video Row (Exact match for 720x1280 source videos) */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {galleryPhotos.map((photo, idx) => (
-            <motion.div
-              key={photo.id}
-              initial={reducedMotion ? false : { opacity: 0, y: 18 }}
-              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.55, delay: idx * 0.08, ease: 'easeOut' }}
-              onClick={() => setActiveIndex(idx)}
-              className="group cursor-pointer rounded-2xl p-2 sm:p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_8px_22px_rgba(63,41,29,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
-            >
-              {/* Exact 9:16 portrait stage + object-contain guarantees zero face/detail cropping */}
-              <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]">
-                <img
-                  src={photo.src}
-                  onError={(e) => {
-                    if (photo.fallbackSrc) {
-                      (e.target as HTMLImageElement).src = photo.fallbackSrc;
-                    }
-                  }}
-                  alt={photo.title}
-                  className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
-                  loading="lazy"
-                />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveIndex(idx);
-                  }}
-                  className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md cursor-pointer"
-                  aria-label={`Inspect ${photo.title}`}
-                >
-                  <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
-                </button>
-              </div>
+          {galleryVideos.map((item, idx) => {
+            const isUnmuted = unmutedId === item.id;
+            return (
+              <motion.div
+                key={item.id}
+                initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+                whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.55, delay: idx * 0.08, ease: 'easeOut' }}
+                onClick={() => setActiveIndex(idx)}
+                data-testid={`gallery-video-card-${item.id}`}
+                className="group cursor-pointer rounded-2xl p-2 sm:p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_8px_22px_rgba(63,41,29,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+              >
+                {/* Exact 9:16 portrait stage + object-contain guarantees zero video cropping */}
+                <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]">
+                  <video
+                    ref={(el) => {
+                      videoRefs.current[item.id] = el;
+                    }}
+                    src={item.src}
+                    autoPlay
+                    loop
+                    muted={!isUnmuted || activeIndex !== null}
+                    playsInline
+                    preload="metadata"
+                    aria-label={item.title}
+                    className="w-full h-full object-contain object-center block"
+                  />
 
-              {/* Clean Title Footer Without Subtitles */}
-              <div className="pt-2.5 px-1">
-                <span className="inline-block text-[10px] font-cinzel font-bold uppercase tracking-wider text-[#C29A54]">
-                  {photo.tag}
-                </span>
-                <h3 className="font-serif-royal text-sm sm:text-base font-bold text-[#741C24] leading-snug mt-0.5">
-                  {photo.title}
-                </h3>
-              </div>
-            </motion.div>
-          ))}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveIndex(idx);
+                    }}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-[#741C24] text-white border border-white/20 transition-colors shadow-md cursor-pointer"
+                    aria-label={`Inspect ${item.title}`}
+                  >
+                    <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
+                  </button>
+
+                  {/* Bottom Mute / Unmute button */}
+                  <button
+                    type="button"
+                    onClick={(e) => handleToggleMute(item.id, e)}
+                    data-testid={`gallery-mute-btn-${item.id}`}
+                    aria-pressed={isUnmuted}
+                    aria-label={isUnmuted ? `${c.muteLabel} ${item.title}` : `${c.unmuteLabel} ${item.title}`}
+                    className={`absolute bottom-2.5 right-2.5 z-20 px-2.5 py-1.5 rounded-full border text-[11px] font-cinzel font-semibold tracking-wider flex items-center gap-1.5 shadow-md transition-all cursor-pointer touch-manipulation active:scale-95 ${
+                      isUnmuted
+                        ? 'bg-[#741C24]/90 text-[#FFF8E8] border-[#E8C784]'
+                        : 'bg-black/70 hover:bg-[#741C24]/90 text-white border-white/25'
+                    }`}
+                  >
+                    {isUnmuted ? (
+                      <>
+                        <Volume2 className="w-3.5 h-3.5 text-[#F5D77F]" />
+                        <span>{c.muteLabel}</span>
+                      </>
+                    ) : (
+                      <>
+                        <VolumeX className="w-3.5 h-3.5 text-[#E8C784]" />
+                        <span>{c.unmuteLabel}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Heritage Deep-Maroon Caption Footer with Thin Gold Separator & Warm Cream Typography */}
+                <div className="mt-2 rounded-xl bg-gradient-to-r from-[#4B141D] via-[#611D2B] to-[#4B141D] border-t border-[#C59B56] px-3 py-2.5 flex items-center justify-between gap-2 shadow-inner">
+                  <div className="min-w-0">
+                    <span className="block text-[10px] font-cinzel font-bold uppercase tracking-[0.16em] text-[#E1BD80] truncate">
+                      {item.tag}
+                    </span>
+                    <h3 className="font-serif-royal text-sm sm:text-base font-bold text-[#FFF5E8] leading-snug mt-0.5 truncate">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <DiyaAccent animated={!reducedMotion} className="w-5 h-5 shrink-0 opacity-90" />
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Interactive High-Resolution Lightbox Modal (Uncropped object-contain + Arrow Keys) */}
+      {/* Interactive High-Resolution Video Popup (Non-blocking website scroll, max-h-[80vh] overflow-y-auto) */}
       <AnimatePresence>
-        {activePhoto && (
+        {activeVideo && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/92 backdrop-blur-md"
-            onClick={handleClose}
+            data-testid="gallery-video-popup"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/65 pointer-events-none"
           >
             <motion.div
               initial={{ scale: 0.94, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.94, opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="relative max-w-5xl w-full bg-[#241711] rounded-3xl overflow-hidden border-2 border-[#C29A54]/70 shadow-2xl flex flex-col"
+              className="pointer-events-auto relative max-w-5xl w-full max-h-[80vh] overflow-y-auto overscroll-auto bg-[#241711] rounded-3xl border-2 border-[#C29A54]/70 shadow-2xl flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -288,49 +361,67 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = ({
                 <X className="w-5 h-5 text-[#E8C784]" />
               </button>
 
-              {/* Image Stage with Prev / Next Controls */}
+              {/* Video Stage with Prev / Next Controls & Mute Toggle */}
               <div className="relative aspect-[16/10] sm:aspect-[16/9] bg-black max-h-[72vh] flex items-center justify-center p-2">
                 <button
                   type="button"
                   onClick={handlePrev}
-                  aria-label="Previous photograph"
+                  aria-label="Previous video"
                   className="absolute left-3 sm:left-4 z-20 p-2.5 rounded-full bg-black/65 hover:bg-[#741C24] text-[#E8C784] border border-white/20 transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                <img
-                  src={activePhoto.src}
-                  onError={(e) => {
-                    if (activePhoto.fallbackSrc) {
-                      (e.target as HTMLImageElement).src = activePhoto.fallbackSrc;
-                    }
-                  }}
-                  alt={activePhoto.title}
+                <video
+                  key={activeVideo.id}
+                  src={activeVideo.src}
+                  autoPlay
+                  loop
+                  muted={unmutedId !== activeVideo.id}
+                  playsInline
+                  aria-label={activeVideo.title}
                   className="max-h-full max-w-full object-contain"
                 />
 
                 <button
                   type="button"
                   onClick={handleNext}
-                  aria-label="Next photograph"
+                  aria-label="Next video"
                   className="absolute right-3 sm:right-4 z-20 p-2.5 rounded-full bg-black/65 hover:bg-[#741C24] text-[#E8C784] border border-white/20 transition-colors cursor-pointer"
                 >
                   <ChevronRight className="w-5 h-5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(e) => handleToggleMute(activeVideo.id, e)}
+                  className="absolute bottom-3 right-3 z-20 px-3 py-1.5 rounded-full bg-black/75 hover:bg-[#741C24] text-white border border-[#E8C784]/60 text-xs font-cinzel font-semibold tracking-wider flex items-center gap-1.5 shadow-lg cursor-pointer"
+                >
+                  {unmutedId === activeVideo.id ? (
+                    <>
+                      <Volume2 className="w-4 h-4 text-[#F5D77F]" />
+                      <span>{c.muteLabel}</span>
+                    </>
+                  ) : (
+                    <>
+                      <VolumeX className="w-4 h-4 text-[#E8C784]" />
+                      <span>{c.unmuteLabel}</span>
+                    </>
+                  )}
                 </button>
               </div>
 
               {/* Lightbox Caption Bar */}
               <div className="p-5 sm:p-6 bg-[#2B1B13] border-t border-[#C29A54]/40 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-cinzel font-bold bg-[#C29A54] text-[#3F291D] mb-1.5">
-                    {activePhoto.tag}
+                  <span className="inline-block font-cinzel text-xs font-bold uppercase tracking-[0.18em] text-[#E1BD80] mb-1">
+                    {activeVideo.tag}
                   </span>
                   <h4 className="font-serif-royal text-xl sm:text-2xl font-bold text-[#FFFDF7] mb-1">
-                    {activePhoto.title}
+                    {activeVideo.title}
                   </h4>
                   <p className="text-xs sm:text-sm text-[#F1E3CC]/90 font-serif max-w-3xl leading-relaxed">
-                    {activePhoto.caption}
+                    {activeVideo.caption}
                   </p>
                 </div>
 

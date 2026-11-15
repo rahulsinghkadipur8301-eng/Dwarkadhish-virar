@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Language, SEVA_OFFERINGS, SevaOffering } from '../data/templeData';
-import { Info, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { PeacockFeather, LotusOrnament } from './KrishnaMotifs';
@@ -50,7 +50,7 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
     <section
       id="seva"
       aria-labelledby="seva-section-heading"
-      className="relative overflow-hidden py-20 sm:py-24 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20"
+      className="relative overflow-hidden py-14 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20"
     >
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -60,7 +60,7 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
-          className="text-center max-w-4xl mx-auto mb-10 sm:mb-12"
+          className="text-center max-w-4xl mx-auto mb-8 sm:mb-10"
         >
           <div className="flex items-center justify-center gap-2.5 mb-2.5">
             <PeacockFeather size={24} />
@@ -87,17 +87,6 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
             <div className="h-[1px] bg-gradient-to-l from-transparent via-[#C29A54]/60 to-[#C29A54] w-16 sm:w-28" />
           </div>
         </motion.div>
-
-        {/* Mandatory Seva Disclaimer Ribbon */}
-        <div className="mb-10 p-5 bg-[#FFFDF8] border border-[#E5D1B6] flex items-start gap-3.5">
-          <Info className="w-5 h-5 text-[#A67C57] shrink-0 mt-0.5" />
-          <div className="text-xs sm:text-sm text-[#3C2A20] leading-relaxed">
-            <span className="font-semibold text-[#6B4832] block sm:inline mr-2">
-              {tDict.seva.noticeHeader}
-            </span>
-            {tDict.seva.noticeBody}
-          </div>
-        </div>
 
         {/* Seva Offerings Grid — Directly Redirects to Official Contribution Portal */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

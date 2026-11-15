@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Language, TEMPLE_LOCATION_RECORD, getGoogleMapsSearchUrl } from '../data/templeData';
-import { ArrowUp, Navigation } from 'lucide-react';
+import { ArrowUp, Navigation, MapPin } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 import { WhatsAppIcon, InstagramIcon, OFFICIAL_SOCIAL_LINKS } from './TempleSocialConnectSection';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <footer
       id="footer"
-      className="relative overflow-hidden bg-[#523725] text-[#FFFDF8] border-t-2 border-[#A67C57] pt-16 sm:pt-20 pb-12"
+      className="relative overflow-hidden bg-[#523725] text-[#FFFDF8] border-t-2 border-[#A67C57] pt-12 sm:pt-14 pb-10"
     >
       {/* Rotating Sacred Chakra Backdrop */}
       <SectionBackgroundChakra reducedMotion={reducedMotion} tone="dark" />
@@ -74,15 +74,31 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
             </div>
 
-            <p className="text-sm sm:text-base text-[#F5E6D3] max-w-lg leading-relaxed">
+            <p className="text-sm sm:text-base text-[#F5E6D3] max-w-xl leading-relaxed">
               {tDict.footer.dedication}
             </p>
 
-            <div className="p-4 bg-[#3C2A20]/90 border border-[#A67C57] text-xs sm:text-sm text-[#F0DFCA] max-w-lg rounded-xs shadow-sm">
-              <strong className="text-[#C98945] block mb-1 font-cinzel text-xs tracking-wider uppercase">
-                {tDict.footer.attributionNoteTitle}
+            {/* Official Sanctuary Address */}
+            <div className="p-4 bg-[#3C2A20]/85 border border-[#A67C57]/80 text-xs sm:text-sm text-[#F0DFCA] max-w-lg rounded-xs shadow-sm space-y-1.5">
+              <strong className="text-[#F5DEAE] flex items-center gap-1.5 font-cinzel text-xs tracking-wider uppercase">
+                <MapPin className="w-3.5 h-3.5 text-[#E8C784] shrink-0" />
+                <span>{tDict.footer.addressHeading}</span>
               </strong>
-              {tDict.footer.attributionNoteBody}
+              <address className="not-italic text-xs sm:text-sm leading-relaxed text-[#F5E6D3]">
+                {tDict.footer.addressText}
+              </address>
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-[11px] font-mono text-[#E8C784]">
+                <span>{tDict.common.coordinates}</span>
+                <span>·</span>
+                <a
+                  href={searchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-[#FFFDF8] transition-colors"
+                >
+                  {tDict.common.openInMaps}
+                </a>
+              </div>
             </div>
 
             {/* Official Social Portals */}
@@ -156,10 +172,10 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   type="button"
-                  onClick={() => onNavigate('gallery')}
+                  onClick={() => onNavigate('know-the-story')}
                   className="hover:text-[#C98945] hover:translate-x-1 transition-all cursor-pointer"
                 >
-                  {tDict.nav.gallery}
+                  {tDict.nav.knowTheStory}
                 </button>
               </li>
               <li>
@@ -205,6 +221,15 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-[#C98945] hover:translate-x-1 transition-all cursor-pointer"
                 >
                   {tDict.nav.donation}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('gallery')}
+                  className="hover:text-[#C98945] hover:translate-x-1 transition-all cursor-pointer"
+                >
+                  {tDict.nav.gallery}
                 </button>
               </li>
               <li>
@@ -259,11 +284,15 @@ export const Footer: React.FC<FooterProps> = ({
                   {tDict.nav.admin}
                 </button>
               </li>
-              <li className="pt-2 text-xs text-[#E5D1B6]/80 font-mono">
-                Virar Railway Station (4.5 km)
+              <li className="pt-2 border-t border-[#A67C57]/40 text-xs text-[#F5E6D3] leading-relaxed">
+                <span className="font-semibold text-[#F5DEAE] block mb-0.5">{tDict.common.templeName}</span>
+                {tDict.common.talukaDistrict}
               </li>
-              <li className="text-xs text-[#E5D1B6]/80">
-                Daily Hours: 06:00 AM – 09:00 PM
+              <li className="text-xs text-[#E5D1B6]/85 font-mono">
+                Virar Railway Station (4.5 km) · {tDict.common.coordinates}
+              </li>
+              <li className="text-xs text-[#E5D1B6]/90">
+                {tDict.common.openDaily}: {tDict.common.dailyHours} · {tDict.hero.statSandhyaAarti}: {tDict.hero.statSandhyaTime}
               </li>
             </ul>
           </motion.div>

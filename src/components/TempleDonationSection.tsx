@@ -78,7 +78,7 @@ export const TempleDonationSection: React.FC<TempleDonationSectionProps> = React
     <section
       id="donation"
       aria-label="Official Contribution Portal — Shri Dwarkadhish Mandir"
-      className="relative w-full bg-[#F5E9D3] text-[#3F291D] py-20 sm:py-24 lg:py-28 border-b-2 border-[#C29A54]/70 scroll-mt-20 overflow-hidden"
+      className="relative w-full bg-[#F5E9D3] text-[#3F291D] py-16 sm:py-20 border-b-2 border-[#C29A54]/70 scroll-mt-20 overflow-hidden"
     >
       {/* Full-Section Animated Motion-Graphics & Hanging Temple Bells Backdrop */}
       <DonationSacredAtmosphere reducedMotion={reducedMotion} />

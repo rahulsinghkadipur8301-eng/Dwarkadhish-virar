@@ -140,31 +140,28 @@ test('Dedicated TempleGallerySection & SectionBackgroundChakra across every sect
   const galleryCode = fs.readFileSync('src/components/TempleGallerySection.tsx', 'utf-8');
   assert.ok(galleryCode.includes('id="gallery"'), 'TempleGallerySection must define id="gallery"');
   assert.ok(galleryCode.includes('Sacred Moments & Consecration Seva'), 'Must include heading Sacred Moments & Consecration Seva');
-  assert.ok(
-    galleryCode.includes('Full uncropped devotional photographs — click any portrait to inspect at full clarity'),
-    'Must include subheading for uncropped devotional portraits'
-  );
 
-  for (const expectedText of [
-    'Offering Before the Deity',
-    'Sanctum Darshan',
-    'Consecration Abhishekam',
-    'Vedic Abhishekam',
-    'Dressed Dwarkadhish in Temple Splendour',
-    'Dwarkadhish Splendour',
-    'Humble Charan Seva',
-    'Charan Seva',
-    '/assets/praveena_thakur/before_idol.webp',
-    '/assets/praveena_thakur/devotional_ceremony.webp',
-    '/assets/praveena_thakur/dressed_dwarkadhish_splendour.webp',
-    '/assets/praveena_thakur/charan_seva.webp',
+  for (const expectedVideo of [
+    'dwarika 1.mp4',
+    'dwarika 2.mp4',
+    'dwarika 3.mp4',
+    'dwarika 4.mp4',
+    'autoPlay',
+    'loop',
+    'playsInline',
+    'Volume2',
+    'VolumeX',
   ]) {
-    assert.ok(galleryCode.includes(expectedText), `TempleGallerySection must include ${expectedText}`);
+    assert.ok(galleryCode.includes(expectedVideo), `TempleGallerySection must include ${expectedVideo}`);
   }
 
-  assert.ok(galleryCode.includes('aspect-[9/16]') && galleryCode.includes('object-contain'), 'Gallery portraits must be uncropped 9:16 object-contain');
+  assert.ok(galleryCode.includes('aspect-[9/16]') && galleryCode.includes('object-contain'), 'Gallery videos must be uncropped 9:16 object-contain');
   assert.strictEqual(galleryCode.includes('object-cover'), false, 'TempleGallerySection must not use object-cover');
   assert.ok(galleryCode.includes('SectionBackgroundChakra'), 'TempleGallerySection must mount rotating SectionBackgroundChakra');
+
+  const overlayCode = fs.readFileSync('src/components/CharanAshirwadOverlay.tsx', 'utf-8');
+  assert.strictEqual(overlayCode.includes('charan-sparsh-hands'), false, 'Stylized hand-type SVG structure must be removed');
+  assert.ok(overlayCode.includes('createRealFlowerSprites'), 'Must render real botanical flower sprites');
 
   const appCode = fs.readFileSync('src/App.tsx', 'utf-8');
   assert.ok(appCode.includes('<TempleGallerySection'), 'App.tsx must mount TempleGallerySection');

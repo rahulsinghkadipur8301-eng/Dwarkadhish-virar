@@ -42,6 +42,9 @@
     --site-content-width: min(98vw, 1840px);
     --site-content-width-wide: min(99vw, 1920px);
     --section-space: clamp(48px, 4.5vw, 88px);
+    --section-padding-block: clamp(52px, 5vw, 80px);
+    --section-heading-gap: clamp(32px, 3vw, 44px);
+    --content-gap: clamp(20px, 2.2vw, 36px);
   }
 
   /* Default English typography */
@@ -257,8 +260,23 @@
   }
 }
 
-.animate-subtle-zoom {
-  animation: subtleKenBurns 18s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+@keyframes heroGentleZoom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.065);
+  }
+}
+
+.animate-hero-zoom {
+  animation: heroGentleZoom 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+.motion-reduce .animate-hero-zoom {
+  animation: none !important;
+  transform: scale(1) !important;
 }
 
 @keyframes goldLineExpand {
@@ -288,6 +306,15 @@
 
 .animate-bell-ring {
   animation: bellRing 1.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+@keyframes ashirwadProgressBar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 @keyframes chakraSpinClockwise {
@@ -328,7 +355,8 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .animate-subtle-zoom {
+  .animate-subtle-zoom,
+  .animate-hero-zoom {
     animation: none !important;
     transform: scale(1.0) !important;
   }

@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useScroll, useTransform, useMotionValueEvent } from 'motion/react';
 import { Sparkles, BookOpen } from 'lucide-react';
 import { PeacockFeather, FluteDivider, DiyaAccent } from './KrishnaMotifs';
 import { TempleSanctumFrame } from './TempleSanctumFrame';
 import { useI18n } from '../i18n/I18nContext';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
+import { ASHIRWAD_CEREMONY_DURATION_MS } from '../utils/ashirwadCeremonyUtils';
 
 interface DevotionalPresenceSectionProps {
   reducedMotion?: boolean;
@@ -43,6 +44,19 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
   const [manualOpen, setManualOpen] = useState(false);
   const [blessingRevealed, setBlessingRevealed] = useState(false);
   const [currentP, setCurrentP] = useState(0);
+  const [ashirwadTrigger, setAshirwadTrigger] = useState<{ id: number; active: boolean }>({
+    id: 0,
+    active: false,
+  });
+  const ashirwadTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (ashirwadTimerRef.current !== null) {
+        window.clearTimeout(ashirwadTimerRef.current);
+      }
+    };
+  }, []);
 
   // Viewport-based scroll tracking targeted directly at the sanctum shrine frame
   // Offset "start end" to "end start" maps progress from when the top of the shrine
@@ -103,8 +117,35 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
   const effectiveSeamOpacity = manualOpen || reducedMotion ? 0 : seamOpacityTransform;
   const effectiveGlowOpacity = manualOpen || reducedMotion ? 0.95 : glowOpacityTransform;
 
+  const curtainsVisible = manualOpen || reducedMotion || (currentP > 0.28 && currentP < 0.80);
+
   const handleToggleManualOpen = () => {
     setManualOpen((prev) => !prev);
+  };
+
+  const handleTriggerCharanSparsh = () => {
+    // Ensure curtains part so the devotee can clearly see Lord Dwarkadhish's blessing hand,
+    // Lotus Feet Charan Sparsh, warm Ashirwad beam, and full 3.6s Pushpa Varsha
+    if (!curtainsVisible) {
+      setManualOpen(true);
+    }
+
+    if (ashirwadTimerRef.current !== null) {
+      window.clearTimeout(ashirwadTimerRef.current);
+    }
+
+    setAshirwadTrigger((prev) => ({
+      id: prev.id + 1,
+      active: true,
+    }));
+
+    ashirwadTimerRef.current = window.setTimeout(() => {
+      setAshirwadTrigger((prev) => ({
+        ...prev,
+        active: false,
+      }));
+      ashirwadTimerRef.current = null;
+    }, ASHIRWAD_CEREMONY_DURATION_MS + 60);
   };
 
   // Compute active status label according to exact ceremony state
@@ -126,7 +167,7 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
     <section
       ref={sectionRef}
       id="presence"
-      className="relative w-full bg-[#FBF6ED] border-b border-[#E5D1B6] py-14 sm:py-18 lg:py-24 select-none overflow-hidden"
+      className="relative w-full bg-[#FBF6ED] border-b border-[#E5D1B6] py-14 sm:py-16 lg:py-20 select-none overflow-hidden"
     >
       {/* Centered Rotating Sacred Background Chakra */}
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
@@ -134,7 +175,7 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative z-10">
         
         {/* Section Editorial Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
           <div className="flex items-center justify-center gap-2 mb-2.5">
             <PeacockFeather size={28} />
             <span className="font-cinzel text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold">
@@ -175,6 +216,10 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
                 ceremonyProgress={ceremonyProgress}
                 manualOpen={manualOpen}
                 onToggleManualOpen={handleToggleManualOpen}
+                curtainsVisible={curtainsVisible}
+                ashirwadActive={ashirwadTrigger.active}
+                ashirwadTriggerId={ashirwadTrigger.id}
+                onTriggerCharanSparsh={handleTriggerCharanSparsh}
                 reducedMotion={reducedMotion}
               />
             </div>

@@ -144,4 +144,19 @@ test('HeroSection utility bar uses 20% opacity, Darshan & Seva headers are cente
   );
   const navSrc = readFileSync('src/components/Navbar.tsx', 'utf8');
   assert.ok(navSrc.includes("labelEn: 'Way to Mandir'"), 'Navbar location link should say Way to Mandir');
+
+  const particlesSrc = readFileSync('src/components/GoldenParticles.tsx', 'utf8');
+  assert.ok(
+    particlesSrc.includes('width < 640 ? 28 : Math.min(54'),
+    'GoldenParticles should render rich density of small golden dots'
+  );
+  const cssSrc = readFileSync('src/index.css', 'utf8');
+  assert.ok(
+    cssSrc.includes('@keyframes heroGentleZoom') && cssSrc.includes('.animate-hero-zoom'),
+    'index.css must define continuous gentle zoom-in/out animation'
+  );
+  assert.ok(
+    heroSrc.includes('animate-hero-zoom') && (heroSrc.match(/<GoldenParticles/g) || []).length === 2,
+    'HeroSection must apply animate-hero-zoom and mount GoldenParticles on desktop and mobile branches'
+  );
 });

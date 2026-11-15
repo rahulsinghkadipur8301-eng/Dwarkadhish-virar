@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ZoomIn, Building, Calendar, Heart } from 'lucide-react';
+import { ZoomIn, Building, Calendar } from 'lucide-react';
 import { Language } from '../../data/templeData';
 import { PeacockFeather, LotusOrnament, DiyaAccent } from '../KrishnaMotifs';
 
@@ -33,20 +33,22 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
       statement: 'A sacred vision, shaped by devotion, brought Dwarkadhish Dham to Virar.',
       statementTag: '॥ SHRI DWARKADHISH SANKALP ॥',
       bioP1:
-        'Pravina H. Thakur is publicly recognized in Virar for dedicated civic leadership and spiritual devotion. As former Mayor of Vasai–Virar and Trustee of Late Shri Vishnu Waman Thakur Charitable Trust, publicly reported accounts connect the creation of Shri Dwarkadhish Temple in Shirgaon, Virar East, to her initiative, devotion, and long-held aspiration to establish a magnificent abode of Bhagwan Dwarkadhish for pilgrims across the region.',
+        'Pravina H. Thakur is publicly recognized in Virar for civic leadership and enduring Krishna devotion. As former Mayor of Vasai–Virar and Trustee of Late Shri Vishnu Waman Thakur Charitable Trust, her over 25 years of annual pilgrimages to Dwarka since 2000 inspired the resolve—supported immediately by Sri Hitendra Thakur—to establish Shri Dwarkadhish Dham in Virar.',
       bioP2:
-        'She has been described as a guiding inspiration behind the temple’s spiritual journey. Her role is linked to nurturing a living sanctuary centered on divine darshan, selfless seva, traditional festivals, and community faith.',
+        'Choosing the serene lake-and-hill setting of Shirgaon and committing to traditional stone architecture built without cement or iron alongside Sompura architect Raju Bhai Mistry, her brother Kiran, Padma Shri Vasudeo Kamath, and dedicated artisans, the mandir unites devotion with community seva—including elder care and shelter.',
       bioP3:
-        'The consecration in November 2025 marked the realization of that sacred vision, creating an enduring spiritual landmark of peace and devotion in Shirgaon.',
+        'Crafted over 7–8 years with interlocking Bansi Paharpur sandstone without iron or concrete, 56 steps, 24 avatar pillars, and 108 names of Krishna, its four-day Vedic Pran Pratishtha began on Wednesday, 26 November 2025 (26–29 Nov) led by Jagadguru Shankaracharya Swami Avimukteshwaranand Saraswati, consecrating the 90-ft shrine and Krishnashila Rajadhiraj murti to open the sanctum doors to thousands.',
       highlight1Title: 'Public Service',
       highlight1Subtitle: 'Former Mayor of Vasai–Virar',
-      highlight1Desc: 'Distinguished civic stewardship and dedicated leadership in the Vasai–Virar municipal region.',
-      highlight2Title: 'Temple Vision',
-      highlight2Subtitle: 'Sanctuary in Shirgaon',
-      highlight2Desc: 'Publicly reported association with conceiving and inspiring the creation of Shri Dwarkadhish Mandir.',
-      highlight3Title: 'Documented Milestone',
-      highlight3Subtitle: 'November 2025 Milestone',
-      highlight3Desc: 'Culmination of devotion in a landmark consecration that opened the temple gates to thousands of devotees.',
+      highlight1Desc: 'Rooted in Vasai–Virar civic stewardship, uniting spiritual devotion with compassionate Dharma and Karma seva.',
+      highlight3Title: 'Pran Pratishtha Mahotsav',
+      highlight3Subtitle: 'Sacred Consecration · Shirgaon',
+      highlight3Before: 'On ',
+      highlight3BoldDate: 'Wednesday, 26 November 2025',
+      highlight3Mid: ', ',
+      highlight3BoldOpening:
+        'after 7–8 years of pure sandstone craft honoring brother Kiran’s memory, Shankaracharya Avimukteshwaranand consecrated the 90-ft shrine to open its doors',
+      highlight3After: ' to thousands.',
       // Featured First Image: At Dwarkadhish Shikhara
       goldenTag: 'Golden Hour',
       goldenTitle: 'At Dwarkadhish Shikhara',
@@ -63,20 +65,22 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
       statement: 'भक्ति और श्रद्धा से संजोए एक पावन संकल्प ने विरार में द्वारकाधीश धाम को साकार किया।',
       statementTag: '॥ श्री द्वारकाधीश संकल्प ॥',
       bioP1:
-        'प्रवीणा एच. ठाकुर को विरार में समर्पित जनसेवा और आध्यात्मिक निष्ठा के लिए विशेष सम्मान प्राप्त है। वसई-विरार की पूर्व महापौर एवं स्वर्गीय श्री विष्णु वामन ठाकुर चैरिटेबल ट्रस्ट की ट्रस्टी के रूप में, सार्वजनिक विवरण शिरगांव (विरार पूर्व) में श्री द्वारकाधीश मंदिर की स्थापना को उनके संकल्प, भक्ति और श्रद्धालुओं के लिए एक पावन धाम स्थापित करने की दीर्घकालिक अभिलाषा से जोड़ते हैं।',
+        'प्रवीणा एच. ठाकुर को विरार में समर्पित जनसेवा और अनन्य कृष्ण भक्ति के लिए सम्मान प्राप्त है। वसई-विरार की पूर्व महापौर एवं स्वर्गीय श्री विष्णु वामन ठाकुर चैरिटेबल ट्रस्ट की ट्रस्टी के रूप में, सन् २००० से २५ वर्षों से अधिक की द्वारका यात्रा ने उन्हें विरार में श्री द्वारकाधीश धाम स्थापित करने की प्रेरणा दी, जिसे श्री हितेंद्र ठाकुर जी का तुरंत समर्थन मिला।',
       bioP2:
-        'वे मंदिर की आध्यात्मिक यात्रा की एक मुख्य प्रेरक शक्ति रही हैं। उनकी भूमिका मंदिर की परिकल्पना के साथ-साथ दर्शन, सेवा, उत्सव और सामुदायिक आस्था से परिपूर्ण एक सजीव भक्ति स्थल के निर्माण से जुड़ी है।',
+        'शिरगाव में पहाड़ी और झील से घिरी शांत भूमि चुनकर, भाई किरण, सोमपुरा शिल्पकार राजू भाई मिस्त्री, पद्मश्री वासुदेव कामत और निष्ठावान कारीगरों के सहयोग से बिना सीमेंट व लोहे के शुद्ध पाषाण मंदिर की रचना हुई—जो धर्म और सेवा (वृद्धाश्रम व अनाथ आश्रम) का संगम है।',
       bioP3:
-        'नवंबर 2025 में मंदिर का पावन लोकार्पण इस संकल्प की पूर्णता का प्रतीक बना, जिसने शिरगांव को एक नया आध्यात्मिक तीर्थ प्रदान किया।',
+        'बिना लोहे व कंक्रीट के बंसी पहाड़पुर पत्थर, ५६ सीढ़ियों, २४ अवतार स्तंभों व १०८ नामों से ७–८ वर्षों में निर्मित इस ९० फुट ऊँचे मंदिर के कपाट बुधवार, २६ नवंबर २०२५ (२६–२९ नवंबर) को जगद्गुरु शंकराचार्य स्वामी अविमुक्तेश्वरानंद सरस्वती जी के पावन सान्निध्य में वैदिक प्राण प्रतिष्ठा व कृष्णशिला राजाधिराज विग्रह स्थापना के साथ हजारों श्रद्धालुओं हेतु खोले गए।',
       highlight1Title: 'जनसेवा',
       highlight1Subtitle: 'वसई-विरार की पूर्व महापौर',
-      highlight1Desc: 'वसई-विरार महानगर क्षेत्र में समर्पित नागरिक नेतृत्व एवं जनकल्याणकारी सेवा।',
-      highlight2Title: 'मंदिर संकल्प',
-      highlight2Subtitle: 'शिरगांव में पावन धाम',
-      highlight2Desc: 'श्री द्वारकाधीश मंदिर के पावन निर्माण की परिकल्पना एवं जनप्रेरणा से गहरा जुड़ाव।',
-      highlight3Title: 'प्रलेखित ऐतिहासिक क्षण',
-      highlight3Subtitle: 'नवंबर 2025 का ऐतिहासिक क्षण',
-      highlight3Desc: 'भव्य प्राण प्रतिष्ठा के साथ मंदिर के कपाट हजारों श्रद्धालुओं के लिए खोले गए।',
+      highlight1Desc: 'वसई-विरार में समर्पित नागरिक नेतृत्व, जहाँ धर्म व भक्ति को वृद्धाश्रम एवं अनाथ आश्रम जैसी समाजसेवा से जोड़ा गया।',
+      highlight3Title: 'प्राण प्रतिष्ठा महोत्सव',
+      highlight3Subtitle: 'पावन प्रतिष्ठा · शिरगांव',
+      highlight3Before: '',
+      highlight3BoldDate: 'बुधवार, २६ नवंबर २०२५',
+      highlight3Mid: ' को ',
+      highlight3BoldOpening:
+        'भाई किरण की स्मृति में ७–८ वर्षों के शुद्ध पाषाण निर्माण के बाद शंकराचार्य अविमुक्तेश्वरानंद जी के वैदिक अनुष्ठान से ९० फुट मंदिर के द्वार खुले',
+      highlight3After: ' और हजारों भक्तों ने दर्शन पाए।',
       goldenTag: 'संध्या दर्शन',
       goldenTitle: 'श्री द्वारकाधीश शिखर के समक्ष',
       goldenCaption: 'शिरगांव के नक्काशीदार गुलाबी बलुआ पत्थर शिखर के सामने सायंकालीन पावन दर्शन।',
@@ -91,20 +95,22 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
       statement: 'भक्ती आणि श्रद्धेतून साकार झालेल्या एका पवित्र संकल्पाने विरारमध्ये द्वारकाधीश धाम उभे केले.',
       statementTag: '॥ श्री द्वारकाधीश संकल्प ॥',
       bioP1:
-        'प्रवीणा एच. ठाकूर यांना विरारमध्ये समर्पित नागरी नेतृत्व आणि आध्यात्मिक निष्ठा या दोन्हींसाठी आदराचे स्थान आहे. वसई-विरारच्या माजी महापौर आणि कै. श्री विष्णू वामन ठाकूर चॅरिटेबल ट्रस्टच्या विश्वस्त म्हणून, सार्वजनिक नोंदीनुसार शिरगाव (विरार पूर्व) येथील श्री द्वारकाधीश मंदिराची निर्मिती त्यांच्या पुढाकार, भक्ती आणि द्वारकाधीशांचे भव्य मंदिर उभारण्याच्या ध्यासाशी जोडलेली आहे.',
+        'प्रवीणा एच. ठाकूर यांना विरारमध्ये नागरी नेतृत्व आणि निस्सीम कृष्णभक्तीसाठी विशेष आदर लाभला आहे. वसई-विरारच्या माजी महापौर आणि कै. श्री विष्णू वामन ठाकूर चॅरिटेबल ट्रस्टच्या विश्वस्त म्हणून, २००० सालापासून २५ वर्षांहून अधिक काळ केलेल्या द्वारका यात्रेतून विरारमध्ये श्री द्वारकाधीश धाम साकारण्याचा संकल्प आकाराला आला—ज्याला श्री हितेंद्र ठाकूर यांनी त्वरित पाठिंबा दिला.',
       bioP2:
-        'त्या मंदिराच्या आध्यात्मिक प्रवासातील मुख्य शक्ती मानल्या जातात. त्यांची भूमिका मंदिराच्या संकल्पनेपुरती मर्यादित नसून दर्शन, सेवा, उत्सव आणि समाजभक्तीचे केंद्र उभारण्याशी निगडित आहे.',
+        'शिरगावातील टेकडी व शांत तलावाजवळील निसर्गरम्य जागा निवडून, बंधू किरण, सोमपुरा शिल्पकार राजू भाई मिस्त्री, पद्मश्री वासुदेव कामत आणि निपुण कारागिरांच्या साथीने सिमेंट व लोखंडाविना शुद्ध दगडी मंदिर उभारले—जे धर्म आणि वृद्धाश्रम-अनाथालयासारख्या कर्मसेवेचा संगम आहे.',
       bioP3:
-        'नोव्हेंबर २०२५ मधील मंदिराचा भव्य प्राणप्रतिष्ठा सोहळा म्हणजे या पवित्र संकल्पाची पूर्तता ठरली, ज्याने परिसराला एक पावन आध्यात्मिक केंद्र दिले.',
+        'लोखंड व सिमेंटविना बन्सी पहाडपूरचा वालुकाश्म, ५६ पायऱ्या, २४ अवतार स्तंभ व १०८ नावांनी ७–८ वर्षांत उभारलेल्या या ९० फूट भव्य मंदिराची चार दिवसीय वैदिक प्राणप्रतिष्ठा बुधवार, २६ नोव्हेंबर २०२५ (२६–२९ नोव्हेंबर) रोजी जगद्गुरू शंकराचार्य स्वामी अविमुक्तेश्वरानंद सरस्वती यांच्या हस्ते होऊन कृष्णशिला राजाधिराज मूर्ती स्थापनेनंतर मंदिराचे दरवाजे हजारो भाविकांसाठी खुले झाले.',
       highlight1Title: 'लोकसेवा',
       highlight1Subtitle: 'वसई-विरारच्या माजी महापौर',
-      highlight1Desc: 'वसई-विरार महानगर क्षेत्रात समर्पित नागरी नेतृत्व आणि समाजसेवा.',
-      highlight2Title: 'मंदिर संकल्प',
-      highlight2Subtitle: 'शिरगावात पावन धाम',
-      highlight2Desc: 'श्री द्वारकाधीश मंदिराच्या निर्मितीमागील प्रेरणा आणि भक्तीभावाची जोड.',
-      highlight3Title: 'नोंदवलेला ऐतिहासिक टप्पा',
-      highlight3Subtitle: 'नोव्हेंबर २०२५ चा ऐतिहासिक टप्पा',
-      highlight3Desc: 'भव्य प्राणप्रतिष्ठेसह मंदिराची कवाडे हजारो भाविकांसाठी खुली झाली.',
+      highlight1Desc: 'वसई-विरारमध्ये समर्पित नागरी सेवा आणि धर्म-कर्म एकत्र आणणारे वृद्धाश्रम व समाजसेवेचे कार्य.',
+      highlight3Title: 'प्राणप्रतिष्ठा महोत्सव',
+      highlight3Subtitle: 'पावन प्रतिष्ठा · शिरगाव',
+      highlight3Before: '',
+      highlight3BoldDate: 'बुधवार, २६ नोव्हेंबर २०२५',
+      highlight3Mid: ' रोजी ',
+      highlight3BoldOpening:
+        'बंधू किरण यांच्या स्मृतीप्रीत्यर्थ ७–८ वर्षांच्या शुद्ध पाषाण बांधकामानंतर शंकराचार्य अविमुक्तेश्वरानंद यांच्या हस्ते ९० फूट मंदिराचे दरवाजे खुले झाले',
+      highlight3After: ' व हजारो भाविकांनी दर्शन घेतले.',
       goldenTag: 'सायंकाळ दर्शन',
       goldenTitle: 'श्री द्वारकाधीश शिखरासमोर',
       goldenCaption: 'शिरगावच्या कोरीव गुलाबी वालुकाश्म शिखरासमोर संध्याकाळच्या मंगल क्षणाचे दर्शन.',
@@ -119,20 +125,22 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
       statement: 'ભક્તિ અને શ્રદ્ધાથી ઘડાયેલા પવિત્ર સંકલ્પે વિરારમાં દ્વારકાધીશ ધામને સાકાર કર્યું.',
       statementTag: '॥ શ્રી દ્વારકાધીશ સંકલ્પ ॥',
       bioP1:
-        'પ્રવીણા એચ. ઠાકુર વિરારમાં સમર્પિત લોકસેવા અને આધ્યાત્મિક આસ્થા માટે સુવિખ્યાત છે. વસઈ-વિરારના પૂર્વ મેયર અને સ્વ. શ્રી વિષ્ણુ વામન ઠાકુર ચેરિટેબલ ટ્રસ્ટના ટ્રસ્ટી તરીકે, સાર્વજનિક અહેવાલો મુજબ શિરગાવ (વિરાર પૂર્વ) ખાતે શ્રી દ્વારકાધીશ મંદિરનું નિર્માણ તેમની પહેલ, અનન્ય ભક્તિ અને ભવ્ય ધામ સ્થાપવાની મનોકામના સાથે સંકળાયેલું છે.',
+        'પ્રવીણા એચ. ઠાકુર વિરારમાં સમર્પિત લોકસેવા અને અનન્ય કૃષ્ણભક્તિ માટે સુવિખ્યાત છે. વસઈ-વિરારના પૂર્વ મેયર અને સ્વ. શ્રી વિષ્ણુ વામન ઠાકુર ચેરિટેબલ ટ્રસ્ટના ટ્રસ્ટી તરીકે, ઈ.સ. ૨૦૦૦થી ૨૫થી વધુ વર્ષની દ્વારકા યાત્રાએ તેમને વિરારમાં શ્રી દ્વારકાધીશ ધામ સ્થાપવાની પ્રેરણા આપી, જેને શ્રી હિતેન્દ્ર ઠાકુરનો સહજ ટેકો મળ્યો.',
       bioP2:
-        'તેઓ મંદિરની આધ્યાત્મિક યાત્રાના પ્રમુખ પ્રેરકબળ રહ્યા છે. તેમની ભૂમિકા દર્શન, સેવા, ઉત્સવો અને સામુદાયિક આસ્થાના જીવંત કેન્દ્રના નિર્માણ સાથે સંકળાયેલી છે.',
+        'શિરગાવમાં પર્વત અને તળાવથી ઘેરાયેલી શાંત ભૂમિ પસંદ કરી, ભાઈ કિરણ, સોમપુરા સ્થપતિ રાજુભાઈ મિસ્ત્રી, પદ્મશ્રી વાસુદેવ કામત અને સમર્પિત શિલ્પકારોના સંગાથે સિમેન્ટ કે લોખંડ વિના શુદ્ધ પથ્થરનું મંદિર નિર્માણ પામ્યું—જે ધર્મ સાથે વૃદ્ધાશ્રમ અને અનાથાશ્રમ જેવી કર્મસેવાનો સંગમ છે.',
       bioP3:
-        'નવેમ્બર ૨૦૨૫માં મંદિરનો ભવ્ય પ્રાણપ્રતિષ્ઠા મહોત્સવ એ સંકલ્પની પૂર્ણાહુતિ સમાન બની રહ્યો, જેણે સમગ્ર પ્રદેશને નવું પવિત્ર ધાર્મિક સીમાચિહ્ન પ્રદાન કર્યું.',
+        'લોખંડ કે સિમેન્ટ વિના બંસી પહાડપુરના ગુલાબી પથ્થર, ૫૬ પગથિયાં, ૨૪ અવતાર સ્તંભો અને ૧૦૮ નામોથી ૭–૮ વર્ષમાં નિર્મિત આ ૯૦ ફૂટ ઊંચા મંદિરની વૈદિક પ્રાણપ્રતિષ્ઠા બુધવાર, ૨૬ નવેમ્બર ૨૦૨૫ (૨૬–૨૯ નવેમ્બર)ના રોજ જગદ્ગુરુ શંકરાચાર્ય સ્વામી અવિમુક્તેશ્વરાનંદ સરસ્વતીજીના હસ્તે થતાં કૃષ્ણશિલા રાજાધિરાજ મૂર્તિની સ્થાપના સાથે હજારો ભક્તો માટે દ્વાર ખુલ્લા મુકાયા.',
       highlight1Title: 'લોકસેવા',
       highlight1Subtitle: 'વસઈ-વિરારના પૂર્વ મેયર',
-      highlight1Desc: 'વસઈ-વિરાર મહાનગરમાં સમર્પિત નાગરિક નેતૃત્વ અને લોકસેવા.',
-      highlight2Title: 'મંદિર સંકલ્પ',
-      highlight2Subtitle: 'શિરગાવમાં પવિત્ર ધામ',
-      highlight2Desc: 'શ્રી દ્વારકાધીશ મંદિરના નિર્માણની પવિત્ર પરિકલ્પના અને પ્રેરણા.',
-      highlight3Title: 'નોંધાયેલ ઐતિહાસિક પળ',
-      highlight3Subtitle: 'નવેમ્બર ૨૦૨૫ ઐતિહાસિક પળ',
-      highlight3Desc: 'મંગલ પ્રાણપ્રતિષ્ઠા સાથે મંદિરના દ્વાર હજારો ભક્તો માટે ખુલ્યા.',
+      highlight1Desc: 'વસઈ-વિરારમાં સમર્પિત નાગરિક નેતૃત્વ અને ધર્મ સાથે વૃદ્ધાશ્રમ-અનાથાશ્રમ જેવી કર્મસેવાનો સમન્વય.',
+      highlight3Title: 'પ્રાણ પ્રતિષ્ઠા મહોત્સવ',
+      highlight3Subtitle: 'પાવન પ્રતિષ્ઠા · શિરગાવ',
+      highlight3Before: '',
+      highlight3BoldDate: 'બુધવાર, ૨૬ નવેમ્બર ૨૦૨૫',
+      highlight3Mid: 'ના રોજ ',
+      highlight3BoldOpening:
+        'ભાઈ કિરણની સ્મૃતિમાં ૭–૮ વર્ષના શુદ્ધ પાષાણ નિર્માણ બાદ શંકરાચાર્ય અવિમુક્તેશ્વરાનંદજીના હસ્તે ૯૦ ફૂટ મંદિરના દ્વાર ખૂલ્યા',
+      highlight3After: ' અને હજારો ભક્તો ઉમટ્યા.',
       goldenTag: 'સંધ્યા દર્શન',
       goldenTitle: 'શ્રી દ્વારકાધીશ શિખર સમક્ષ',
       goldenCaption: 'શિરગાવના ગુલાબી પથ્થરના કોતરણીયુક્ત શિખર સમક્ષ સંધ્યા સમયે ભક્તિમય દર્શન.',
@@ -244,9 +252,9 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
           First Image: At Dwarkadhish Shikhara (16:9 Uncropped Lead)
           Below It: 3 Uploaded Ceremony Photos (Uncropped Native Aspect Ratio)
          =================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 lg:items-stretch mb-10">
         {/* LEFT VISUAL COLUMN (lg:col-span-7) */}
-        <div className="lg:col-span-7 flex flex-col gap-3.5">
+        <div className="lg:col-span-7 h-full flex flex-col justify-between gap-3.5">
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 20 }}
             whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
@@ -337,13 +345,13 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
         </div>
 
         {/* RIGHT BIOGRAPHY & HIGHLIGHTS COLUMN (lg:col-span-5) */}
-        <div className="lg:col-span-5 flex flex-col justify-between gap-3.5">
+        <div className="lg:col-span-5 h-full flex flex-col justify-between gap-3.5">
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 18 }}
             whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="bg-[#FFFDF8] rounded-2xl p-4 sm:p-5 border-2 border-[#C29A54]/80 shadow-[0_12px_32px_rgba(194,154,84,0.1)]"
+            className="flex-1 bg-[#FFFDF8] rounded-2xl p-4 sm:p-5 border-2 border-[#C29A54]/80 shadow-[0_12px_32px_rgba(194,154,84,0.1)] flex flex-col justify-center"
           >
             <div className="flex items-center gap-2 mb-2">
               <DiyaAccent animated={!reducedMotion} />
@@ -384,23 +392,6 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
 
             <div className="group rounded-xl p-3 sm:p-3.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
-                <Heart className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="block text-[10.5px] font-cinzel font-bold text-[#C29A54] uppercase tracking-wider">
-                  {c.highlight2Subtitle}
-                </span>
-                <h4 className="font-serif-royal text-[15px] font-bold text-[#3F291D] group-hover:text-[#741C24] transition-colors leading-snug">
-                  {c.highlight2Title}
-                </h4>
-                <p className="text-xs text-[#3F291D]/80 font-serif leading-snug mt-0.5">
-                  {c.highlight2Desc}
-                </p>
-              </div>
-            </div>
-
-            <div className="group rounded-xl p-3 sm:p-3.5 bg-[#FFFDF8] border border-[#C29A54]/60 hover:border-[#741C24] shadow-xs hover:shadow-md transition-all duration-300 flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#F1E3CC] border border-[#C29A54]/50 flex items-center justify-center text-[#741C24] group-hover:bg-[#741C24] group-hover:text-white transition-colors shrink-0 mt-0.5">
                 <Calendar className="w-4 h-4" />
               </div>
               <div>
@@ -411,7 +402,11 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
                   {c.highlight3Title}
                 </h4>
                 <p className="text-xs text-[#3F291D]/80 font-serif leading-snug mt-0.5">
-                  {c.highlight3Desc}
+                  {c.highlight3Before}
+                  {c.highlight3BoldDate}
+                  {c.highlight3Mid}
+                  {c.highlight3BoldOpening}
+                  {c.highlight3After}
                 </p>
               </div>
             </div>

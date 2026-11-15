@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
 import { motion, MotionValue } from 'motion/react';
-import { Sparkles, Eye, EyeOff } from 'lucide-react';
+import { Sparkles, Eye, EyeOff, Hand } from 'lucide-react';
 import { TempleBell } from './TempleBell';
 import { DivineDarshanCurtains } from './DivineDarshanCurtains';
 import { DivineFlowerShower, calculateCeremonyTimeline } from './DivineFlowerShower';
+import { CharanAshirwadOverlay, EverywhereFlowerCanvas } from './CharanAshirwadOverlay';
 import { DiyaAccent } from './KrishnaMotifs';
 import { useI18n } from '../i18n/I18nContext';
+import { ASHIRWAD_CEREMONY_DURATION_MS } from '../utils/ashirwadCeremonyUtils';
 
 export interface TempleSanctumFrameProps {
   shrineRef?: React.RefObject<HTMLDivElement | null>;
@@ -20,6 +22,10 @@ export interface TempleSanctumFrameProps {
   glowRef?: React.RefObject<HTMLDivElement | null>;
   manualOpen?: boolean;
   onToggleManualOpen?: () => void;
+  curtainsVisible?: boolean;
+  ashirwadActive?: boolean;
+  ashirwadTriggerId?: number;
+  onTriggerCharanSparsh?: () => void;
   reducedMotion?: boolean;
 }
 
@@ -50,6 +56,10 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
   glowRef,
   manualOpen = false,
   onToggleManualOpen,
+  curtainsVisible = false,
+  ashirwadActive = false,
+  ashirwadTriggerId = 0,
+  onTriggerCharanSparsh,
   reducedMotion = false,
 }) => {
   const { tDict } = useI18n();
@@ -214,6 +224,7 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
           <div
             className="relative w-full mx-6 sm:mx-8 lg:mx-10 my-2 overflow-hidden aspect-[3/4.2] max-h-[480px] sm:max-h-[560px] lg:max-h-[640px] xl:max-h-[700px]"
             style={{
+              containerType: 'size',
               clipPath: 'url(#vaishnavToranaClip)',
               WebkitClipPath: 'url(#vaishnavToranaClip)',
             }}
@@ -246,22 +257,41 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
               />
             </div>
 
-            {/* 2. Authentic Unaltered Photograph of Shri Dwarkadhish Bhagwan (Z: 3) */}
+            {/* 2. Authentic Unaltered Photograph of Shri Dwarkadhish Bhagwan (Locked 3:4 Coordinate Box, Z: 3) */}
             <div className="relative z-3 w-full h-full flex items-end justify-center overflow-hidden">
-              <picture className="w-full h-full flex items-end justify-center">
-                <source
-                  type="image/webp"
-                  srcSet="/assets/aistudio/dwarkadhish_hero_enhanced_800.webp"
-                />
-                <img
-                  src="/assets/aistudio/dwarkadhish_hero_enhanced_1600.webp"
-                  alt="Shri Dwarkadhish Bhagwan seated in regal simhasana with golden crown, pitambar, and flower garlands at Shirgaon Mandir, Virar East"
-                  className="w-full h-full object-contain object-bottom block mx-auto drop-shadow-[0_16px_28px_rgba(0,0,0,0.95)]"
-                  loading="eager"
-                  decoding="sync"
-                  referrerPolicy="no-referrer"
-                />
-              </picture>
+              <div
+                className="relative flex items-end justify-center"
+                style={{
+                  width: 'min(100cqw, calc(100cqh * 0.75))',
+                  height: 'min(100cqh, calc(100cqw / 0.75))',
+                }}
+              >
+                <picture className="w-full h-full block">
+                  <source
+                    type="image/webp"
+                    srcSet="/assets/aistudio/dwarkadhish_hero_enhanced_800.webp"
+                  />
+                  <img
+                    src="/assets/aistudio/dwarkadhish_hero_enhanced_1600.webp"
+                    alt="Shri Dwarkadhish Bhagwan seated in regal simhasana with golden crown, pitambar, and flower garlands at Shirgaon Mandir, Virar East"
+                    className="w-full h-full object-cover object-bottom block mx-auto drop-shadow-[0_16px_28px_rgba(0,0,0,0.95)]"
+                    loading="eager"
+                    decoding="sync"
+                    referrerPolicy="no-referrer"
+                  />
+                </picture>
+
+                {/* Coordinated Charan Sparsh & Left-Hand Ashirwad Light Beam Overlay */}
+                {onTriggerCharanSparsh && (
+                  <CharanAshirwadOverlay
+                    active={ashirwadActive}
+                    triggerId={ashirwadTriggerId}
+                    curtainsVisible={curtainsVisible}
+                    reducedMotion={reducedMotion}
+                    onTouchFeet={onTriggerCharanSparsh}
+                  />
+                )}
+              </div>
             </div>
 
             {/* Depth Layer 2: Midground Petals (Directly in front of deity, showering sanctum, Z: 4) */}
@@ -277,9 +307,9 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
             <div
               className="absolute inset-0 z-5 pointer-events-none transition-opacity duration-300"
               style={{
-                opacity: ceremonyState.goldenWarmthOpacity,
+                opacity: ashirwadActive ? Math.max(ceremonyState.goldenWarmthOpacity, 0.24) : ceremonyState.goldenWarmthOpacity,
                 background:
-                  'radial-gradient(circle at 50% 38%, rgba(255, 215, 100, 0.45) 0%, rgba(245, 166, 35, 0.22) 45%, rgba(197, 155, 86, 0.08) 70%, transparent 85%)',
+                  'radial-gradient(circle at 46% 48%, rgba(255, 215, 100, 0.45) 0%, rgba(245, 166, 35, 0.22) 45%, rgba(197, 155, 86, 0.08) 70%, transparent 85%)',
                 mixBlendMode: 'screen',
               }}
             />
@@ -293,8 +323,17 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
               />
             </div>
 
+            {/* Depth Layer 4: 3.6-Second Ceremonial Pushpa Varsha ("From Everywhere") & Ashish Motes Canvas (Z: 8) */}
+            <div className="absolute inset-0 z-8 pointer-events-none">
+              <EverywhereFlowerCanvas
+                triggerId={ashirwadTriggerId}
+                active={ashirwadActive}
+                reducedMotion={reducedMotion}
+              />
+            </div>
+
             {/* 3. Sliding Velvet Curtains (In front of deity & all flower layers, Z: 10) */}
-            <div className="absolute inset-0 z-10">
+            <div className="absolute inset-0 z-10 pointer-events-none">
               <DivineDarshanCurtains
                 leftX={leftX}
                 rightX={rightX}
@@ -369,38 +408,75 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
         {/* Stepped Upper Base Moulding with Gold Inlay */}
         <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-[#F5D77F] to-transparent mb-2" />
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5">
-          {/* Sacred Title & Mandir Attribution */}
-          <div className="flex items-center gap-2">
-            <DiyaAccent animated={!reducedMotion} />
-            <div className="text-left">
-              <span className="text-xs font-devanagari font-bold text-[#FFE8B3] tracking-wide block">
-                {tDict.darshan.sanctumAttribution}
-              </span>
-              <span className="text-[10px] font-cinzel text-[#C59B56] tracking-wider block">
-                {tDict.darshan.sanctumSubAttribution}
-              </span>
+        <div className="flex flex-col gap-2.5">
+          {/* Top row: Sanctum Attribution & Curtain Toggle */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <DiyaAccent animated={!reducedMotion} />
+              <div className="text-left min-w-0">
+                <span className="text-xs font-devanagari font-bold text-[#FFE8B3] tracking-wide block truncate">
+                  {tDict.darshan.sanctumAttribution}
+                </span>
+                <span className="text-[10px] font-cinzel text-[#C59B56] tracking-wider block truncate">
+                  {tDict.darshan.sanctumSubAttribution}
+                </span>
+              </div>
             </div>
+
+            {onToggleManualOpen && (
+              <button
+                type="button"
+                onClick={onToggleManualOpen}
+                className="shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-cinzel font-semibold tracking-wider text-[#FFF8E8] hover:text-white bg-[#3A2012]/90 hover:bg-[#4D2A18] border border-[#C59B56]/70 rounded-full shadow-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-98 touch-manipulation"
+                title={manualOpen ? tDict.darshan.closeCurtainsManual : tDict.darshan.openCurtainsManual}
+              >
+                {manualOpen ? (
+                  <>
+                    <EyeOff className="w-3.5 h-3.5 text-[#FF9EA8]" />
+                    <span className="hidden sm:inline">{tDict.darshan.closeCurtainsManual}</span>
+                    <span className="sm:hidden">Close</span>
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-3.5 h-3.5 text-[#F5D77F]" />
+                    <span className="hidden sm:inline">{tDict.darshan.openCurtainsManual}</span>
+                    <span className="sm:hidden">Open</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
 
-          {/* Interactive Manual Curtain Toggle Override Button */}
-          {onToggleManualOpen && (
+          {/* Primary Mobile-Optimized Charan Sparsh & Ashirwad Ceremony Button */}
+          {onTriggerCharanSparsh && (
             <button
               type="button"
-              onClick={onToggleManualOpen}
-              className="px-3 py-1 text-[11px] font-cinzel font-semibold tracking-wider text-[#3C2A20] hover:text-[#1A0F07] bg-gradient-to-r from-[#FFFDF8] via-[#FAF4E8] to-[#EFE2CF] hover:from-[#FAF4E8] hover:to-[#E0CCA8] border border-[#B68A45] rounded-full shadow-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-98"
-              title={manualOpen ? tDict.darshan.closeCurtainsManual : tDict.darshan.openCurtainsManual}
+              onClick={onTriggerCharanSparsh}
+              data-testid="charan-sparsh-cta"
+              className={`relative overflow-hidden w-full min-h-[44px] px-4 py-2 rounded-lg font-cinzel text-xs sm:text-sm font-bold tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer touch-manipulation active:scale-[0.985] ${
+                ashirwadActive
+                  ? 'bg-gradient-to-r from-[#FFDF8E] via-[#FFEFC2] to-[#FFCA5C] text-[#3B1E08] border border-[#FFF5D6] shadow-[0_0_22px_rgba(255,208,90,0.65)]'
+                  : 'bg-gradient-to-r from-[#F9E3AE] via-[#FFF4D6] to-[#E6BE6C] hover:from-[#FFEBB8] hover:to-[#F1CC7B] text-[#361D0D] border border-[#FFE5A3] shadow-md'
+              }`}
             >
-              {manualOpen ? (
-                <>
-                  <EyeOff className="w-3.5 h-3.5 text-[#921B2C]" />
-                  <span>{tDict.darshan.closeCurtainsManual}</span>
-                </>
+              {ashirwadActive ? (
+                <Sparkles className={`w-4 h-4 text-[#B45309] shrink-0 ${reducedMotion ? '' : 'animate-spin'}`} />
               ) : (
-                <>
-                  <Eye className="w-3.5 h-3.5 text-[#B68A45]" />
-                  <span>{tDict.darshan.openCurtainsManual}</span>
-                </>
+                <Hand className="w-4 h-4 text-[#8B5218] shrink-0" />
+              )}
+              <span className="truncate">
+                {ashirwadActive ? tDict.darshan.touchFeetActive : tDict.darshan.touchFeetCta}
+              </span>
+
+              {/* Smooth 3.6s Golden Ceremony Progress Bar */}
+              {ashirwadActive && !reducedMotion && (
+                <span
+                  key={ashirwadTriggerId}
+                  style={{
+                    animation: `ashirwadProgressBar ${ASHIRWAD_CEREMONY_DURATION_MS}ms linear forwards`,
+                  }}
+                  className="absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-[#C2410C] via-[#F59E0B] to-[#B45309] origin-left"
+                />
               )}
             </button>
           )}

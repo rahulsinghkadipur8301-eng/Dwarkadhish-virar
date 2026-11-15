@@ -150,7 +150,7 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
     <section
       id="social"
       aria-labelledby="social-section-heading"
-      className="relative w-full bg-[#FAF5EC] border-b border-[#E5D1B6] py-20 sm:py-24 lg:py-28 select-none overflow-hidden scroll-mt-20"
+      className="relative w-full bg-[#FAF5EC] border-b border-[#E5D1B6] py-14 sm:py-16 lg:py-20 select-none overflow-hidden scroll-mt-20"
     >
       {/* Centered Rotating Sacred Background Chakra */}
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
@@ -165,7 +165,7 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-center max-w-3xl mx-auto mb-14 sm:mb-18"
+          className="text-center max-w-3xl mx-auto mb-8 sm:mb-10"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <PeacockFeather size={28} />
