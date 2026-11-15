@@ -29,7 +29,7 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
   const directionsUrl = getGoogleMapsDirectionsUrl(loc);
 
   return (
-    <section id="location" className="relative overflow-hidden py-12 sm:py-16 bg-[#F3E7D6] border-b border-[#E5D1B6]">
+    <section id="location" className="relative overflow-hidden py-12 sm:py-16 bg-[#F3E7D6] border-b border-[#E5D1B6] scroll-mt-20">
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-6 sm:mb-8">

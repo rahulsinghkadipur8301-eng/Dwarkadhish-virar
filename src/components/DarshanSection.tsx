@@ -32,7 +32,7 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
   };
 
   return (
-    <section id="darshan" className="relative overflow-hidden py-14 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6]">
+    <section id="darshan" className="relative overflow-hidden py-12 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20">
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Centered Section Header matching other Temple Sections */}

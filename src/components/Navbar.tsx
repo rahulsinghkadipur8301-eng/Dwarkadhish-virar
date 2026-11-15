@@ -189,7 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Navigation Menu"
-              className="p-2 text-[#3C2A20] hover:text-[#6B4832] focus:outline-none cursor-pointer"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#3C2A20] hover:text-[#6B4832] focus:outline-none cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -198,7 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile & Tablet Dropdown Menu in Warm Ivory */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-[#FFFDF8] border-b border-[#E5D1B6] px-6 py-6 shadow-xl space-y-5">
+          <div className="xl:hidden bg-[#FFFDF8] border-b border-[#E5D1B6] px-5 sm:px-6 py-5 shadow-xl space-y-4 max-h-[calc(100svh-4rem)] overflow-y-auto overscroll-contain">
             {/* Mobile Language Selector */}
             <div className="pb-4 border-b border-[#E5D1B6]/60">
               <span className="block text-xs font-cinzel text-[#76502F] uppercase tracking-wider font-semibold mb-2">
@@ -231,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-1">
               {navItems.map((item) => (
                 <button
                   key={item.id}
@@ -240,7 +240,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onTabChange(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`text-left py-2 text-base font-medium transition-colors border-b border-[#E5D1B6]/50 ${
+                  className={`min-h-[44px] text-left py-2 text-base font-medium transition-colors border-b border-[#E5D1B6]/50 ${
                     activeTab === item.id ? 'text-[#6B4832] font-bold' : 'text-[#3C2A20]'
                   }`}
                 >

@@ -230,7 +230,7 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
                   : 'rotateX(var(--rot-x, 0deg)) rotateY(var(--rot-y, 0deg)) translateZ(var(--tz, 0px))',
                 transition: 'transform 0.22s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.35s ease, border-color 0.35s ease',
               }}
-              className="group relative w-full bg-[#FFFDF8] rounded-2xl border-2 border-[#D8C2A4] hover:border-[#25D366]/70 shadow-[0_10px_30px_rgba(60,42,32,0.06)] hover:shadow-[0_20px_45px_rgba(7,94,67,0.18)] flex flex-col justify-between overflow-hidden p-7 sm:p-9 xl:p-10"
+              className="group relative w-full bg-[#FFFDF8] rounded-2xl border-2 border-[#D8C2A4] hover:border-[#25D366]/70 shadow-[0_10px_30px_rgba(60,42,32,0.06)] hover:shadow-[0_20px_45px_rgba(7,94,67,0.18)] flex flex-col justify-between overflow-hidden p-5 sm:p-9 xl:p-10"
             >
               {/* Soft Localized Radial Light Bloom Following Cursor */}
               <div
@@ -291,7 +291,7 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
                       height={220}
                       loading="lazy"
                       decoding="async"
-                      className="w-48 sm:w-56 h-48 sm:h-56 aspect-square object-contain block mx-auto rounded-md select-all"
+                      className="w-44 sm:w-56 h-44 sm:h-56 aspect-square object-contain block mx-auto rounded-md select-all"
                     />
                   </div>
 
@@ -354,7 +354,7 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
                   : 'rotateX(var(--rot-x, 0deg)) rotateY(var(--rot-y, 0deg)) translateZ(var(--tz, 0px))',
                 transition: 'transform 0.22s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.35s ease, border-color 0.35s ease',
               }}
-              className="group relative w-full bg-[#FFFDF8] rounded-2xl border-2 border-[#D8C2A4] hover:border-[#E65B87]/70 shadow-[0_10px_30px_rgba(60,42,32,0.06)] hover:shadow-[0_20px_45px_rgba(141,102,199,0.18)] flex flex-col justify-between overflow-hidden p-7 sm:p-9 xl:p-10"
+              className="group relative w-full bg-[#FFFDF8] rounded-2xl border-2 border-[#D8C2A4] hover:border-[#E65B87]/70 shadow-[0_10px_30px_rgba(60,42,32,0.06)] hover:shadow-[0_20px_45px_rgba(141,102,199,0.18)] flex flex-col justify-between overflow-hidden p-5 sm:p-9 xl:p-10"
             >
               {/* Soft Localized Radial Light Bloom Following Cursor */}
               <div
@@ -419,7 +419,7 @@ export const TempleSocialConnectSection: React.FC<TempleSocialConnectSectionProp
                       height={220}
                       loading="lazy"
                       decoding="async"
-                      className="w-48 sm:w-56 h-48 sm:h-56 aspect-square object-contain block mx-auto rounded-md select-all"
+                      className="w-44 sm:w-56 h-44 sm:h-56 aspect-square object-contain block mx-auto rounded-md select-all"
                     />
                   </div>
 

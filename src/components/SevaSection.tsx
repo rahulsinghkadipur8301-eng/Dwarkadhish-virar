@@ -89,28 +89,28 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
         </motion.div>
 
         {/* Seva Offerings Grid — Directly Redirects to Official Contribution Portal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {SEVA_OFFERINGS.map((seva) => (
             <div
               key={seva.id}
-              className="bg-[#FFFDF8] border border-[#E5D1B6] p-6 flex flex-col justify-between hover:border-[#A67C57] transition-all hover:shadow-sm"
+              className="bg-[#FFFDF8] border border-[#E5D1B6] p-4 sm:p-6 flex flex-col justify-between hover:border-[#A67C57] transition-all hover:shadow-sm"
             >
               <div>
-                <div className="flex items-center justify-between text-xs text-[#376C68] uppercase tracking-wider font-cinzel mb-3">
+                <div className="flex items-center justify-between text-xs text-[#376C68] uppercase tracking-wider font-cinzel mb-2.5 sm:mb-3">
                   <span>{seva.category}</span>
                   <span className="text-[#715847] font-mono capitalize">{seva.frequency}</span>
                 </div>
 
-                <h3 className="font-cinzel text-2xl font-bold text-[#3C2A20] mb-2">
+                <h3 className="font-cinzel text-xl sm:text-2xl font-bold text-[#3C2A20] mb-2 leading-snug">
                   {getTitle(seva)}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-[#715847] leading-relaxed mb-6">
+                <p className="text-xs sm:text-sm text-[#715847] leading-relaxed mb-5 sm:mb-6">
                   {getDesc(seva)}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#E5D1B6]/50 flex items-center justify-between gap-3">
+              <div className="pt-3.5 sm:pt-4 border-t border-[#E5D1B6]/50 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <span className="block text-[10px] uppercase tracking-wider text-[#715847]">
                     {tDict.seva.proposedOfferingLabel}
@@ -124,7 +124,7 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
                   href="#donation"
                   onClick={handlePortalRedirect}
                   data-testid={`seva-portal-link-${seva.id}`}
-                  className="px-3.5 py-2 text-[11px] font-semibold uppercase tracking-wider text-white bg-[#6B4832] hover:bg-[#523725] transition-colors inline-flex items-center gap-1.5 cursor-pointer shrink-0 rounded-xs"
+                  className="min-h-[40px] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-wider text-white bg-[#6B4832] hover:bg-[#523725] transition-colors inline-flex items-center gap-1.5 cursor-pointer shrink-0 rounded-xs"
                 >
                   <span>{tDict.seva.btnContributionPortal}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-[#E8C784] shrink-0" aria-hidden="true" />

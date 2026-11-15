@@ -296,7 +296,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
               <button
                 type="button"
                 onClick={() => onExplore('darshan')}
-                className="w-full px-2.5 py-1.5 text-[11px] sm:text-[12px] font-semibold tracking-wide text-[#FFFCF7] bg-[#3B2518]/90 hover:bg-[#4A3022] border border-[#B68A45]/80 rounded-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
+                className="w-full min-h-[42px] px-2.5 py-2 text-[11px] sm:text-[12px] font-semibold tracking-wide text-[#FFFCF7] bg-[#3B2518]/90 hover:bg-[#4A3022] border border-[#B68A45]/80 rounded-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
               >
                 <Clock className="w-3.5 h-3.5 text-[#D8C2A4] shrink-0" aria-hidden="true" />
                 <span className="truncate">{tDict.hero.btnDarshanInfo}</span>
@@ -306,7 +306,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
                 href={directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full px-2.5 py-1.5 text-[11px] sm:text-[12px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
+                className="w-full min-h-[42px] px-2.5 py-2 text-[11px] sm:text-[12px] font-bold tracking-wide text-[#20140D] bg-gradient-to-r from-[#B68A45] via-[#C9964E] to-[#B68A45] hover:from-[#A57A3A] hover:to-[#B68A45] border border-[#F8F1E5]/40 rounded-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 transition-colors"
               >
                 <Navigation className="w-3.5 h-3.5 text-[#20140D] shrink-0" aria-hidden="true" />
                 <span className="truncate">{tDict.hero.btnPlanVisit}</span>

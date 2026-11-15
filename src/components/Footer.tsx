@@ -43,7 +43,7 @@ export const Footer: React.FC<FooterProps> = ({
 
       <div className="relative z-10 w-full max-w-[min(98vw,1920px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* Main Footer Grid with Staggered Scroll Entrance */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-12 pb-12 border-b border-[#A67C57]/60">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 pb-10 sm:pb-12 border-b border-[#A67C57]/60">
           {/* Brand Column */}
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 20 }}

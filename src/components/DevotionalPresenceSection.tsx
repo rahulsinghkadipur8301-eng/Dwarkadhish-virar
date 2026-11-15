@@ -167,7 +167,7 @@ export const DevotionalPresenceSection: React.FC<DevotionalPresenceSectionProps>
     <section
       ref={sectionRef}
       id="presence"
-      className="relative w-full bg-[#FBF6ED] border-b border-[#E5D1B6] py-14 sm:py-16 lg:py-20 select-none overflow-hidden"
+      className="relative w-full bg-[#FBF6ED] border-b border-[#E5D1B6] py-12 sm:py-16 lg:py-20 select-none overflow-hidden scroll-mt-20"
     >
       {/* Centered Rotating Sacred Background Chakra */}
       <SectionBackgroundChakra reducedMotion={reducedMotion} />

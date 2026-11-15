@@ -313,7 +313,7 @@ export const PravinaVisionHero: React.FC<PravinaVisionHeroProps> = React.memo(({
                       }}
                       alt={photo.title}
                       className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-102"
-                      loading="lazy"
+                      loading="eager"
                       decoding="async"
                     />
                   </picture>
