@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { ZoomIn, Volume2, VolumeX } from 'lucide-react';
 import { Language } from '../data/templeData';
 import { PeacockFeather, LotusOrnament, DiyaAccent } from './KrishnaMotifs';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { useViewportVideo } from '../hooks/useViewportVideo';
-import { useTouchTap } from '../hooks/useTouchTap';
 import { useVideoMediaReady } from '../hooks/useVideoMediaReady';
 import { preloadHlsModule, useHlsVideoStream } from '../hooks/useHlsVideoStream';
 import {
   getMobileStreamStaggerMs,
+  isDecodedVideoFrameVisible,
   shouldLoadVideoSource,
   shouldPauseGalleryCardOnPopup,
 } from '../utils/hlsStreamingUtils';
@@ -89,7 +90,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
       onOutOfView: handleCardOutOfView,
     });
 
-    // Gate & slightly stagger mobile source attachment via IntersectionObserver
+    // Gate & stagger source attachment cleanly after IntersectionObserver detects entry
     useEffect(() => {
       if (!isInView || hasEnteredViewport) return;
       const delayMs = getMobileStreamStaggerMs(index, isMobileViewport);
@@ -128,6 +129,9 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
       watchKey: shouldLoad ? item.id : `idle-${item.id}`,
     });
     const showSkeleton = shouldShowVideoSkeleton(loadState, Boolean(item.hlsSrc || item.src));
+    const hasDecodedFrame =
+      loadState === 'ready' ||
+      isDecodedVideoFrameVisible(videoRef.current?.readyState ?? 0, loadState === 'error');
 
     const handleInspectCard = useCallback(() => {
       onInspect(index);
@@ -135,22 +139,11 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
 
     const handleToggleCardMute = useCallback(
       (e: React.SyntheticEvent) => {
+        e.stopPropagation();
         onToggleMute(item.id, e);
       },
       [item.id, onToggleMute]
     );
-
-    const cardTouchHandlers = useTouchTap<HTMLDivElement>(handleInspectCard, {
-      stopPropagation: false,
-    });
-
-    const inspectTouchHandlers = useTouchTap<HTMLButtonElement>(handleInspectCard, {
-      stopPropagation: true,
-    });
-
-    const muteTouchHandlers = useTouchTap<HTMLButtonElement>(handleToggleCardMute, {
-      stopPropagation: true,
-    });
 
     const handleSetRef = useCallback(
       (el: HTMLVideoElement | null) => {
@@ -175,9 +168,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
         ref={cardRef}
         role="button"
         tabIndex={0}
-        onTouchStart={cardTouchHandlers.onTouchStart}
-        onTouchEnd={cardTouchHandlers.onTouchEnd}
-        onClick={cardTouchHandlers.onClick}
+        onClick={handleInspectCard}
         onKeyDown={handleCardKeyDown}
         data-testid={`gallery-video-card-${item.id}`}
         className="group cursor-pointer rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_6px_18px_rgba(63,41,29,0.08)] sm:hover:-translate-y-1 transition-transform duration-200 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#741C24] touch-manipulation [contain:layout_style]"
@@ -189,6 +180,17 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
           data-source-loaded={String(shouldLoad)}
           className="relative w-full aspect-[9/16] rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]"
         >
+          {/* Persistent Crisp Poster Layer — cards NEVER turn black while HLS/video loads */}
+          {item.posterSrc && (
+            <img
+              src={item.posterSrc}
+              alt={item.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none"
+            />
+          )}
+
           <VideoCardSkeletonOverlay
             visible={showSkeleton}
             index={index}
@@ -196,6 +198,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
             reducedMotion={reducedMotion}
             hasPoster={Boolean(item.posterSrc)}
           />
+
           <video
             ref={handleSetRef}
             poster={item.posterSrc}
@@ -203,36 +206,37 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
             loop
             muted={effectiveMuted}
             playsInline
-            preload="metadata"
+            preload="none"
             aria-label={item.title}
             onLoadedData={onLoadedData}
             onCanPlay={onCanPlay}
             onPlaying={onPlaying}
             onError={onError}
-            className="w-full h-full object-contain object-center block"
+            className={`relative z-[1] w-full h-full object-contain object-center block transition-opacity duration-200 ${
+              hasDecodedFrame ? 'opacity-100' : 'opacity-0'
+            }`}
           />
 
           <button
             type="button"
-            onTouchStart={inspectTouchHandlers.onTouchStart}
-            onTouchEnd={inspectTouchHandlers.onTouchEnd}
-            onClick={inspectTouchHandlers.onClick}
-            className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20 min-w-[34px] min-h-[34px] p-1.5 rounded-full bg-black/70 hover:bg-[#741C24] text-white border border-white/25 transition-colors shadow-md cursor-pointer flex items-center justify-center touch-manipulation"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleInspectCard();
+            }}
+            className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20 min-w-[36px] min-h-[36px] p-1.5 rounded-full bg-black/70 hover:bg-[#741C24] text-white border border-white/25 transition-colors shadow-md cursor-pointer flex items-center justify-center touch-manipulation"
             aria-label={`Inspect ${item.title}`}
           >
             <ZoomIn className="w-3.5 h-3.5 text-[#E8C784]" />
           </button>
 
-          {/* Bottom Mute / Unmute button with explicit touch-start/touch-end tap isolation */}
+          {/* Bottom Mute / Unmute button with clean native click + touch-manipulation */}
           <button
             type="button"
-            onTouchStart={muteTouchHandlers.onTouchStart}
-            onTouchEnd={muteTouchHandlers.onTouchEnd}
-            onClick={muteTouchHandlers.onClick}
+            onClick={handleToggleCardMute}
             data-testid={`gallery-mute-btn-${item.id}`}
             aria-pressed={isUnmuted}
             aria-label={isUnmuted ? `${muteLabel} ${item.title}` : `${unmuteLabel} ${item.title}`}
-            className={`absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 z-20 min-h-[32px] px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border text-[10px] sm:text-[11px] font-cinzel font-semibold tracking-wider flex items-center gap-1 sm:gap-1.5 shadow-md transition-colors cursor-pointer touch-manipulation active:scale-95 ${
+            className={`absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 z-20 min-h-[36px] px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border text-[10px] sm:text-[11px] font-cinzel font-semibold tracking-wider flex items-center gap-1 sm:gap-1.5 shadow-md transition-colors cursor-pointer touch-manipulation active:scale-95 ${
               isUnmuted
                 ? 'bg-[#741C24] text-[#FFF8E8] border-[#E8C784]'
                 : 'bg-black/80 hover:bg-[#741C24] text-white border-white/25'
@@ -290,7 +294,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
     setIsMobileViewport(mql.matches);
     const onChange = (e: MediaQueryListEvent) => setIsMobileViewport(e.matches);
     mql.addEventListener('change', onChange);
-    // Warm hls.js asynchronously without blocking section UI mount
+    // Warm hls.js asynchronously off critical path ONLY when native Apple HLS is unavailable
     const warmTimer = window.setTimeout(() => {
       preloadHlsModule().catch(() => {});
     }, 150);
@@ -500,7 +504,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
       cooldownTimerRef.current = window.setTimeout(() => {
         cooldownTimerRef.current = null;
         setPostCloseCooldown(false);
-      }, 150);
+      }, 180);
     }
     setActiveState(null);
   }, []);
@@ -558,6 +562,38 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [activeIndex, handleClose, handlePrev, handleNext]);
+
+  const portalLightbox =
+    activeVideo && activeState !== null && typeof document !== 'undefined'
+      ? createPortal(
+          <div
+            data-testid="gallery-video-popup"
+            role="dialog"
+            aria-modal="true"
+            aria-label={activeVideo.title}
+            onClick={handleClose}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-2.5 sm:p-6 bg-black/75 overflow-y-auto overscroll-contain"
+          >
+            <div className="w-full max-w-4xl flex items-center justify-center my-auto">
+              <GalleryLightboxPlayer
+                item={activeVideo}
+                index={activeState.index}
+                total={galleryVideos.length}
+                initialTime={activeState.initialTime}
+                isUnmuted={unmutedId === activeVideo.id}
+                muteLabel={c.muteLabel}
+                unmuteLabel={c.unmuteLabel}
+                onToggleMute={handleToggleMute}
+                onFallbackMuted={handleFallbackMuted}
+                onPrev={handlePrev}
+                onNext={handleNext}
+                onClose={handleClose}
+              />
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
 
   return (
     <section
@@ -624,30 +660,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
         </div>
       </div>
 
-      {/* Zero-Exit-Lag Interactive Portrait Video Lightbox (Non-blocking website scroll) */}
-      {activeVideo && activeState !== null && (
-        <div
-          data-testid="gallery-video-popup"
-          className="fixed inset-0 z-[60] flex items-center justify-center pt-20 pb-4 px-3 sm:pt-24 sm:pb-6 sm:px-6 bg-black/55 pointer-events-none"
-        >
-          <div className="w-full max-w-4xl flex items-center justify-center pointer-events-none">
-            <GalleryLightboxPlayer
-              item={activeVideo}
-              index={activeState.index}
-              total={galleryVideos.length}
-              initialTime={activeState.initialTime}
-              isUnmuted={unmutedId === activeVideo.id}
-              muteLabel={c.muteLabel}
-              unmuteLabel={c.unmuteLabel}
-              onToggleMute={handleToggleMute}
-              onFallbackMuted={handleFallbackMuted}
-              onPrev={handlePrev}
-              onNext={handleNext}
-              onClose={handleClose}
-            />
-          </div>
-        </div>
-      )}
+      {portalLightbox}
     </section>
   );
 });

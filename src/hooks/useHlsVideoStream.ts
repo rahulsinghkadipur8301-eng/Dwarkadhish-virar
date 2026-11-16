@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, RefObject } from 'react';
 import type HlsType from 'hls.js';
 import {
+  HLS_STALL_FALLBACK_TIMEOUT_MS,
   resolveHlsInitialBandwidthEstimate,
   resolveHlsPlayerConfig,
   selectStreamingPlaybackMode,
+  shouldPreloadHlsModule,
   StreamingPlaybackMode,
 } from '../utils/hlsStreamingUtils';
 
@@ -19,10 +21,27 @@ let cachedHlsPromise: Promise<typeof HlsType> | null = null;
 let cachedHlsCtor: typeof HlsType | null = null;
 
 /**
- * Lazy-loads the `hls.js` runtime once off the initial section render critical path
- * so Shrine Archive UI cards and posters paint immediately on mobile devices.
+ * Detects whether the current browser natively supports Apple HLS playback
+ * (all iOS browsers via WebKit + macOS Safari).
  */
-export function preloadHlsModule(): Promise<typeof HlsType> {
+export function supportsNativeAppleHls(videoEl?: HTMLVideoElement | null): boolean {
+  if (typeof document === 'undefined') return false;
+  const probe = videoEl ?? document.createElement('video');
+  if (typeof probe.canPlayType !== 'function') return false;
+  return Boolean(
+    probe.canPlayType('application/vnd.apple.mpegurl') ||
+      probe.canPlayType('application/x-mpegURL')
+  );
+}
+
+/**
+ * Lazy-loads the `hls.js` runtime once off the initial section render critical path,
+ * skipping completely on browsers with native Apple HLS support.
+ */
+export function preloadHlsModule(): Promise<typeof HlsType | null> {
+  if (!shouldPreloadHlsModule(supportsNativeAppleHls())) {
+    return Promise.resolve(null);
+  }
   if (!cachedHlsPromise) {
     cachedHlsPromise = import('hls.js').then((mod) => {
       cachedHlsCtor = mod.default;
@@ -65,11 +84,11 @@ export interface UseHlsVideoStreamOptions {
 export type StreamAttachStatus = 'idle' | StreamingPlaybackMode;
 
 /**
- * Attaches adaptive bitrate HLS streaming (`hls.js` ABR or native Apple HLS,
- * with clean MP4 fallback) only when `shouldLoad` becomes true (viewport entry).
- * Dynamically imports `hls.js` so section UI rendering is never blocked on mobile,
- * disables expensive Web Worker spawning on mobile viewports, and automatically
- * stops segment downloads when off-screen or yielded to the lightbox.
+ * Attaches adaptive bitrate HLS streaming:
+ * - iOS/Safari/WebKit: native hardware Apple HLS directly (no JS transmuxing or ManagedMediaSource stalls)
+ * - Chromium/Firefox/Android: adaptive `hls.js` with network-tier bitrate & buffer limits
+ * - Automatic MP4 fallback on fatal errors OR if no frame decodes within `HLS_STALL_FALLBACK_TIMEOUT_MS`
+ * - Zero pipeline rebuilds when `startPosition` props fluctuate across renders
  */
 export function useHlsVideoStream({
   videoRef,
@@ -87,9 +106,12 @@ export function useHlsVideoStream({
   const onStreamReadyRef = useRef(onStreamReady);
   const isInViewRef = useRef(isInView);
   const enabledRef = useRef(enabled);
+  const startPositionRef = useRef(startPosition);
+
   onStreamReadyRef.current = onStreamReady;
   isInViewRef.current = isInView;
   enabledRef.current = enabled;
+  startPositionRef.current = startPosition;
 
   useEffect(() => {
     const vid = videoRef.current;
@@ -110,41 +132,121 @@ export function useHlsVideoStream({
 
     let cancelled = false;
     let cleanupConnectionListener: (() => void) | null = null;
+    let cleanupNativeErrorListener: (() => void) | null = null;
+    let stallTimer: number | null = null;
     let localHls: HlsType | null = null;
+    let fellBackToMp4 = false;
 
-    const nativeHlsSupported = Boolean(
-      typeof vid.canPlayType === 'function' &&
-        (vid.canPlayType('application/vnd.apple.mpegurl') ||
-          vid.canPlayType('application/x-mpegURL'))
-    );
+    const clearStallTimer = () => {
+      if (stallTimer !== null) {
+        window.clearTimeout(stallTimer);
+        stallTimer = null;
+      }
+    };
 
-    // Fast path for native Apple HLS (iOS Safari) without downloading hls.js
-    if (!hlsSrc) {
-      if (vid.getAttribute('src') !== fallbackSrc) {
-        vid.src = fallbackSrc;
+    const activateMp4Fallback = () => {
+      if (cancelled || fellBackToMp4) return;
+      fellBackToMp4 = true;
+      clearStallTimer();
+      cleanupNativeErrorListener?.();
+      cleanupNativeErrorListener = null;
+
+      if (localHls) {
+        if (hlsRef.current === localHls) {
+          hlsRef.current = null;
+        }
+        localHls.destroy();
+        localHls = null;
+      }
+
+      const target = videoRef.current;
+      if (target && target.getAttribute('src') !== fallbackSrc) {
+        target.src = fallbackSrc;
+        target.load();
       }
       setStreamStatus('mp4-fallback');
       onStreamReadyRef.current?.();
-      return;
-    }
+    };
 
-    const mseSupported =
-      typeof window !== 'undefined' &&
-      ('MediaSource' in window || 'ManagedMediaSource' in window);
+    const armStallWatchdog = () => {
+      clearStallTimer();
+      if (!isInViewRef.current || !enabledRef.current) return;
+      stallTimer = window.setTimeout(() => {
+        stallTimer = null;
+        const target = videoRef.current;
+        if (
+          !cancelled &&
+          !fellBackToMp4 &&
+          target &&
+          target.readyState < 2 &&
+          isInViewRef.current &&
+          enabledRef.current
+        ) {
+          activateMp4Fallback();
+        }
+      }, HLS_STALL_FALLBACK_TIMEOUT_MS);
+    };
 
-    if (!mseSupported && nativeHlsSupported) {
-      if (vid.getAttribute('src') !== hlsSrc) {
-        vid.src = hlsSrc;
+    const attachNativeHls = (targetVideo: HTMLVideoElement) => {
+      if (cancelled) return;
+      if (targetVideo.getAttribute('src') !== hlsSrc && hlsSrc) {
+        targetVideo.src = hlsSrc;
       }
+      const onNativeLoaded = () => clearStallTimer();
+      const onNativeError = () => activateMp4Fallback();
+      targetVideo.addEventListener('loadeddata', onNativeLoaded, { once: true });
+      targetVideo.addEventListener('canplay', onNativeLoaded, { once: true });
+      targetVideo.addEventListener('error', onNativeError, { once: true });
+      cleanupNativeErrorListener = () => {
+        targetVideo.removeEventListener('loadeddata', onNativeLoaded);
+        targetVideo.removeEventListener('canplay', onNativeLoaded);
+        targetVideo.removeEventListener('error', onNativeError);
+      };
+      armStallWatchdog();
       setStreamStatus('hls-native');
       onStreamReadyRef.current?.();
-      return;
+    };
+
+    if (!hlsSrc) {
+      activateMp4Fallback();
+      return () => {
+        cancelled = true;
+        clearStallTimer();
+      };
     }
 
-    const attachWithHls = (Hls: typeof HlsType) => {
+    const nativeHlsSupported = supportsNativeAppleHls(vid);
+    const fastMode = selectStreamingPlaybackMode({
+      hasHlsSource: true,
+      hlsJsSupported: true,
+      nativeHlsSupported,
+    });
+
+    // Fast hardware path for iOS/macOS Safari: bypass hls.js and ManagedMediaSource completely
+    if (fastMode === 'hls-native') {
+      attachNativeHls(vid);
+      return () => {
+        cancelled = true;
+        clearStallTimer();
+        cleanupNativeErrorListener?.();
+      };
+    }
+
+    const attachWithHls = (Hls: typeof HlsType | null) => {
       if (cancelled || !videoRef.current) return;
       const targetVideo = videoRef.current;
+
+      if (!Hls) {
+        if (nativeHlsSupported) {
+          attachNativeHls(targetVideo);
+        } else {
+          activateMp4Fallback();
+        }
+        return;
+      }
+
       const hints = readNetworkHints();
+      const initialStartPos = startPositionRef.current;
       const mode = selectStreamingPlaybackMode({
         hasHlsSource: Boolean(hlsSrc),
         hlsJsSupported: Hls.isSupported(),
@@ -152,9 +254,9 @@ export function useHlsVideoStream({
       });
 
       if (mode === 'hls-js') {
-        const config = resolveHlsPlayerConfig({ ...hints, startPosition });
+        const config = resolveHlsPlayerConfig({ ...hints, startPosition: initialStartPos });
         const initialLoadPos =
-          typeof startPosition === 'number' && startPosition > 0.5 ? startPosition : -1;
+          typeof initialStartPos === 'number' && initialStartPos > 0.5 ? initialStartPos : -1;
         const hls = new Hls({
           ...config,
           autoStartLoad: isInViewRef.current && enabledRef.current,
@@ -162,27 +264,18 @@ export function useHlsVideoStream({
         localHls = hls;
         hlsRef.current = hls;
 
-        const activateMp4Fallback = () => {
-          if (cancelled) return;
-          if (hlsRef.current === hls) {
-            hls.destroy();
-            hlsRef.current = null;
-          }
-          if (videoRef.current && videoRef.current.getAttribute('src') !== fallbackSrc) {
-            videoRef.current.src = fallbackSrc;
-          }
-          setStreamStatus('mp4-fallback');
-          onStreamReadyRef.current?.();
-        };
+        const onDecodedFrame = () => clearStallTimer();
+        targetVideo.addEventListener('loadeddata', onDecodedFrame, { once: true });
+        targetVideo.addEventListener('canplay', onDecodedFrame, { once: true });
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          if (cancelled) return;
+          if (cancelled || fellBackToMp4) return;
           if (isInViewRef.current && enabledRef.current) {
             hls.startLoad(initialLoadPos);
+            armStallWatchdog();
           } else {
             hls.stopLoad();
           }
-          // Once startup tier begins playing on mobile, enable automatic ABR upgrades
           if (hints.isMobileViewport && !hints.saveData) {
             hls.nextLevel = -1;
           }
@@ -192,7 +285,7 @@ export function useHlsVideoStream({
 
         let recoveredMediaError = false;
         hls.on(Hls.Events.ERROR, (_event, data) => {
-          if (cancelled || !data.fatal) return;
+          if (cancelled || !data.fatal || fellBackToMp4) return;
           if (data.type === Hls.ErrorTypes.MEDIA_ERROR && !recoveredMediaError) {
             recoveredMediaError = true;
             hls.recoverMediaError();
@@ -201,6 +294,7 @@ export function useHlsVideoStream({
           activateMp4Fallback();
         });
 
+        armStallWatchdog();
         hls.loadSource(hlsSrc);
         hls.attachMedia(targetVideo);
         setStreamStatus('hls-js');
@@ -220,24 +314,20 @@ export function useHlsVideoStream({
           }
         };
         conn?.addEventListener('change', handleConnectionChange);
-        cleanupConnectionListener = () => conn?.removeEventListener('change', handleConnectionChange);
+        cleanupConnectionListener = () => {
+          conn?.removeEventListener('change', handleConnectionChange);
+          targetVideo.removeEventListener('loadeddata', onDecodedFrame);
+          targetVideo.removeEventListener('canplay', onDecodedFrame);
+        };
         return;
       }
 
       if (mode === 'hls-native') {
-        if (targetVideo.getAttribute('src') !== hlsSrc) {
-          targetVideo.src = hlsSrc;
-        }
-        setStreamStatus('hls-native');
-        onStreamReadyRef.current?.();
+        attachNativeHls(targetVideo);
         return;
       }
 
-      if (targetVideo.getAttribute('src') !== fallbackSrc) {
-        targetVideo.src = fallbackSrc;
-      }
-      setStreamStatus('mp4-fallback');
-      onStreamReadyRef.current?.();
+      activateMp4Fallback();
     };
 
     if (cachedHlsCtor) {
@@ -246,18 +336,15 @@ export function useHlsVideoStream({
       preloadHlsModule()
         .then(attachWithHls)
         .catch(() => {
-          if (cancelled || !videoRef.current) return;
-          if (videoRef.current.getAttribute('src') !== fallbackSrc) {
-            videoRef.current.src = fallbackSrc;
-          }
-          setStreamStatus('mp4-fallback');
-          onStreamReadyRef.current?.();
+          if (!cancelled) activateMp4Fallback();
         });
     }
 
     return () => {
       cancelled = true;
+      clearStallTimer();
       cleanupConnectionListener?.();
+      cleanupNativeErrorListener?.();
       if (localHls) {
         if (hlsRef.current === localHls) {
           hlsRef.current = null;
@@ -265,7 +352,7 @@ export function useHlsVideoStream({
         localHls.destroy();
       }
     };
-  }, [videoRef, hlsSrc, fallbackSrc, shouldLoad, startPosition, streamKey]);
+  }, [videoRef, hlsSrc, fallbackSrc, shouldLoad, streamKey]);
 
   // Pause background HLS segment downloads immediately when off-screen or yielded to lightbox
   useEffect(() => {

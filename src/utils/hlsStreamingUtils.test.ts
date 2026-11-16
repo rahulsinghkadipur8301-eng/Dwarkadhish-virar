@@ -2,11 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   getMobileStreamStaggerMs,
+  isDecodedVideoFrameVisible,
   resolveHlsInitialBandwidthEstimate,
   resolveHlsPlayerConfig,
+  resolveLightboxMediaDuration,
   selectStreamingPlaybackMode,
   shouldLoadVideoSource,
   shouldPauseGalleryCardOnPopup,
+  shouldPreloadHlsModule,
 } from './hlsStreamingUtils.ts';
 
 test('resolveHlsInitialBandwidthEstimate: scales initial bitrate target based on network speed and Save-Data', () => {
@@ -51,9 +54,22 @@ test('shouldLoadVideoSource: blocks video source attachment until frame enters v
   assert.equal(shouldLoadVideoSource(true), true);
 });
 
-test('selectStreamingPlaybackMode: prioritizes hls.js ABR, then native Safari HLS, then MP4 fallback', () => {
+test('selectStreamingPlaybackMode: prioritizes hardware native Apple HLS (avoiding iOS ManagedMediaSource stalls), then hls.js ABR, then MP4 fallback', () => {
   assert.equal(
     selectStreamingPlaybackMode({ hasHlsSource: true, hlsJsSupported: true, nativeHlsSupported: true }),
+    'hls-native'
+  );
+  assert.equal(
+    selectStreamingPlaybackMode({
+      hasHlsSource: true,
+      hlsJsSupported: true,
+      nativeHlsSupported: true,
+      preferNativeHls: false,
+    }),
+    'hls-js'
+  );
+  assert.equal(
+    selectStreamingPlaybackMode({ hasHlsSource: true, hlsJsSupported: true, nativeHlsSupported: false }),
     'hls-js'
   );
   assert.equal(
@@ -68,4 +84,18 @@ test('selectStreamingPlaybackMode: prioritizes hls.js ABR, then native Safari HL
     selectStreamingPlaybackMode({ hasHlsSource: false, hlsJsSupported: true, nativeHlsSupported: true }),
     'mp4-fallback'
   );
+  assert.equal(shouldPreloadHlsModule(true), false);
+  assert.equal(shouldPreloadHlsModule(false), true);
+});
+
+test('isDecodedVideoFrameVisible & resolveLightboxMediaDuration: prevent black boxes and stale durations', () => {
+  assert.equal(isDecodedVideoFrameVisible(0, false), false);
+  assert.equal(isDecodedVideoFrameVisible(1, false), false);
+  assert.equal(isDecodedVideoFrameVisible(2, false), true);
+  assert.equal(isDecodedVideoFrameVisible(4, false), true);
+  assert.equal(isDecodedVideoFrameVisible(4, true), false);
+
+  assert.deepEqual(resolveLightboxMediaDuration(Number.NaN), { duration: 0, isKnown: false });
+  assert.deepEqual(resolveLightboxMediaDuration(0), { duration: 0, isKnown: false });
+  assert.deepEqual(resolveLightboxMediaDuration(24.7), { duration: 24.7, isKnown: true });
 });

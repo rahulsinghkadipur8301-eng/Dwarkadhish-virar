@@ -1,6 +1,6 @@
 /**
  * Pure adaptive HLS streaming configuration, network-tier bandwidth estimation,
- * and IntersectionObserver-gated video source loading utilities.
+ * poster/frame visibility helpers, and IntersectionObserver-gated video source loading utilities.
  */
 
 export type StreamingPlaybackMode = 'hls-js' | 'hls-native' | 'mp4-fallback';
@@ -16,6 +16,7 @@ export interface HlsCapabilityInput {
   hasHlsSource: boolean;
   hlsJsSupported: boolean;
   nativeHlsSupported: boolean;
+  preferNativeHls?: boolean;
 }
 
 export interface AdaptiveHlsConfig {
@@ -32,6 +33,8 @@ export interface AdaptiveHlsConfig {
   maxMaxBufferLength: number;
   backBufferLength: number;
 }
+
+export const HLS_STALL_FALLBACK_TIMEOUT_MS = 4500;
 
 /**
  * Computes conservative initial ABR bandwidth estimate (bps) from browser
@@ -89,7 +92,7 @@ export function resolveHlsPlayerConfig(
 
 /**
  * Determines staggered stream initialization delay (ms) across visible cards on
- * mobile viewports so 4 MSE pipelines never lock the main thread in one burst.
+ * mobile viewports so parallel pipelines never saturate the main thread in one burst.
  */
 export function getMobileStreamStaggerMs(
   cardIndex: number,
@@ -127,15 +130,20 @@ export function shouldLoadVideoSource(hasEnteredViewport: boolean): boolean {
 
 /**
  * Chooses the optimal playback engine:
- * 1. MSE-based hls.js when supported (enables full ABR switching + size capping)
- * 2. Native Apple HLS when hls.js MSE is unavailable (iOS Safari)
- * 3. MP4 fallback if no HLS source or HLS support exists
+ * 1. Native Apple HLS FIRST when supported (iOS/macOS Safari/WebKit hardware AVFoundation),
+ *    preventing iOS 17+ `ManagedMediaSource` from stalling 4 concurrent JS hls.js pipelines.
+ * 2. MSE-based `hls.js` when native HLS is unavailable (Chrome, Android, Edge, Firefox).
+ * 3. MP4 progressive fallback if no HLS source or HLS support exists.
  */
 export function selectStreamingPlaybackMode(
   capabilities: HlsCapabilityInput
 ): StreamingPlaybackMode {
   if (!capabilities.hasHlsSource) {
     return 'mp4-fallback';
+  }
+  const preferNative = capabilities.preferNativeHls ?? true;
+  if (preferNative && capabilities.nativeHlsSupported) {
+    return 'hls-native';
   }
   if (capabilities.hlsJsSupported) {
     return 'hls-js';
@@ -144,4 +152,38 @@ export function selectStreamingPlaybackMode(
     return 'hls-native';
   }
   return 'mp4-fallback';
+}
+
+/**
+ * Determines whether the browser needs `hls.js` preloaded asynchronously.
+ * Browsers with native Apple HLS support should never download `hls.js`.
+ */
+export function shouldPreloadHlsModule(nativeHlsSupported: boolean): boolean {
+  return !nativeHlsSupported;
+}
+
+/**
+ * Determines whether the persistent `<img>` poster underlay should remain visible
+ * and hide the `<video>` surface until at least one real frame is decoded (`readyState >= 2`),
+ * eliminating solid black boxes when `blob:` MediaSource attaches or streams initialize.
+ */
+export function isDecodedVideoFrameVisible(
+  readyState: number,
+  hasError: boolean
+): boolean {
+  return !hasError && Number.isFinite(readyState) && readyState >= 2;
+}
+
+/**
+ * Resolves metadata duration safely so the scrubber displays known clip duration
+ * instead of showing misleading stale values before `loadedmetadata` resolves.
+ */
+export function resolveLightboxMediaDuration(rawDuration: number): {
+  duration: number;
+  isKnown: boolean;
+} {
+  if (Number.isFinite(rawDuration) && rawDuration > 0) {
+    return { duration: rawDuration, isKnown: true };
+  }
+  return { duration: 0, isKnown: false };
 }

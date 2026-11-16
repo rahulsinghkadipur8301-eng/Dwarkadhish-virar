@@ -29,6 +29,24 @@
           "value": "public, max-age=2592000, stale-while-revalidate=86400"
         }
       ]
+    },
+    {
+      "source": "/hls/(.*)\\.ts",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/hls/(.*)\\.m3u8",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, stale-while-revalidate=3600"
+        }
+      ]
     }
   ],
   "rewrites": [
