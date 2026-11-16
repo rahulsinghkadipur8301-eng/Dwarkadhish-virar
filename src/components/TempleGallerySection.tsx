@@ -6,11 +6,14 @@ import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { useViewportVideo } from '../hooks/useViewportVideo';
 import { useTouchTap } from '../hooks/useTouchTap';
 import { useVideoMediaReady } from '../hooks/useVideoMediaReady';
-import { useHlsVideoStream } from '../hooks/useHlsVideoStream';
-import { shouldLoadVideoSource } from '../utils/hlsStreamingUtils';
+import { preloadHlsModule, useHlsVideoStream } from '../hooks/useHlsVideoStream';
+import {
+  getMobileStreamStaggerMs,
+  shouldLoadVideoSource,
+  shouldPauseGalleryCardOnPopup,
+} from '../utils/hlsStreamingUtils';
 import {
   attemptSafeVideoPlay,
-  shouldPauseGalleryCardForPopup,
   syncVideoAutoplayAttributes,
 } from '../utils/videoAutoplayUtils';
 import {
@@ -40,6 +43,7 @@ interface GalleryVideoCardProps {
   isUnmuted: boolean;
   isPopupOpen: boolean;
   isInspected: boolean;
+  isMobileViewport: boolean;
   muteLabel: string;
   unmuteLabel: string;
   reducedMotion: boolean;
@@ -56,6 +60,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
     isUnmuted,
     isPopupOpen,
     isInspected,
+    isMobileViewport,
     muteLabel,
     unmuteLabel,
     reducedMotion,
@@ -73,25 +78,30 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
       onSilenceOffscreen(item.id);
     }, [item.id, onSilenceOffscreen]);
 
-    // Pause only the card currently open in lightbox (`!isInspected`) to prevent
-    // duplicate mobile decoding while keeping the other visible frames playing smoothly
     const isInView = useViewportVideo({
       videoRef,
       containerRef: cardRef,
       muted: effectiveMuted,
       enabled: !isInspected,
-      rootMargin: '0px',
-      threshold: 0.12,
+      rootMargin: isMobileViewport ? '40px 0px' : '0px',
+      threshold: 0.1,
       initialInView: false,
       onOutOfView: handleCardOutOfView,
     });
 
-    // Gate initial source loading strictly on the frame entering the viewport via IntersectionObserver
+    // Gate & slightly stagger mobile source attachment via IntersectionObserver
     useEffect(() => {
-      if (isInView && !hasEnteredViewport) {
+      if (!isInView || hasEnteredViewport) return;
+      const delayMs = getMobileStreamStaggerMs(index, isMobileViewport);
+      if (delayMs === 0) {
         setHasEnteredViewport(true);
+        return;
       }
-    }, [isInView, hasEnteredViewport]);
+      const timer = window.setTimeout(() => {
+        setHasEnteredViewport(true);
+      }, delayMs);
+      return () => window.clearTimeout(timer);
+    }, [isInView, hasEnteredViewport, index, isMobileViewport]);
 
     const shouldLoad = shouldLoadVideoSource(hasEnteredViewport);
 
@@ -184,9 +194,11 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
             index={index}
             variant="gallery"
             reducedMotion={reducedMotion}
+            hasPoster={Boolean(item.posterSrc)}
           />
           <video
             ref={handleSetRef}
+            poster={item.posterSrc}
             autoPlay
             loop
             muted={effectiveMuted}
@@ -265,13 +277,36 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
     null
   );
   const [unmutedId, setUnmutedId] = useState<string | null>(null);
+  const [postCloseCooldown, setPostCloseCooldown] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  const cooldownTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mql = window.matchMedia('(max-width: 767px)');
+    setIsMobileViewport(mql.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsMobileViewport(e.matches);
+    mql.addEventListener('change', onChange);
+    // Warm hls.js asynchronously without blocking section UI mount
+    const warmTimer = window.setTimeout(() => {
+      preloadHlsModule().catch(() => {});
+    }, 150);
+    return () => {
+      window.clearTimeout(warmTimer);
+      mql.removeEventListener('change', onChange);
+    };
+  }, []);
 
   // Keep refs synced so callbacks retain zero dependency churn and React.memo stays intact
   const unmutedIdRef = useRef<string | null>(unmutedId);
   const activeStateRef = useRef(activeState);
+  const isMobileRef = useRef(isMobileViewport);
   unmutedIdRef.current = unmutedId;
   activeStateRef.current = activeState;
+  isMobileRef.current = isMobileViewport;
 
   const contentRecord = {
     en: {
@@ -360,6 +395,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
         id: 'dwarika-1',
         src: dwarikaVideo1,
         hlsSrc: '/hls/dwarika-1/master.m3u8',
+        posterSrc: '/hls/dwarika-1/poster.webp',
         tag: c.photo1Tag,
         title: c.photo1Title,
         caption: c.photo1Caption,
@@ -368,6 +404,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
         id: 'dwarika-2',
         src: dwarikaVideo2,
         hlsSrc: '/hls/dwarika-2/master.m3u8',
+        posterSrc: '/hls/dwarika-2/poster.webp',
         tag: c.photo2Tag,
         title: c.photo2Title,
         caption: c.photo2Caption,
@@ -376,6 +413,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
         id: 'dwarika-3',
         src: dwarikaVideo3,
         hlsSrc: '/hls/dwarika-3/master.m3u8',
+        posterSrc: '/hls/dwarika-3/poster.webp',
         tag: c.photo3Tag,
         title: c.photo3Title,
         caption: c.photo3Caption,
@@ -384,6 +422,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
         id: 'dwarika-4',
         src: dwarikaVideo4,
         hlsSrc: '/hls/dwarika-4/master.m3u8',
+        posterSrc: '/hls/dwarika-4/poster.webp',
         tag: c.photo4Tag,
         title: c.photo4Title,
         caption: c.photo4Caption,
@@ -419,6 +458,16 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
       currentGridVid && Number.isFinite(currentGridVid.currentTime)
         ? currentGridVid.currentTime
         : 0;
+
+    // Synchronously release mobile decoders BEFORE opening lightbox to eliminate popup lag
+    for (const gridItem of galleryVideosRef.current) {
+      const vid = videoRefs.current[gridItem.id];
+      if (!vid) continue;
+      if (isMobileRef.current || gridItem.id === item?.id) {
+        vid.pause();
+      }
+    }
+
     setActiveState({ index, initialTime: capturedTime });
   }, []);
 
@@ -443,6 +492,16 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
   }, []);
 
   const handleClose = useCallback(() => {
+    if (isMobileRef.current) {
+      setPostCloseCooldown(true);
+      if (cooldownTimerRef.current !== null) {
+        window.clearTimeout(cooldownTimerRef.current);
+      }
+      cooldownTimerRef.current = window.setTimeout(() => {
+        cooldownTimerRef.current = null;
+        setPostCloseCooldown(false);
+      }, 150);
+    }
     setActiveState(null);
   }, []);
 
@@ -476,6 +535,15 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
 
   const activeIndex = activeState !== null ? activeState.index : null;
   const activeVideo = activeIndex !== null ? galleryVideos[activeIndex] : null;
+  const popupOrCooldownActive = activeIndex !== null || postCloseCooldown;
+
+  useEffect(() => {
+    return () => {
+      if (cooldownTimerRef.current !== null) {
+        window.clearTimeout(cooldownTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (activeIndex === null) return;
@@ -498,7 +566,7 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
       className="relative w-full bg-[#F3E7D6] text-[#3F291D] py-12 sm:py-16 lg:py-20 border-b border-[#E5D1B6] overflow-hidden scroll-mt-20"
     >
       {/* Rotating Sacred Background Chakra */}
-      <SectionBackgroundChakra reducedMotion={reducedMotion} />
+      <SectionBackgroundChakra reducedMotion={reducedMotion || activeIndex !== null} />
 
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         {/* Centered Header */}
@@ -537,8 +605,13 @@ export const TempleGallerySection: React.FC<TempleGallerySectionProps> = React.m
               item={item}
               index={idx}
               isUnmuted={unmutedId === item.id}
-              isPopupOpen={activeIndex !== null}
-              isInspected={shouldPauseGalleryCardForPopup(idx, activeIndex)}
+              isPopupOpen={popupOrCooldownActive}
+              isInspected={shouldPauseGalleryCardOnPopup(
+                idx,
+                postCloseCooldown ? -1 : activeIndex,
+                isMobileViewport
+              )}
+              isMobileViewport={isMobileViewport}
               muteLabel={c.muteLabel}
               unmuteLabel={c.unmuteLabel}
               reducedMotion={reducedMotion}

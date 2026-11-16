@@ -175,6 +175,9 @@ export const mr: TranslationDictionary = {
     categoryAfternoon: 'दुपार',
     categoryEvening: 'संध्याकाळ',
     categoryNight: 'रात्र',
+    mobileExploreBtn: 'आरती वेळापत्रक पहा',
+    mobileCollapseBtn: 'वेळापत्रक लपवा',
+    mobileSummaryHighlight: '५ दैनंदिन आरती · सकाळी ०६:०० – रात्री ०९:००',
   },
   location: {
     kicker: 'तीर्थयात्रा मार्ग व पवित्र धाम प्रवेश',
@@ -198,6 +201,8 @@ export const mr: TranslationDictionary = {
     crucialDistinctionTitle: 'अतिशय महत्त्वाची प्रवासाची नोंद:',
     crucialDistinctionBody: 'हे मंदिर शिरगाव, विरार पूर्व (महाराष्ट्र) येथे आहे. आपला जीपीएस गुजरातमधील द्वारका न दाखवता महाराष्ट्रातील मार्ग दाखवत असल्याची खात्री करा.',
     iframeAriaLabel: 'श्री द्वारकाधीश मंदिर शिरगाव विरारचे गुगल मॅप स्थान',
+    mobileExploreBtn: 'बस सेवा, प्रवास मार्ग व पत्ता पहा',
+    mobileCollapseBtn: 'प्रवास तपशील लपवा',
   },
   architecture: {
     kicker: 'स्थापत्य कला, पाषाण शिल्प व पवित्र भौमिती',
@@ -252,6 +257,9 @@ export const mr: TranslationDictionary = {
     modalEmailPlaceholder: 'name@example.com',
     modalBtnConfirm: 'आठवण सेट करा',
     modalConfirmationSuccess: 'धन्यवाद! तुमची नोंदणी यशस्वी झाली आहे.',
+    mobileExploreBtn: 'सण व एकादशी दिनदर्शिका पहा',
+    mobileCollapseBtn: 'दिनदर्शिका लपवा',
+    mobileSummaryHighlight: '९ पावन उत्सव · २३ एकादशी तिथी',
   },
   seva: {
     kicker: 'भक्ती सेवा आणि समर्पण संकल्प',
@@ -277,6 +285,9 @@ export const mr: TranslationDictionary = {
     categoryGeneral: 'नित्य दीप व स्वच्छता',
     freqOneTime: 'एक वेळ',
     freqMonthly: 'मासिक',
+    mobileExploreBtn: 'भक्ती सेवा व संकल्प पहा',
+    mobileCollapseBtn: 'सेवा तपशील लपवा',
+    mobileSummaryHighlight: '५ पावन सेवा संकल्प · ₹५०१ पासून',
   },
   community: {
     kicker: 'सामुदायिक सहभाग व ऐच्छिक सेवा',

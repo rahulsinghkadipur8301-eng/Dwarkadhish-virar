@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { Calendar, Clock, Bell, Check, ArrowRight, X, Sparkles, ScrollText } from 'lucide-react';
+import { Calendar, Clock, Bell, Check, ArrowRight, X, Sparkles, ScrollText, ChevronDown, ChevronUp } from 'lucide-react';
 import { Language, FESTIVALS_DATA, FestivalEvent } from '../data/templeData';
 import {
   EKADASHI_SCHEDULE,
@@ -22,6 +22,10 @@ import {
   calculateCardTiltAndLight,
   getCardTransformString,
 } from '../utils/motionUtils';
+import {
+  isSectionInitiallyExpandedOnMobile,
+  toggleMobileSectionExpanded,
+} from '../utils/mobileSectionUtils';
 
 type FestivalTabMode = 'all' | 'ekadashi';
 
@@ -36,6 +40,7 @@ interface FestivalCardProps {
   language: Language;
   isSubscribed: boolean;
   reducedMotion: boolean;
+  skipScrollReveal?: boolean;
   viewProgrammeLabel: string;
   remindMeLabel: string;
   reminderSetLabel: string;
@@ -49,6 +54,7 @@ const FestivalCard: React.FC<FestivalCardProps> = React.memo(({
   language,
   isSubscribed,
   reducedMotion,
+  skipScrollReveal = false,
   viewProgrammeLabel,
   remindMeLabel,
   reminderSetLabel,
@@ -94,8 +100,8 @@ const FestivalCard: React.FC<FestivalCardProps> = React.memo(({
   return (
     <motion.article
       layout={!reducedMotion}
-      initial={reducedMotion ? false : { opacity: 0, y: 18, scale: 0.98 }}
-      whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+      initial={reducedMotion || skipScrollReveal ? false : { opacity: 0, y: 18, scale: 0.98 }}
+      whileInView={reducedMotion || skipScrollReveal ? undefined : { opacity: 1, y: 0, scale: 1 }}
       exit={reducedMotion ? undefined : { opacity: 0, scale: 0.96, transition: { duration: 0.16 } }}
       viewport={{ once: true, amount: 0.02, margin: '260px 0px' }}
       transition={{
@@ -239,6 +245,9 @@ export const FestivalsSection: React.FC<FestivalsSectionProps> = ({
   const [selectedFestival, setSelectedFestival] = useState<FestivalEvent | null>(null);
   const [selectedEkadashi, setSelectedEkadashi] = useState<EkadashiEntry | null>(null);
   const [activeFilter, setActiveFilter] = useState<FestivalTabMode>('all');
+  const [mobileExpanded, setMobileExpanded] = useState(() =>
+    isSectionInitiallyExpandedOnMobile('festivals')
+  );
   const [remindState, setRemindState] = useState<Record<string, boolean>>({});
   const [reminderEmail, setReminderEmail] = useState('');
   const [emailConfirmMsg, setEmailConfirmMsg] = useState<string | null>(null);
@@ -301,7 +310,7 @@ export const FestivalsSection: React.FC<FestivalsSectionProps> = ({
     <section
       id="festivals"
       aria-labelledby="festivals-section-heading"
-      className="relative overflow-hidden py-12 sm:py-14 lg:py-16 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20"
+      className="relative overflow-hidden py-8 sm:py-14 lg:py-16 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20"
     >
       {/* Centered Rotating Sacred Background Chakra */}
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
@@ -313,7 +322,7 @@ export const FestivalsSection: React.FC<FestivalsSectionProps> = ({
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-center max-w-4xl mx-auto mb-6 sm:mb-7"
+          className="text-center max-w-4xl mx-auto mb-5 sm:mb-7"
         >
           <div className="flex items-center justify-center gap-2.5 mb-2">
             <PeacockFeather size={22} />
@@ -341,115 +350,151 @@ export const FestivalsSection: React.FC<FestivalsSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Compact Switcher: All Krishna Utsavs vs Ekadashi */}
-        <div
-          role="group"
-          aria-label={tDict.festivals.kicker}
-          className="flex flex-wrap items-center justify-center gap-2.5 mb-6 sm:mb-7"
-        >
-          {filterTabs.map((tab) => {
-            const isActive = activeFilter === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                aria-pressed={isActive}
-                onClick={() => setActiveFilter(tab.id)}
-                className={`min-h-[38px] px-4 sm:px-5 py-1.5 rounded-lg text-xs font-cinzel font-semibold tracking-wider transition-all cursor-pointer border inline-flex items-center gap-2 ${
-                  isActive
-                    ? 'bg-[#3C2A20] text-[#FFFDF8] border-[#C29A54] shadow-sm'
-                    : 'bg-[#FFFDF8] text-[#6B4832] border-[#E5D1B6] hover:border-[#A67C57] hover:bg-[#F3E7D6]'
-                }`}
-              >
-                {tab.id === 'ekadashi' && (
-                  <ScrollText className="w-3.5 h-3.5 text-[#C29A54]" aria-hidden="true" />
-                )}
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+        {/* Mobile Compact Click-to-Explore Card (< md) */}
+        <div className="md:hidden mb-4">
+          <div className="bg-[#FFFDF8] border border-[#C8AB88] rounded-xl p-4 shadow-xs flex flex-col gap-3">
+            <div className="flex items-center justify-center gap-2 text-xs font-cinzel font-semibold text-[#6B4832] text-center">
+              <Calendar className="w-4 h-4 text-[#A67C57] shrink-0" aria-hidden="true" />
+              <span>{tDict.festivals.mobileSummaryHighlight}</span>
+            </div>
+            <button
+              type="button"
+              data-testid="festivals-mobile-toggle"
+              aria-expanded={mobileExpanded}
+              aria-controls="festivals-expandable-content"
+              onClick={() => setMobileExpanded(toggleMobileSectionExpanded)}
+              className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-[#6B4832] hover:bg-[#523725] text-[#FFFDF8] font-cinzel text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+            >
+              <span>
+                {mobileExpanded
+                  ? tDict.festivals.mobileCollapseBtn
+                  : tDict.festivals.mobileExploreBtn}
+              </span>
+              {mobileExpanded ? (
+                <ChevronUp className="w-4 h-4 text-[#E8C784] shrink-0" aria-hidden="true" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-[#E8C784] shrink-0" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* All Krishna Utsavs (Compact 3x3 Grid) vs Ekadashi Tithis (Compact 23 Parchment Cards) */}
-        {activeFilter === 'all' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            <AnimatePresence mode="popLayout">
-              {FESTIVALS_DATA.map((fest, idx) => (
-                <FestivalCard
-                  key={fest.id}
-                  festival={fest}
-                  index={idx}
-                  language={language}
-                  isSubscribed={Boolean(remindState[fest.id])}
-                  reducedMotion={reducedMotion}
-                  viewProgrammeLabel={tDict.festivals.viewProgramme}
-                  remindMeLabel={tDict.festivals.remindMe}
-                  reminderSetLabel={tDict.festivals.reminderRecorded}
-                  onSelect={(f) => {
-                    setSelectedFestival(f);
-                    setEmailConfirmMsg(null);
-                  }}
-                  onToggleRemind={handleRemindMe}
-                />
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : (
-          <motion.div
-            key="ekadashi-grid"
-            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            data-testid="ekadashi-grid"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-3.5"
+        {/* Expandable Calendar Content (Collapsed by default on < md, always visible on md+) */}
+        <div
+          id="festivals-expandable-content"
+          className={mobileExpanded ? 'block' : 'hidden md:block'}
+        >
+          {/* Compact Switcher: All Krishna Utsavs vs Ekadashi */}
+          <div
+            role="group"
+            aria-label={tDict.festivals.kicker}
+            className="flex flex-wrap items-center justify-center gap-2.5 mb-6 sm:mb-7"
           >
-            {EKADASHI_SCHEDULE.map((item) => {
-              const ekView = getLocalizedEkadashiView(item, language);
+            {filterTabs.map((tab) => {
+              const isActive = activeFilter === tab.id;
               return (
                 <button
-                  key={item.id}
+                  key={tab.id}
                   type="button"
-                  data-testid={`ekadashi-card-${item.id}`}
-                  onClick={() => setSelectedEkadashi(item)}
-                  className="group text-left bg-gradient-to-br from-[#FFFDF8] via-[#FAF1DF] to-[#F3E3C4] border border-[#C8AB88] hover:border-[#9A7132] rounded-xl p-3.5 shadow-[0_6px_18px_rgba(60,42,32,0.08)] hover:shadow-[0_12px_26px_rgba(60,42,32,0.16)] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C29A54]"
+                  aria-pressed={isActive}
+                  onClick={() => setActiveFilter(tab.id)}
+                  className={`min-h-[38px] px-4 sm:px-5 py-1.5 rounded-lg text-xs font-cinzel font-semibold tracking-wider transition-all cursor-pointer border inline-flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-[#3C2A20] text-[#FFFDF8] border-[#C29A54] shadow-sm'
+                      : 'bg-[#FFFDF8] text-[#6B4832] border-[#E5D1B6] hover:border-[#A67C57] hover:bg-[#F3E7D6]'
+                  }`}
                 >
-                  <div className="flex items-center justify-between gap-2 w-full">
-                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-[#3C2A20] text-[#F5DEAE] font-cinzel text-[11px] font-bold tracking-wider border border-[#C29A54]/60 shrink-0">
-                      {String(ekView.number).padStart(2, '0')}
-                    </span>
-                    <div className="inline-flex items-center gap-1.5 text-[11px] font-cinzel font-semibold text-[#741C24]">
-                      <Calendar className="w-3 h-3 text-[#A67C57] shrink-0" aria-hidden="true" />
-                      <span>{ekView.date}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-serif-royal text-lg sm:text-[1.15rem] font-bold text-[#3C2A20] group-hover:text-[#741C24] transition-colors leading-snug">
-                      {ekView.title}
-                    </h3>
-                    <div
-                      aria-hidden="true"
-                      className="h-[1px] w-full origin-left bg-gradient-to-r from-[#C29A54]/80 to-transparent mt-1.5 scale-x-50 group-hover:scale-x-100 transition-transform duration-300"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#D8C2A4]/60 text-[11px]">
-                    <span className="font-cinzel font-semibold uppercase tracking-wider text-[#6B4832]">
-                      {ekView.weekday}
-                    </span>
-                    <span className="inline-flex items-center gap-1 font-cinzel font-semibold text-[#8C6D28] group-hover:text-[#741C24] transition-colors">
-                      <span>{tDict.festivals.ekadashiOpenScroll}</span>
-                      <ArrowRight
-                        className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </div>
+                  {tab.id === 'ekadashi' && (
+                    <ScrollText className="w-3.5 h-3.5 text-[#C29A54]" aria-hidden="true" />
+                  )}
+                  <span>{tab.label}</span>
                 </button>
               );
             })}
-          </motion.div>
-        )}
+          </div>
+
+          {/* All Krishna Utsavs (Compact 3x3 Grid) vs Ekadashi Tithis (Compact 23 Parchment Cards) */}
+          {activeFilter === 'all' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <AnimatePresence mode="popLayout">
+                {FESTIVALS_DATA.map((fest, idx) => (
+                  <FestivalCard
+                    key={fest.id}
+                    festival={fest}
+                    index={idx}
+                    language={language}
+                    isSubscribed={Boolean(remindState[fest.id])}
+                    reducedMotion={reducedMotion}
+                    skipScrollReveal={mobileExpanded}
+                    viewProgrammeLabel={tDict.festivals.viewProgramme}
+                    remindMeLabel={tDict.festivals.remindMe}
+                    reminderSetLabel={tDict.festivals.reminderRecorded}
+                    onSelect={(f) => {
+                      setSelectedFestival(f);
+                      setEmailConfirmMsg(null);
+                    }}
+                    onToggleRemind={handleRemindMe}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <motion.div
+              key="ekadashi-grid"
+              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              data-testid="ekadashi-grid"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-3.5"
+            >
+              {EKADASHI_SCHEDULE.map((item) => {
+                const ekView = getLocalizedEkadashiView(item, language);
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    data-testid={`ekadashi-card-${item.id}`}
+                    onClick={() => setSelectedEkadashi(item)}
+                    className="group text-left bg-gradient-to-br from-[#FFFDF8] via-[#FAF1DF] to-[#F3E3C4] border border-[#C8AB88] hover:border-[#9A7132] rounded-xl p-3.5 shadow-[0_6px_18px_rgba(60,42,32,0.08)] hover:shadow-[0_12px_26px_rgba(60,42,32,0.16)] transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C29A54]"
+                  >
+                    <div className="flex items-center justify-between gap-2 w-full">
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-[#3C2A20] text-[#F5DEAE] font-cinzel text-[11px] font-bold tracking-wider border border-[#C29A54]/60 shrink-0">
+                        {String(ekView.number).padStart(2, '0')}
+                      </span>
+                      <div className="inline-flex items-center gap-1.5 text-[11px] font-cinzel font-semibold text-[#741C24]">
+                        <Calendar className="w-3 h-3 text-[#A67C57] shrink-0" aria-hidden="true" />
+                        <span>{ekView.date}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-serif-royal text-lg sm:text-[1.15rem] font-bold text-[#3C2A20] group-hover:text-[#741C24] transition-colors leading-snug">
+                        {ekView.title}
+                      </h3>
+                      <div
+                        aria-hidden="true"
+                        className="h-[1px] w-full origin-left bg-gradient-to-r from-[#C29A54]/80 to-transparent mt-1.5 scale-x-50 group-hover:scale-x-100 transition-transform duration-300"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#D8C2A4]/60 text-[11px]">
+                      <span className="font-cinzel font-semibold uppercase tracking-wider text-[#6B4832]">
+                        {ekView.weekday}
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-cinzel font-semibold text-[#8C6D28] group-hover:text-[#741C24] transition-colors">
+                        <span>{tDict.festivals.ekadashiOpenScroll}</span>
+                        <ArrowRight
+                          className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </motion.div>
+          )}
+        </div>
       </div>
 
       {/* Interactive Animated Festival Programme & Reminder Modal */}

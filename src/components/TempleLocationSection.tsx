@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Language, TEMPLE_LOCATION_RECORD, getGoogleMapsSearchUrl, getGoogleMapsDirectionsUrl } from '../data/templeData';
-import { MapPin, Navigation, Copy, Check, ExternalLink, Info, Train, Car, Clock, Bus } from 'lucide-react';
+import { MapPin, Navigation, Copy, Check, ExternalLink, Info, Train, Car, Clock, Bus, ChevronDown, ChevronUp } from 'lucide-react';
 import { FluteDivider, LotusOrnament } from './KrishnaMotifs';
 import { useI18n } from '../i18n/I18nContext';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
+import {
+  isSectionInitiallyExpandedOnMobile,
+  toggleMobileSectionExpanded,
+} from '../utils/mobileSectionUtils';
 
 interface TempleLocationSectionProps {
   language: Language;
@@ -15,6 +19,9 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
 }) => {
   const { tDict } = useI18n();
   const [copied, setCopied] = useState(false);
+  const [mobileDetailsOpen, setMobileDetailsOpen] = useState(() =>
+    isSectionInitiallyExpandedOnMobile('location')
+  );
   const loc = TEMPLE_LOCATION_RECORD;
 
   const handleCopyAddress = () => {
@@ -29,10 +36,10 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
   const directionsUrl = getGoogleMapsDirectionsUrl(loc);
 
   return (
-    <section id="location" className="relative overflow-hidden py-12 sm:py-16 bg-[#F3E7D6] border-b border-[#E5D1B6] scroll-mt-20">
+    <section id="location" className="relative overflow-hidden py-8 sm:py-16 bg-[#F3E7D6] border-b border-[#E5D1B6] scroll-mt-20">
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-5 sm:mb-8">
           <LotusOrnament className="mb-2 text-[#A67C57]" size={28} />
           <div className="text-xs sm:text-sm uppercase tracking-widest text-[#A67C57] font-semibold mb-1.5 font-cinzel">
             {tDict.location.kicker}
@@ -46,8 +53,8 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
           <FluteDivider className="w-full max-w-md mt-3" />
         </div>
 
-        {/* Verification Status Banner */}
-        <div className="mb-5 p-3.5 sm:p-4 bg-[#FFFDF8] border border-[#C8AB88] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xs shadow-xs">
+        {/* Desktop Verification Status Banner (>= md) */}
+        <div className="hidden md:flex mb-5 p-3.5 sm:p-4 bg-[#FFFDF8] border border-[#C8AB88] flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xs shadow-xs">
           <div className="flex items-start gap-2.5">
             <Info className="w-4 h-4 text-[#A67C57] shrink-0 mt-0.5" />
             <div className="text-xs sm:text-sm text-[#3C2A20] leading-relaxed">
@@ -60,12 +67,12 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
           </span>
         </div>
 
-        {/* Desktop 60/40 Split Layout — Tightly Balanced Height With Zero Empty Voids */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
+        {/* Desktop 60/40 Split Layout — On mobile, Google Map + Get Directions + Open in Maps always visible */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch">
           {/* LEFT COLUMN (60% Desktop): Interactive Google Maps Surface + Dedicated VVMT Bus Service */}
           <div className="lg:col-span-7 flex flex-col gap-4">
             <div className="bg-[#FFFDF8] border border-[#C8AB88] p-3 shadow-sm flex flex-col rounded-xs">
-              <div className="relative w-full h-[300px] sm:h-[340px] lg:h-[365px] bg-[#E5D1B6]/40 overflow-hidden border border-[#E5D1B6] rounded-xs">
+              <div className="relative w-full h-[240px] sm:h-[340px] lg:h-[365px] bg-[#E5D1B6]/40 overflow-hidden border border-[#E5D1B6] rounded-xs">
                 <iframe
                   title={tDict.location.iframeAriaLabel}
                   src="https://maps.google.com/maps?q=Shirgaon%20Virar%20East%20Dwarkadhish%20Mandir&t=&z=14&ie=UTF8&iwloc=&output=embed"
@@ -75,39 +82,83 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
                 />
               </div>
 
-              {/* Quick Map Bar */}
+              {/* Quick Map Bar — Always visible on both Mobile & Desktop */}
               <div className="mt-2.5 pt-2.5 border-t border-[#E5D1B6] flex flex-wrap items-center justify-between gap-2.5 text-xs">
                 <div className="flex items-center gap-2 text-[#715847]">
                   <MapPin className="w-4 h-4 text-[#A67C57]" />
                   <span className="font-mono">GPS: {loc.latitude}° N, {loc.longitude}° E</span>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                   <a
                     href={directionsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3.5 py-1.5 bg-[#B68A45] hover:bg-[#9D7437] text-[#20140D] font-bold rounded-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                    data-testid="location-get-directions-btn"
+                    className="flex-1 sm:flex-initial min-h-[42px] sm:min-h-0 px-2.5 sm:px-3.5 py-2 sm:py-1.5 bg-[#B68A45] hover:bg-[#9D7437] text-[#20140D] text-[11px] sm:text-xs font-bold whitespace-nowrap rounded-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                   >
-                    <Navigation className="w-3.5 h-3.5 text-[#20140D]" />
+                    <Navigation className="w-3.5 h-3.5 text-[#20140D] shrink-0" />
                     <span>{tDict.common.getDirections}</span>
-                    <ExternalLink className="w-3 h-3 text-[#20140D]/80" />
+                    <ExternalLink className="w-3 h-3 text-[#20140D]/80 shrink-0" />
                   </a>
                   <a
                     href={searchUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 bg-[#6B4832] hover:bg-[#523725] text-white font-medium rounded-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                    data-testid="location-open-maps-btn"
+                    className="flex-1 sm:flex-initial min-h-[42px] sm:min-h-0 px-2.5 sm:px-3 py-2 sm:py-1.5 bg-[#6B4832] hover:bg-[#523725] text-white text-[11px] sm:text-xs font-medium whitespace-nowrap rounded-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-[#E5BE75]" />
+                    <MapPin className="w-3.5 h-3.5 text-[#E5BE75] shrink-0" />
                     <span>{tDict.common.openInMaps}</span>
-                    <ExternalLink className="w-3 h-3 text-white/70" />
+                    <ExternalLink className="w-3 h-3 text-white/70 shrink-0" />
                   </a>
                 </div>
               </div>
             </div>
 
+            {/* Mobile Toggle Button for Secondary Travel Routes, VVMT Bus & Address Details (< md) */}
+            <div className="md:hidden">
+              <button
+                type="button"
+                data-testid="location-mobile-toggle"
+                aria-expanded={mobileDetailsOpen}
+                aria-controls="location-mobile-details-bus location-mobile-details-info"
+                onClick={() => setMobileDetailsOpen(toggleMobileSectionExpanded)}
+                className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-[#FFFDF8] hover:bg-[#FBF6ED] border border-[#C29A54] text-[#6B4832] font-cinzel text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+              >
+                <span>
+                  {mobileDetailsOpen
+                    ? tDict.location.mobileCollapseBtn
+                    : tDict.location.mobileExploreBtn}
+                </span>
+                {mobileDetailsOpen ? (
+                  <ChevronUp className="w-4 h-4 text-[#A67C57] shrink-0" aria-hidden="true" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-[#A67C57] shrink-0" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+
+            {/* Mobile Verification Banner (shown only when expanded below button) */}
+            {mobileDetailsOpen && (
+              <div className="md:hidden p-3.5 bg-[#FFFDF8] border border-[#C8AB88] flex flex-col items-start gap-2.5 rounded-xs shadow-xs">
+                <div className="flex items-start gap-2.5">
+                  <Info className="w-4 h-4 text-[#A67C57] shrink-0 mt-0.5" />
+                  <div className="text-xs text-[#3C2A20] leading-relaxed">
+                    <span className="font-bold text-[#6B4832] mr-1.5">{tDict.location.guidanceHeader}</span>
+                    {tDict.location.guidanceBody}
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-[#E5D1B6] text-[#6B4832] text-[11px] font-cinzel font-semibold uppercase tracking-wider shrink-0">
+                  {tDict.location.documentedBadge}
+                </span>
+              </div>
+            )}
+
             {/* Dedicated VVMT Municipal Bus Service & Easy Commute Card (Fills Left Column Cleanly) */}
-            <div className="bg-[#FFFDF8] border-2 border-[#C29A54]/80 p-4 sm:p-5 shadow-xs rounded-xs flex-1 flex flex-col justify-between">
+            <div
+              id="location-mobile-details-bus"
+              className={`${mobileDetailsOpen ? 'flex' : 'hidden md:flex'} bg-[#FFFDF8] border-2 border-[#C29A54]/80 p-4 sm:p-5 shadow-xs rounded-xs flex-1 flex-col justify-between`}
+            >
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
                   <div className="flex items-center gap-2.5">
@@ -153,7 +204,10 @@ export const TempleLocationSection: React.FC<TempleLocationSectionProps> = ({
           </div>
 
           {/* RIGHT COLUMN (40% Desktop): Visitor Transit & Address Information */}
-          <div className="lg:col-span-5 flex flex-col justify-between gap-4">
+          <div
+            id="location-mobile-details-info"
+            className={`${mobileDetailsOpen ? 'flex' : 'hidden md:flex'} lg:col-span-5 flex-col justify-between gap-4`}
+          >
             {/* Written Address Box with Copy Feedback & Direct Google Maps Directions */}
             <div className="bg-[#FFFDF8] border border-[#C8AB88] p-4 shadow-xs rounded-xs">
               <div className="text-[11px] uppercase tracking-wider font-cinzel text-[#A67C57] font-semibold mb-1">

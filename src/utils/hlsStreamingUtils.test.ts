@@ -1,31 +1,49 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  getMobileStreamStaggerMs,
   resolveHlsInitialBandwidthEstimate,
   resolveHlsPlayerConfig,
   selectStreamingPlaybackMode,
   shouldLoadVideoSource,
+  shouldPauseGalleryCardOnPopup,
 } from './hlsStreamingUtils.ts';
 
 test('resolveHlsInitialBandwidthEstimate: scales initial bitrate target based on network speed and Save-Data', () => {
-  assert.equal(resolveHlsInitialBandwidthEstimate({ saveData: true, isMobileViewport: false }), 350_000);
-  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '2g' }), 350_000);
-  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '3g' }), 650_000);
-  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '4g', isMobileViewport: true }), 850_000);
-  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '4g', isMobileViewport: false }), 1_450_000);
-  assert.equal(resolveHlsInitialBandwidthEstimate({ downlinkMbps: 1.2, isMobileViewport: true }), 900_000);
+  assert.equal(resolveHlsInitialBandwidthEstimate({ saveData: true, isMobileViewport: false }), 240_000);
+  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '2g' }), 240_000);
+  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '3g' }), 420_000);
+  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '4g', isMobileViewport: true }), 520_000);
+  assert.equal(resolveHlsInitialBandwidthEstimate({ effectiveType: '4g', isMobileViewport: false }), 1_250_000);
+  assert.equal(resolveHlsInitialBandwidthEstimate({ downlinkMbps: 1.2, isMobileViewport: true }), 840_000);
 });
 
-test('resolveHlsPlayerConfig: enables ABR auto-level, capLevelToPlayerSize, and tighter mobile buffers', () => {
-  const mobileCfg = resolveHlsPlayerConfig({ effectiveType: '3g', isMobileViewport: true });
-  assert.equal(mobileCfg.startLevel, -1);
+test('resolveHlsPlayerConfig: eliminates mobile worker/prefetch saturation and sets tight mobile buffers', () => {
+  const mobileCfg = resolveHlsPlayerConfig({ effectiveType: '3g', isMobileViewport: true, startPosition: 4.5 });
+  assert.equal(mobileCfg.enableWorker, false);
+  assert.equal(mobileCfg.startLevel, 0);
+  assert.equal(mobileCfg.startFragPrefetch, false);
+  assert.equal(mobileCfg.startPosition, 4.5);
   assert.equal(mobileCfg.capLevelToPlayerSize, true);
-  assert.equal(mobileCfg.abrEwmaDefaultEstimate, 650_000);
-  assert.equal(mobileCfg.maxBufferLength, 10);
+  assert.equal(mobileCfg.abrEwmaDefaultEstimate, 420_000);
+  assert.equal(mobileCfg.maxBufferLength, 4);
 
   const desktopCfg = resolveHlsPlayerConfig({ effectiveType: '4g', isMobileViewport: false });
-  assert.equal(desktopCfg.maxBufferLength, 18);
+  assert.equal(desktopCfg.enableWorker, true);
+  assert.equal(desktopCfg.startLevel, -1);
+  assert.equal(desktopCfg.maxBufferLength, 16);
   assert.equal(desktopCfg.startFragPrefetch, true);
+});
+
+test('getMobileStreamStaggerMs & shouldPauseGalleryCardOnPopup: protect mobile decoders cleanly', () => {
+  assert.equal(getMobileStreamStaggerMs(0, true), 0);
+  assert.equal(getMobileStreamStaggerMs(2, true), 220);
+  assert.equal(getMobileStreamStaggerMs(2, false), 0);
+
+  assert.equal(shouldPauseGalleryCardOnPopup(0, null, true), false);
+  assert.equal(shouldPauseGalleryCardOnPopup(2, 0, true), true);
+  assert.equal(shouldPauseGalleryCardOnPopup(2, 0, false), false);
+  assert.equal(shouldPauseGalleryCardOnPopup(0, 0, false), true);
 });
 
 test('shouldLoadVideoSource: blocks video source attachment until frame enters viewport', () => {

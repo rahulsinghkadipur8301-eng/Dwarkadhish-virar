@@ -10,11 +10,9 @@ import { HeroSection } from './components/HeroSection';
 import { SacredAmbientBackground } from './components/SacredAmbientBackground';
 import { GoldenCursorTrail } from './components/GoldenCursorTrail';
 import { KnowTheStorySection } from './components/KnowTheStorySection';
+import { TempleGallerySection } from './components/TempleGallerySection';
 import { SectionErrorBoundary } from './components/ErrorBoundary';
-import {
-  DevotionalPresenceSkeleton,
-  GalleryVideoGridSkeleton,
-} from './components/VideoGridSkeleton';
+import { DevotionalPresenceSkeleton } from './components/VideoGridSkeleton';
 
 /**
  * Retries transient dynamic import failures (e.g., mobile network drops or edge cache rollover
@@ -50,11 +48,6 @@ const DevotionalPresenceSection = lazyWithRetry(() =>
 const VisionarySection = lazyWithRetry(() =>
   import('./components/VisionarySection').then((m) => ({
     default: m.VisionarySection,
-  }))
-);
-const TempleGallerySection = lazyWithRetry(() =>
-  import('./components/TempleGallerySection').then((m) => ({
-    default: m.TempleGallerySection,
   }))
 );
 const DarshanSection = lazyWithRetry(() =>
@@ -331,9 +324,7 @@ export default function App() {
 
         {/* 10. Sacred Ritual Videos / Gallery */}
         <SectionErrorBoundary id="gallery">
-          <Suspense fallback={<GalleryVideoGridSkeleton />}>
-            <TempleGallerySection language={language} reducedMotion={reducedMotion} />
-          </Suspense>
+          <TempleGallerySection language={language} reducedMotion={reducedMotion} />
         </SectionErrorBoundary>
 
         {/* 11. Official Temple Social Connect */}

@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Language, SEVA_OFFERINGS, SevaOffering } from '../data/templeData';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { PeacockFeather, LotusOrnament } from './KrishnaMotifs';
+import {
+  isSectionInitiallyExpandedOnMobile,
+  toggleMobileSectionExpanded,
+} from '../utils/mobileSectionUtils';
 
 interface SevaSectionProps {
   language: Language;
@@ -18,6 +22,9 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
   onRedirectToPortal,
 }) => {
   const { tDict } = useI18n();
+  const [mobileExpanded, setMobileExpanded] = useState(() =>
+    isSectionInitiallyExpandedOnMobile('seva')
+  );
 
   const getTitle = (item: SevaOffering) => {
     if (language === 'hi') return item.titleHi;
@@ -50,7 +57,7 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
     <section
       id="seva"
       aria-labelledby="seva-section-heading"
-      className="relative overflow-hidden py-14 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20"
+      className="relative overflow-hidden py-8 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20"
     >
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -60,7 +67,7 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
-          className="text-center max-w-4xl mx-auto mb-8 sm:mb-10"
+          className="text-center max-w-4xl mx-auto mb-5 sm:mb-10"
         >
           <div className="flex items-center justify-center gap-2.5 mb-2.5">
             <PeacockFeather size={24} />
@@ -88,8 +95,42 @@ export const SevaSection: React.FC<SevaSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Seva Offerings Grid — Directly Redirects to Official Contribution Portal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* Mobile Compact Click-to-Explore Card (< md) */}
+        <div className="md:hidden mb-4">
+          <div className="bg-[#FFFDF8] border border-[#C8AB88] rounded-xl p-4 shadow-xs flex flex-col gap-3">
+            <div className="flex items-center justify-center gap-2 text-xs font-cinzel font-semibold text-[#6B4832] text-center">
+              <Sparkles className="w-4 h-4 text-[#A67C57] shrink-0" aria-hidden="true" />
+              <span>{tDict.seva.mobileSummaryHighlight}</span>
+            </div>
+            <button
+              type="button"
+              data-testid="seva-mobile-toggle"
+              aria-expanded={mobileExpanded}
+              aria-controls="seva-expandable-grid"
+              onClick={() => setMobileExpanded(toggleMobileSectionExpanded)}
+              className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-[#6B4832] hover:bg-[#523725] text-[#FFFDF8] font-cinzel text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+            >
+              <span>
+                {mobileExpanded
+                  ? tDict.seva.mobileCollapseBtn
+                  : tDict.seva.mobileExploreBtn}
+              </span>
+              {mobileExpanded ? (
+                <ChevronUp className="w-4 h-4 text-[#E8C784] shrink-0" aria-hidden="true" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-[#E8C784] shrink-0" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Seva Offerings Grid — Collapsed on < md until clicked, always visible on md+ */}
+        <div
+          id="seva-expandable-grid"
+          className={`${
+            mobileExpanded ? 'grid' : 'hidden md:grid'
+          } grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6`}
+        >
           {SEVA_OFFERINGS.map((seva) => (
             <div
               key={seva.id}

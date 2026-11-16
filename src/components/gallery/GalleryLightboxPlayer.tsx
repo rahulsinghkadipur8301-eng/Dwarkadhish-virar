@@ -27,6 +27,7 @@ export interface GalleryLightboxItem {
   id: string;
   src: string;
   hlsSrc?: string;
+  posterSrc?: string;
   tag: string;
   title: string;
   caption: string;
@@ -182,6 +183,7 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
       shouldLoad: true,
       isInView: isLightboxInView,
       enabled: !userPaused,
+      startPosition: initialTime > 0.5 ? initialTime : -1,
       streamKey: item.id,
       onStreamReady: handleStreamReady,
     });
@@ -330,10 +332,16 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
             data-stream-mode={streamStatus}
             className="relative h-[320px] sm:h-[390px] md:h-[480px] md:max-h-[74vh] w-auto max-w-full aspect-[9/16] rounded-xl overflow-hidden border border-[#C29A54]/60 bg-black shadow-2xl flex items-center justify-center"
           >
-            <VideoCardSkeletonOverlay visible={showSkeleton} index={index} variant="gallery" />
+            <VideoCardSkeletonOverlay
+              visible={showSkeleton}
+              index={index}
+              variant="gallery"
+              hasPoster={Boolean(item.posterSrc)}
+            />
             <video
               ref={videoRef}
               key={item.id}
+              poster={item.posterSrc}
               autoPlay
               loop
               muted={!isUnmuted}
@@ -347,10 +355,11 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
               onLoadedMetadata={(e) => {
                 const vid = e.currentTarget;
                 if (
-                  initialTime > 0.25 &&
+                  initialTime > 0.5 &&
                   appliedInitialTimeForRef.current !== item.id &&
                   Number.isFinite(vid.duration) &&
-                  vid.duration > initialTime + 0.5
+                  vid.duration > initialTime + 0.5 &&
+                  Math.abs(vid.currentTime - initialTime) > 1.2
                 ) {
                   appliedInitialTimeForRef.current = item.id;
                   vid.currentTime = initialTime;

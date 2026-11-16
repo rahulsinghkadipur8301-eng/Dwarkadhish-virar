@@ -69,9 +69,9 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
         }`}
       />
 
-      {/* Outer 24-Petal Sacred Lotus Yantra Ring */}
+      {/* Outer 24-Petal Sacred Lotus Yantra Ring (Desktop/Tablet GPU optimization) */}
       <div
-        className={`absolute left-1/2 top-1/2 w-[min(96vw,880px)] h-[min(96vw,880px)] ${outerOpacity} ${cwClass}`}
+        className={`hidden sm:block absolute left-1/2 top-1/2 w-[min(96vw,880px)] h-[min(96vw,880px)] ${outerOpacity} ${cwClass}`}
       >
         <svg viewBox="0 0 800 800" fill="none" className="w-full h-full">
           <circle
@@ -114,7 +114,7 @@ export const SectionBackgroundChakra: React.FC<SectionBackgroundChakraProps> = R
 
       {/* Counter-Rotating Inner 16-Petal Ashtadal Geometric Wheel */}
       <div
-        className={`absolute left-1/2 top-1/2 w-[min(80vw,660px)] h-[min(80vw,660px)] ${innerOpacity} ${ccwClass}`}
+        className={`hidden sm:block absolute left-1/2 top-1/2 w-[min(80vw,660px)] h-[min(80vw,660px)] ${innerOpacity} ${ccwClass}`}
       >
         <svg viewBox="0 0 600 600" fill="none" className="w-full h-full">
           <circle cx="300" cy="300" r="286" stroke={primaryStroke} strokeWidth="1.5" />

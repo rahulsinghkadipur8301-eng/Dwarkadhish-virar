@@ -175,6 +175,9 @@ export const gu: TranslationDictionary = {
     categoryAfternoon: 'બપોર',
     categoryEvening: 'સાંજ',
     categoryNight: 'રાત્રિ',
+    mobileExploreBtn: 'આરતી સમયપત્રક જુઓ',
+    mobileCollapseBtn: 'સમયપત્રક છુપાવો',
+    mobileSummaryHighlight: '૫ દૈનિક આરતી · સવારે ૦૬:૦૦ – રાત્રે ૦૯:૦૦',
   },
   location: {
     kicker: 'તીર્થયાત્રા માર્ગ અને પવિત્ર ધામ પ્રવેશ',
@@ -198,6 +201,8 @@ export const gu: TranslationDictionary = {
     crucialDistinctionTitle: 'અતિ મહત્વપૂર્ણ પ્રવાસ ભેદ:',
     crucialDistinctionBody: 'આ મંદિર શિરગાવ, વિરાર પૂર્વ (મહારાષ્ટ્ર) ખાતે છે. આપનું જીપીએસ ગુજરાતના દ્વારકા ન બતાવતાં મહારાષ્ટ્રનો માર્ગ દર્શાવે છે તેની ખાતરી કરશો.',
     iframeAriaLabel: 'ગૂગલ મેપ્સ પર શ્રી દ્વારકાધીશ મંદિર શિરગાવ વિરારનું સ્થાન',
+    mobileExploreBtn: 'બસ સેવા, માર્ગ અને સરનામું જુઓ',
+    mobileCollapseBtn: 'પ્રવાસ વિગતો છુપાવો',
   },
   architecture: {
     kicker: 'સ્થાપત્ય કલા, શિલા શિલ્પ અને પવિત્ર ભૂમિતિ',
@@ -252,6 +257,9 @@ export const gu: TranslationDictionary = {
     modalEmailPlaceholder: 'name@example.com',
     modalBtnConfirm: 'ઉત્સવ સ્મરણ સેટ કરો',
     modalConfirmationSuccess: 'આભાર! તમારી સ્મરણ પસંદગી નોંધાઈ ગઈ છે.',
+    mobileExploreBtn: 'તહેવારો અને એકાદશી પંચાંગ જુઓ',
+    mobileCollapseBtn: 'પંચાંગ છુપાવો',
+    mobileSummaryHighlight: '૯ પાવન ઉત્સવ · ૨૩ એકાદશી તિથિ',
   },
   seva: {
     kicker: 'ભક્તિ સેવા અને સમર્પણ સંકલ્પ',
@@ -277,6 +285,9 @@ export const gu: TranslationDictionary = {
     categoryGeneral: 'નિત્ય દીપમ અને સ્વચ્છતા',
     freqOneTime: 'એક વખત',
     freqMonthly: 'માસિક',
+    mobileExploreBtn: 'ભક્તિ સેવા વિકલ્પો જુઓ',
+    mobileCollapseBtn: 'સેવા વિગતો છુપાવો',
+    mobileSummaryHighlight: '૫ પાવન સેવા સંકલ્પ · ₹૫૦૧ થી શરૂ',
   },
   community: {
     kicker: 'સામુદાયિક સત્સંગ અને સ્વૈચ્છિક સેવા',

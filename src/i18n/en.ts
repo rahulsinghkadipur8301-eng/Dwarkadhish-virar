@@ -175,6 +175,9 @@ export const en: TranslationDictionary = {
     categoryAfternoon: 'Afternoon',
     categoryEvening: 'Evening',
     categoryNight: 'Night',
+    mobileExploreBtn: 'Explore Aarti Schedule',
+    mobileCollapseBtn: 'Hide Schedule',
+    mobileSummaryHighlight: '5 Daily Aartis · 06:00 AM – 09:00 PM',
   },
   location: {
     kicker: 'PLAN YOUR VISIT',
@@ -198,6 +201,8 @@ export const en: TranslationDictionary = {
     crucialDistinctionTitle: 'Crucial Travel Distinction:',
     crucialDistinctionBody: 'This temple is in Shirgaon, Virar East, Maharashtra. Ensure GPS points to Maharashtra, not Dwarka, Gujarat.',
     iframeAriaLabel: 'Google Maps location for Shri Dwarkadhish Mandir, Shirgaon, Virar East',
+    mobileExploreBtn: 'Browse Travel Routes, VVMT Bus & Address',
+    mobileCollapseBtn: 'Hide Travel Details',
   },
   architecture: {
     kicker: '05. Architecture, Stone Craft & Sacred Geometry',
@@ -252,6 +257,9 @@ export const en: TranslationDictionary = {
     modalEmailPlaceholder: 'name@example.com',
     modalBtnConfirm: 'Set Utsav Reminder',
     modalConfirmationSuccess: 'Thank you! Your reminder preference has been registered.',
+    mobileExploreBtn: 'Browse Festivals & Ekadashis',
+    mobileCollapseBtn: 'Hide Calendar',
+    mobileSummaryHighlight: '9 Sacred Utsavs · 23 Ekadashi Tithis',
   },
   seva: {
     kicker: 'Sacred Seva & Devotional Participation',
@@ -277,6 +285,9 @@ export const en: TranslationDictionary = {
     categoryGeneral: 'General Upkeep',
     freqOneTime: 'One-time',
     freqMonthly: 'Monthly',
+    mobileExploreBtn: 'Explore Seva Offerings',
+    mobileCollapseBtn: 'Hide Seva Offerings',
+    mobileSummaryHighlight: '5 Sacred Seva Offerings · From ₹501',
   },
   community: {
     kicker: 'Community & Voluntary Seva',

@@ -10,12 +10,13 @@ export interface VideoCardSkeletonOverlayProps {
   variant?: 'gallery' | 'episode' | 'lead';
   reducedMotion?: boolean;
   showActionPill?: boolean;
+  hasPoster?: boolean;
 }
 
 /**
- * Content-aware 9:16 skeleton shimmer overlay aligned to the exact video card anatomy
- * (top action/part chip, sacred center frame crest, bottom metadata & optional sound pill).
- * Uses absolute inset positioning so bounding height never shifts when playback begins.
+ * Content-aware 9:16 skeleton shimmer overlay aligned to the exact video card anatomy.
+ * When `hasPoster` is true, stays lightweight and transparent so the WebP first-frame
+ * poster renders immediately on mobile with zero occlusion or GPU shimmer overhead.
  */
 export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> = React.memo(
   ({
@@ -24,8 +25,23 @@ export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> =
     variant = 'gallery',
     reducedMotion = false,
     showActionPill = false,
+    hasPoster = false,
   }) => {
     if (!visible) return null;
+
+    if (hasPoster) {
+      return (
+        <div
+          aria-hidden="true"
+          data-testid="video-card-skeleton"
+          className="absolute inset-0 z-10 pointer-events-none flex items-start justify-start p-2 sm:p-2.5"
+        >
+          <span className="px-2 py-0.5 rounded-full bg-black/55 border border-[#E8C784]/45 text-[9px] font-cinzel tracking-widest uppercase text-[#F5D77F]">
+            ॐ
+          </span>
+        </div>
+      );
+    }
 
     const staggerMs = getSkeletonStaggerDelayMs(index);
 
@@ -35,10 +51,10 @@ export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> =
         data-testid="video-card-skeleton"
         className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-2 sm:p-2.5 bg-gradient-to-br from-[#2B1810] via-[#1D120C] to-[#2F1B12]"
       >
-        {/* Warm antique-gold diagonal shimmer pass while initializing */}
+        {/* Warm antique-gold diagonal shimmer pass on sm+ screens while initializing */}
         {!reducedMotion && (
           <div
-            className="absolute inset-0 overflow-hidden"
+            className="hidden sm:block absolute inset-0 overflow-hidden"
             style={{ animationDelay: `${staggerMs}ms` }}
           >
             <div
@@ -48,40 +64,40 @@ export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> =
           </div>
         )}
 
-        {/* Top Chrome Skeleton (matches part/tag badge on left, zoom icon on right) */}
+        {/* Top Chrome Skeleton */}
         <div className="relative flex items-center justify-between gap-2">
           {variant === 'gallery' ? (
-            <span className="h-5 w-16 rounded-full bg-[#3D2418]/80 border border-[#C29A54]/20 animate-pulse" />
+            <span className="h-5 w-16 rounded-full bg-[#3D2418]/80 border border-[#C29A54]/20" />
           ) : (
-            <span className="h-5 w-20 rounded bg-[#3D2418]/90 border border-[#C59B56]/30 animate-pulse" />
+            <span className="h-5 w-20 rounded bg-[#3D2418]/90 border border-[#C59B56]/30" />
           )}
           {showActionPill && (
-            <span className="w-8 h-8 rounded-full bg-[#3D2418]/85 border border-[#C29A54]/25 animate-pulse" />
+            <span className="w-8 h-8 rounded-full bg-[#3D2418]/85 border border-[#C29A54]/25" />
           )}
         </div>
 
         {/* Center Sacred Motif Crest */}
         <div className="relative flex flex-col items-center justify-center gap-2 my-auto px-3">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-[#C29A54]/30 bg-[#351F14]/70 flex items-center justify-center animate-pulse">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-[#C29A54]/30 bg-[#351F14]/70 flex items-center justify-center sm:animate-pulse">
             <span className="font-devanagari text-base sm:text-lg text-[#E8C784]/55 select-none">
               ॐ
             </span>
           </div>
-          <div className="w-24 sm:w-28 h-2 rounded-full bg-[#46291B]/75 animate-pulse" />
+          <div className="w-24 sm:w-28 h-2 rounded-full bg-[#46291B]/75" />
         </div>
 
-        {/* Bottom Chrome Skeleton (matches duration/title & optional fallback sound pill) */}
+        {/* Bottom Chrome Skeleton */}
         <div className="relative flex items-end justify-between gap-2">
           {variant === 'lead' ? (
             <div className="flex-1 space-y-1.5 pr-20">
-              <div className="h-3.5 w-3/4 rounded bg-[#46291B]/80 animate-pulse" />
-              <div className="h-2.5 w-1/2 rounded bg-[#3D2418]/75 animate-pulse" />
+              <div className="h-3.5 w-3/4 rounded bg-[#46291B]/80" />
+              <div className="h-2.5 w-1/2 rounded bg-[#3D2418]/75" />
             </div>
           ) : (
-            <span className="h-5 w-12 rounded bg-[#3D2418]/85 border border-[#C29A54]/20 animate-pulse" />
+            <span className="h-5 w-12 rounded bg-[#3D2418]/85 border border-[#C29A54]/20" />
           )}
           {showActionPill && (
-            <span className="h-8 w-20 rounded-full bg-[#4B141D]/70 border border-[#C29A54]/30 animate-pulse shrink-0" />
+            <span className="h-8 w-20 rounded-full bg-[#4B141D]/70 border border-[#C29A54]/30 shrink-0" />
           )}
         </div>
       </div>
@@ -105,9 +121,9 @@ export const GalleryVideoGridSkeleton: React.FC = React.memo(() => {
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-3 sm:px-6 lg:px-8 xl:px-12 relative z-10">
         {/* Centered Header Skeleton */}
         <div className="text-center max-w-4xl mx-auto mb-7 sm:mb-10 flex flex-col items-center">
-          <div className="h-4 w-48 rounded-full bg-[#E5D1B6] animate-pulse mb-3" />
-          <div className="h-9 sm:h-11 w-72 sm:w-96 rounded-xl bg-[#E0C8AA] animate-pulse mb-3" />
-          <div className="h-4 w-64 sm:w-[440px] rounded-full bg-[#E5D1B6]/80 animate-pulse mb-4" />
+          <div className="h-4 w-48 rounded-full bg-[#E5D1B6] sm:animate-pulse mb-3" />
+          <div className="h-9 sm:h-11 w-72 sm:w-96 rounded-xl bg-[#E0C8AA] sm:animate-pulse mb-3" />
+          <div className="h-4 w-64 sm:w-[440px] rounded-full bg-[#E5D1B6]/80 sm:animate-pulse mb-4" />
           <div className="h-[1px] w-44 bg-[#C29A54]/50" />
         </div>
 
@@ -124,10 +140,10 @@ export const GalleryVideoGridSkeleton: React.FC = React.memo(() => {
               {/* Heritage Maroon Footer Skeleton matching exact card footer dimensions */}
               <div className="mt-1.5 sm:mt-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-[#4B141D] via-[#611D2B] to-[#4B141D] border-t border-[#C59B56] px-2 sm:px-3 py-2 sm:py-2.5 flex items-center justify-between gap-2">
                 <div className="flex-1 min-w-0 space-y-1.5">
-                  <div className="h-2.5 w-20 rounded bg-[#E1BD80]/30 animate-pulse" />
-                  <div className="h-4 w-28 rounded bg-[#FFF5E8]/25 animate-pulse" />
+                  <div className="h-2.5 w-20 rounded bg-[#E1BD80]/30 sm:animate-pulse" />
+                  <div className="h-4 w-28 rounded bg-[#FFF5E8]/25 sm:animate-pulse" />
                 </div>
-                <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#E8C784]/25 animate-pulse shrink-0" />
+                <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#E8C784]/25 sm:animate-pulse shrink-0" />
               </div>
             </div>
           ))}
@@ -152,9 +168,9 @@ export const DevotionalPresenceSkeleton: React.FC = React.memo(() => {
     >
       <div className="w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 flex flex-col items-center">
-          <div className="h-4 w-44 rounded-full bg-[#E5D1B6] animate-pulse mb-3" />
-          <div className="h-9 sm:h-11 w-72 sm:w-96 rounded-xl bg-[#E0C8AA] animate-pulse mb-2.5" />
-          <div className="h-5 w-52 rounded-full bg-[#E5D1B6]/80 animate-pulse mb-4" />
+          <div className="h-4 w-44 rounded-full bg-[#E5D1B6] sm:animate-pulse mb-3" />
+          <div className="h-9 sm:h-11 w-72 sm:w-96 rounded-xl bg-[#E0C8AA] sm:animate-pulse mb-2.5" />
+          <div className="h-5 w-52 rounded-full bg-[#E5D1B6]/80 sm:animate-pulse mb-4" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center w-full">
@@ -166,17 +182,17 @@ export const DevotionalPresenceSkeleton: React.FC = React.memo(() => {
 
           <div className="lg:col-span-6 space-y-6 w-full">
             <div className="bg-[#FFFDF8] p-6 sm:p-8 rounded-xl border border-[#D8C2A4] space-y-3">
-              <div className="h-7 w-56 rounded-lg bg-[#E5D1B6] animate-pulse" />
-              <div className="h-4 w-full rounded bg-[#F0DFC8] animate-pulse" />
-              <div className="h-4 w-5/6 rounded bg-[#F0DFC8] animate-pulse" />
-              <div className="h-4 w-2/3 rounded bg-[#F0DFC8] animate-pulse" />
+              <div className="h-7 w-56 rounded-lg bg-[#E5D1B6] sm:animate-pulse" />
+              <div className="h-4 w-full rounded bg-[#F0DFC8] sm:animate-pulse" />
+              <div className="h-4 w-5/6 rounded bg-[#F0DFC8] sm:animate-pulse" />
+              <div className="h-4 w-2/3 rounded bg-[#F0DFC8] sm:animate-pulse" />
             </div>
 
             <div className="bg-[#FFF9EE] p-6 sm:p-8 rounded-xl border-2 border-[#C59B56]/40 space-y-3">
-              <div className="h-5 w-44 rounded bg-[#E5D1B6] animate-pulse" />
-              <div className="h-6 w-full rounded bg-[#EAD6B9] animate-pulse" />
-              <div className="h-4 w-4/5 rounded bg-[#F0DFC8] animate-pulse" />
-              <div className="h-9 w-40 rounded bg-[#C29A54]/30 animate-pulse" />
+              <div className="h-5 w-44 rounded bg-[#E5D1B6] sm:animate-pulse" />
+              <div className="h-6 w-full rounded bg-[#EAD6B9] sm:animate-pulse" />
+              <div className="h-4 w-4/5 rounded bg-[#F0DFC8] sm:animate-pulse" />
+              <div className="h-9 w-40 rounded bg-[#C29A54]/30 sm:animate-pulse" />
             </div>
           </div>
         </div>

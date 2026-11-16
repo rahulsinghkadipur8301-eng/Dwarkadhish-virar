@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Language, AARTI_SCHEDULE } from '../data/templeData';
-import { Info, CheckCircle2, Clock } from 'lucide-react';
+import { Info, CheckCircle2, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { PeacockFeather, LotusOrnament } from './KrishnaMotifs';
+import {
+  isSectionInitiallyExpandedOnMobile,
+  toggleMobileSectionExpanded,
+} from '../utils/mobileSectionUtils';
 
 interface DarshanSectionProps {
   language: Language;
@@ -16,6 +20,9 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
   reducedMotion = false,
 }) => {
   const { tDict } = useI18n();
+  const [mobileExpanded, setMobileExpanded] = useState(() =>
+    isSectionInitiallyExpandedOnMobile('darshan')
+  );
 
   const getAartiName = (item: typeof AARTI_SCHEDULE[0]) => {
     if (language === 'hi') return item.nameHi;
@@ -32,7 +39,7 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
   };
 
   return (
-    <section id="darshan" className="relative overflow-hidden py-12 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20">
+    <section id="darshan" className="relative overflow-hidden py-8 sm:py-16 lg:py-20 bg-[#FBF6ED] border-b border-[#E5D1B6] scroll-mt-20">
       <SectionBackgroundChakra reducedMotion={reducedMotion} />
       <div className="relative z-10 w-full max-w-[min(98vw,1840px)] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Centered Section Header matching other Temple Sections */}
@@ -41,7 +48,7 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.65, ease: 'easeOut' }}
-          className="text-center max-w-4xl mx-auto mb-8 sm:mb-10"
+          className="text-center max-w-4xl mx-auto mb-5 sm:mb-10"
         >
           <div className="flex items-center justify-center gap-2.5 mb-2.5">
             <PeacockFeather size={24} />
@@ -66,8 +73,8 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Mandatory Verification & Notice Box */}
-        <div className="mb-8 p-5 sm:p-6 bg-[#FFFDF8] border border-[#C8AB88] flex items-start gap-4 rounded-xs shadow-xs">
+        {/* Desktop Mandatory Verification & Notice Box (>= md) */}
+        <div className="hidden md:flex mb-8 p-5 sm:p-6 bg-[#FFFDF8] border border-[#C8AB88] items-start gap-4 rounded-xs shadow-xs">
           <Info className="w-5 h-5 text-[#A67C57] shrink-0 mt-0.5" />
           <div className="text-sm sm:text-base text-[#3C2A20] leading-relaxed">
             <span className="font-bold text-[#6B4832] block sm:inline mr-2">
@@ -77,11 +84,54 @@ export const DarshanSection: React.FC<DarshanSectionProps> = ({
           </div>
         </div>
 
+        {/* Mobile Compact Click-to-Explore Bar (< md) */}
+        <div className="md:hidden mb-4">
+          <div className="bg-[#FFFDF8] border border-[#C8AB88] rounded-xl p-4 shadow-xs flex flex-col gap-3">
+            <div className="flex items-center justify-center gap-2 text-xs font-cinzel font-semibold text-[#6B4832] text-center">
+              <Clock className="w-4 h-4 text-[#A67C57] shrink-0" aria-hidden="true" />
+              <span>{tDict.schedule.mobileSummaryHighlight}</span>
+            </div>
+            <button
+              type="button"
+              data-testid="darshan-mobile-toggle"
+              aria-expanded={mobileExpanded}
+              aria-controls="darshan-mobile-content"
+              onClick={() => setMobileExpanded(toggleMobileSectionExpanded)}
+              className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-[#6B4832] hover:bg-[#523725] text-[#FFFDF8] font-cinzel text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+            >
+              <span>
+                {mobileExpanded
+                  ? tDict.schedule.mobileCollapseBtn
+                  : tDict.schedule.mobileExploreBtn}
+              </span>
+              {mobileExpanded ? (
+                <ChevronUp className="w-4 h-4 text-[#E8C784] shrink-0" aria-hidden="true" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-[#E8C784] shrink-0" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+
         {/* =========================================================================
             1. MOBILE RESPONSIVE CARDS VIEW (< md):
-            Converts wide table into readable cards so there is ZERO horizontal scroll
+            Expanded only on explicit user click so mobile scroll stays minimal
            ========================================================================= */}
-        <div className="grid grid-cols-1 gap-4 md:hidden mb-8">
+        <div
+          id="darshan-mobile-content"
+          className={mobileExpanded ? 'grid grid-cols-1 gap-4 md:hidden mb-4' : 'hidden'}
+        >
+          {/* Mobile Notice Box shown upon exploration */}
+          <div className="p-4 bg-[#FFFDF8] border border-[#C8AB88] flex items-start gap-3 rounded-xl shadow-xs">
+            <Info className="w-4 h-4 text-[#A67C57] shrink-0 mt-0.5" />
+            <div className="text-xs text-[#3C2A20] leading-relaxed">
+              <span className="font-bold text-[#6B4832] block mb-0.5">
+                {tDict.schedule.noticeHeader}
+              </span>
+              {tDict.schedule.noticeBody}
+            </div>
+          </div>
+
           {AARTI_SCHEDULE.map((item) => (
             <div
               key={item.id}

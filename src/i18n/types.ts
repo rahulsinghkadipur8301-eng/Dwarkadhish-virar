@@ -188,6 +188,9 @@ export interface TranslationDictionary {
     categoryAfternoon: string;
     categoryEvening: string;
     categoryNight: string;
+    mobileExploreBtn: string;
+    mobileCollapseBtn: string;
+    mobileSummaryHighlight: string;
   };
   location: {
     kicker: string;
@@ -211,6 +214,8 @@ export interface TranslationDictionary {
     crucialDistinctionTitle: string;
     crucialDistinctionBody: string;
     iframeAriaLabel: string;
+    mobileExploreBtn: string;
+    mobileCollapseBtn: string;
   };
   architecture: {
     kicker: string;
@@ -265,6 +270,9 @@ export interface TranslationDictionary {
     modalEmailPlaceholder: string;
     modalBtnConfirm: string;
     modalConfirmationSuccess: string;
+    mobileExploreBtn: string;
+    mobileCollapseBtn: string;
+    mobileSummaryHighlight: string;
   };
   seva: {
     kicker: string;
@@ -290,6 +298,9 @@ export interface TranslationDictionary {
     categoryGeneral: string;
     freqOneTime: string;
     freqMonthly: string;
+    mobileExploreBtn: string;
+    mobileCollapseBtn: string;
+    mobileSummaryHighlight: string;
   };
   community: {
     kicker: string;
