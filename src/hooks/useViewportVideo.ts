@@ -122,6 +122,10 @@ export function useViewportVideo({
     let cancelled = false;
     const tryPlay = async () => {
       if (cancelled || (typeof document !== 'undefined' && document.hidden)) return;
+      if (!vid.paused && vid.muted === muted) {
+        syncVideoAutoplayAttributes(vid, { muted, loop: true });
+        return;
+      }
       const result = await attemptSafeVideoPlay(vid, { muted, loop: true });
       if (!cancelled && result.fellBackToMuted && !muted) {
         onFallbackMuted?.();
@@ -141,6 +145,7 @@ export function useViewportVideo({
       }
     };
 
+    vid.addEventListener('loadedmetadata', tryPlay);
     vid.addEventListener('loadeddata', tryPlay);
     vid.addEventListener('canplay', tryPlay);
     document.addEventListener('visibilitychange', onVisibilityChange);
@@ -148,6 +153,7 @@ export function useViewportVideo({
 
     return () => {
       cancelled = true;
+      vid.removeEventListener('loadedmetadata', tryPlay);
       vid.removeEventListener('loadeddata', tryPlay);
       vid.removeEventListener('canplay', tryPlay);
       document.removeEventListener('visibilitychange', onVisibilityChange);

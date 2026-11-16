@@ -129,6 +129,19 @@ export function shouldActivateEpisodeStream(
 }
 
 /**
+ * Determines whether a background gallery card video should yield its hardware decoder
+ * while its lightbox popup player is open. Pausing only the active card prevents
+ * duplicate decoding of the same MP4 stream on mobile (keeping decoders <= 4) while
+ * leaving surrounding gallery frames playing smoothly.
+ */
+export function shouldPauseGalleryCardForPopup(
+  cardIndex: number,
+  activePopupIndex: number | null
+): boolean {
+  return activePopupIndex !== null && cardIndex === activePopupIndex;
+}
+
+/**
  * Calculates a throttled timeline update (quantized to quarter-seconds)
  * so parent/scrubber state doesn't re-render excessively during playback.
  */

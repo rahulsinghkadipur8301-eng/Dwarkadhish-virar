@@ -4,6 +4,7 @@ import {
   syncVideoAutoplayAttributes,
   attemptSafeVideoPlay,
   shouldActivateEpisodeStream,
+  shouldPauseGalleryCardForPopup,
   quantizeVideoTime,
   resolveViewportPlaybackAction,
   isTouchTapGesture,
@@ -115,6 +116,13 @@ test('shouldActivateEpisodeStream: limits initial eager streams to concurrent ca
   assert.equal(shouldActivateEpisodeStream(4, false, 4), false);
   assert.equal(shouldActivateEpisodeStream(13, false, 4), false);
   assert.equal(shouldActivateEpisodeStream(13, true, 4), true);
+});
+
+test('shouldPauseGalleryCardForPopup: pauses only the inspected card to avoid duplicate mobile decoding', () => {
+  assert.equal(shouldPauseGalleryCardForPopup(0, null), false);
+  assert.equal(shouldPauseGalleryCardForPopup(0, 0), true);
+  assert.equal(shouldPauseGalleryCardForPopup(1, 0), false);
+  assert.equal(shouldPauseGalleryCardForPopup(3, 2), false);
 });
 
 test('quantizeVideoTime: clamps negatives and rounds cleanly to 0.25s steps', () => {

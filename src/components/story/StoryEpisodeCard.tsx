@@ -5,10 +5,8 @@ import { StoryEpisode, formatEpisodeDuration } from '../../data/storyEpisodes';
 import { useViewportVideo } from '../../hooks/useViewportVideo';
 import { useTouchTap } from '../../hooks/useTouchTap';
 import { useVideoMediaReady } from '../../hooks/useVideoMediaReady';
-import {
-  attemptSafeVideoPlay,
-  shouldActivateEpisodeStream,
-} from '../../utils/videoAutoplayUtils';
+import { attemptSafeVideoPlay } from '../../utils/videoAutoplayUtils';
+import { shouldLoadVideoSource } from '../../utils/hlsStreamingUtils';
 import { shouldShowVideoSkeleton } from '../../utils/videoSkeletonUtils';
 import { VideoCardSkeletonOverlay } from '../VideoGridSkeleton';
 
@@ -45,7 +43,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
 
     const effectiveMuted = !isUnmuted || isPlayerOpen;
 
-    const [hasActivated, setHasActivated] = React.useState(index < 4);
+    const [hasActivated, setHasActivated] = React.useState(false);
 
     const handleCardOutOfView = useCallback(() => {
       if (isUnmuted) {
@@ -60,7 +58,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
       muted: effectiveMuted,
       enabled: !isPlayerOpen,
       rootMargin: '100px 0px',
-      initialInView: index < 4,
+      initialInView: false,
       watchKey: hasActivated ? `active-${episode.id}` : `idle-${episode.id}`,
       onOutOfView: handleCardOutOfView,
     });
@@ -71,7 +69,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
       }
     }, [isInView, hasActivated]);
 
-    const streamActive = shouldActivateEpisodeStream(index, hasActivated || isInView, 4);
+    const streamActive = shouldLoadVideoSource(hasActivated || isInView);
 
     const { loadState, onLoadedData, onCanPlay, onPlaying, onError } = useVideoMediaReady({
       videoRef,
@@ -130,6 +128,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
         {/* Exact 9:16 Uncropped Autoplaying Looping Video Frame */}
         <div
           data-media-state={loadState}
+          data-source-loaded={String(streamActive)}
           className="relative w-full aspect-[9/16] rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]"
         >
           <VideoCardSkeletonOverlay visible={showSkeleton} index={index} variant="episode" />
@@ -141,7 +140,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
             loop
             muted={effectiveMuted}
             playsInline
-            preload={isInView ? 'auto' : streamActive ? 'metadata' : 'none'}
+            preload="metadata"
             aria-label={title}
             onLoadedData={onLoadedData}
             onCanPlay={onCanPlay}

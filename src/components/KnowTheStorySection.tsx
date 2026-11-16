@@ -16,6 +16,7 @@ import { useViewportVideo } from '../hooks/useViewportVideo';
 import { useTouchTap } from '../hooks/useTouchTap';
 import { useVideoMediaReady } from '../hooks/useVideoMediaReady';
 import { attemptSafeVideoPlay } from '../utils/videoAutoplayUtils';
+import { shouldLoadVideoSource } from '../utils/hlsStreamingUtils';
 import { shouldShowVideoSkeleton } from '../utils/videoSkeletonUtils';
 import { VideoCardSkeletonOverlay } from './VideoGridSkeleton';
 import { StoryEpisodeCard } from './story/StoryEpisodeCard';
@@ -35,6 +36,7 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
     const [leadMuted, setLeadMuted] = useState(true);
     const [unmutedCardId, setUnmutedCardId] = useState<number | null>(null);
     const [playerMuted, setPlayerMuted] = useState(true);
+    const [leadEnteredViewport, setLeadEnteredViewport] = useState(false);
 
     const leadCardRef = useRef<HTMLDivElement | null>(null);
     const leadVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -58,8 +60,17 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
       enabled: !isAnyPanelOpen,
       rootMargin: '150px 0px',
       initialInView: false,
+      watchKey: leadEnteredViewport ? 'lead-active' : 'lead-idle',
       onOutOfView: handleLeadOutOfView,
     });
+
+    useEffect(() => {
+      if (isLeadInView && !leadEnteredViewport) {
+        setLeadEnteredViewport(true);
+      }
+    }, [isLeadInView, leadEnteredViewport]);
+
+    const shouldLoadLeadSource = shouldLoadVideoSource(leadEnteredViewport);
 
     const {
       loadState: leadLoadState,
@@ -69,9 +80,9 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
       onError: onLeadError,
     } = useVideoMediaReady({
       videoRef: leadVideoRef,
-      watchKey: 'story-lead',
+      watchKey: shouldLoadLeadSource ? 'story-lead-active' : 'story-lead-idle',
     });
-    const showLeadSkeleton = shouldShowVideoSkeleton(leadLoadState, true);
+    const showLeadSkeleton = shouldShowVideoSkeleton(leadLoadState, shouldLoadLeadSource);
 
     // Bring newly opened inline panel cleanly below the sticky navbar without locking page scroll
     const scrollPanelIntoView = useCallback(() => {
@@ -348,6 +359,7 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                 >
                   <div
                     data-media-state={leadLoadState}
+                    data-source-loaded={String(shouldLoadLeadSource)}
                     className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]"
                   >
                     <VideoCardSkeletonOverlay
@@ -358,13 +370,13 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                     />
                     <video
                       ref={leadVideoRef}
-                      src={featuredLead.src}
+                      src={shouldLoadLeadSource ? featuredLead.src : undefined}
                       poster={featuredLead.poster}
                       autoPlay
                       loop
                       muted={leadEffectiveMuted}
                       playsInline
-                      preload={isLeadInView ? 'auto' : 'metadata'}
+                      preload="metadata"
                       aria-label={featuredLead.title[language]}
                       onLoadedData={onLeadLoadedData}
                       onCanPlay={onLeadCanPlay}

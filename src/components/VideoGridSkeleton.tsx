@@ -25,18 +25,18 @@ export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> =
     reducedMotion = false,
     showActionPill = false,
   }) => {
+    if (!visible) return null;
+
     const staggerMs = getSkeletonStaggerDelayMs(index);
 
     return (
       <div
         aria-hidden="true"
-        data-testid={visible ? 'video-card-skeleton' : 'video-card-skeleton-hidden'}
-        className={`absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-2 sm:p-2.5 bg-gradient-to-br from-[#2B1810] via-[#1D120C] to-[#2F1B12] transition-opacity duration-300 ${
-          visible ? 'opacity-100' : 'opacity-0'
-        }`}
+        data-testid="video-card-skeleton"
+        className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-2 sm:p-2.5 bg-gradient-to-br from-[#2B1810] via-[#1D120C] to-[#2F1B12]"
       >
         {/* Warm antique-gold diagonal shimmer pass while initializing */}
-        {visible && !reducedMotion && (
+        {!reducedMotion && (
           <div
             className="absolute inset-0 overflow-hidden"
             style={{ animationDelay: `${staggerMs}ms` }}

@@ -200,7 +200,7 @@ export const StoryInlinePlayer: React.FC<StoryInlinePlayerProps> = React.memo(
               loop
               playsInline
               muted={isMuted}
-              preload="auto"
+              preload="metadata"
               data-testid="story-active-video"
               aria-label={episode.title[language]}
               onClick={handleTogglePlay}
