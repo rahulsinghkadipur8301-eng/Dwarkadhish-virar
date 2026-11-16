@@ -3,10 +3,14 @@ import { ZoomIn, Volume2, VolumeX } from 'lucide-react';
 import { Language } from '../../data/templeData';
 import { StoryEpisode, formatEpisodeDuration } from '../../data/storyEpisodes';
 import { useViewportVideo } from '../../hooks/useViewportVideo';
+import { useTouchTap } from '../../hooks/useTouchTap';
+import { useVideoMediaReady } from '../../hooks/useVideoMediaReady';
 import {
   attemptSafeVideoPlay,
   shouldActivateEpisodeStream,
 } from '../../utils/videoAutoplayUtils';
+import { shouldShowVideoSkeleton } from '../../utils/videoSkeletonUtils';
+import { VideoCardSkeletonOverlay } from '../VideoGridSkeleton';
 
 export interface StoryEpisodeCardProps {
   episode: StoryEpisode;
@@ -43,6 +47,12 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
 
     const [hasActivated, setHasActivated] = React.useState(index < 4);
 
+    const handleCardOutOfView = useCallback(() => {
+      if (isUnmuted) {
+        onToggleMute(episode.id);
+      }
+    }, [episode.id, isUnmuted, onToggleMute]);
+
     const isInView = useViewportVideo({
       videoRef,
       containerRef: cardRef,
@@ -52,6 +62,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
       rootMargin: '100px 0px',
       initialInView: index < 4,
       watchKey: hasActivated ? `active-${episode.id}` : `idle-${episode.id}`,
+      onOutOfView: handleCardOutOfView,
     });
 
     React.useEffect(() => {
@@ -61,6 +72,12 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
     }, [isInView, hasActivated]);
 
     const streamActive = shouldActivateEpisodeStream(index, hasActivated || isInView, 4);
+
+    const { loadState, onLoadedData, onCanPlay, onPlaying, onError } = useVideoMediaReady({
+      videoRef,
+      watchKey: streamActive ? episode.id : `idle-${episode.id}`,
+    });
+    const showSkeleton = shouldShowVideoSkeleton(loadState, streamActive);
 
     const handleCardKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -73,7 +90,7 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
     );
 
     const handleMuteClick = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
+      (e: React.SyntheticEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         const vid = videoRef.current;
         const willBeMuted = isUnmuted;
@@ -85,6 +102,16 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
       [episode.id, isUnmuted, onToggleMute]
     );
 
+    const cardTouchHandlers = useTouchTap<HTMLDivElement>(
+      () => onSelect(episode.id),
+      { stopPropagation: false }
+    );
+
+    const muteTouchHandlers = useTouchTap<HTMLButtonElement>(
+      (e) => handleMuteClick(e),
+      { stopPropagation: true }
+    );
+
     const title = episode.title[language];
     const summary = episode.summary[language];
 
@@ -94,12 +121,18 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
         role="button"
         tabIndex={0}
         data-testid={`story-episode-card-${episode.id}`}
-        onClick={() => onSelect(episode.id)}
+        onTouchStart={cardTouchHandlers.onTouchStart}
+        onTouchEnd={cardTouchHandlers.onTouchEnd}
+        onClick={cardTouchHandlers.onClick}
         onKeyDown={handleCardKeyDown}
-        className="group text-left rounded-xl sm:rounded-2xl p-1.5 sm:p-2 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_8px_22px_rgba(63,41,29,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#741C24]"
+        className="group text-left rounded-xl sm:rounded-2xl p-1.5 sm:p-2 bg-[#FFFDF8] border-2 border-[#C29A54]/75 hover:border-[#741C24] shadow-[0_8px_22px_rgba(63,41,29,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#741C24] touch-manipulation"
       >
         {/* Exact 9:16 Uncropped Autoplaying Looping Video Frame */}
-        <div className="relative w-full aspect-[9/16] rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]">
+        <div
+          data-media-state={loadState}
+          className="relative w-full aspect-[9/16] rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]"
+        >
+          <VideoCardSkeletonOverlay visible={showSkeleton} index={index} variant="episode" />
           <video
             ref={videoRef}
             src={streamActive ? episode.src : undefined}
@@ -110,6 +143,10 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
             playsInline
             preload={isInView ? 'auto' : streamActive ? 'metadata' : 'none'}
             aria-label={title}
+            onLoadedData={onLoadedData}
+            onCanPlay={onCanPlay}
+            onPlaying={onPlaying}
+            onError={onError}
             className="w-full h-full object-contain object-center block"
           />
 
@@ -139,7 +176,9 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
           <button
             type="button"
             data-testid={`story-card-mute-btn-${episode.id}`}
-            onClick={handleMuteClick}
+            onTouchStart={muteTouchHandlers.onTouchStart}
+            onTouchEnd={muteTouchHandlers.onTouchEnd}
+            onClick={muteTouchHandlers.onClick}
             aria-pressed={isUnmuted}
             aria-label={isUnmuted ? `${muteLabel} ${title}` : `${unmuteLabel} ${title}`}
             className={`absolute bottom-1.5 right-1.5 sm:bottom-2 sm:right-2 z-20 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full border text-[10px] sm:text-[11px] font-cinzel font-semibold tracking-wider flex items-center gap-1 sm:gap-1.5 shadow-md transition-all cursor-pointer touch-manipulation active:scale-95 ${

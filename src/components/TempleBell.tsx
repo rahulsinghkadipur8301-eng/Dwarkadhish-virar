@@ -180,6 +180,9 @@ export const TempleBell: React.FC<TempleBellProps> = React.memo(({
                   }
                 } else {
                   stopLoop();
+                  if (audioContextRef.current && audioContextRef.current.state === 'running') {
+                    audioContextRef.current.suspend().catch(() => {});
+                  }
                 }
               }
             },
@@ -194,6 +197,9 @@ export const TempleBell: React.FC<TempleBellProps> = React.memo(({
     const onVisibilityChange = () => {
       if (document.hidden) {
         stopLoop();
+        if (audioContextRef.current && audioContextRef.current.state === 'running') {
+          audioContextRef.current.suspend().catch(() => {});
+        }
       } else if (Math.abs(angleRef.current) > 0.02 || Math.abs(velocityRef.current) > 0.04) {
         startLoop();
       }

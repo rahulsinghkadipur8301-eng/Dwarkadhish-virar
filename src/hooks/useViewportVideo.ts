@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState, RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, RefObject } from 'react';
 import {
   attemptSafeVideoPlay,
   resolveViewportPlaybackAction,
@@ -18,6 +18,7 @@ export interface UseViewportVideoOptions {
   initialInView?: boolean;
   watchKey?: string | number;
   onFallbackMuted?: () => void;
+  onOutOfView?: () => void;
 }
 
 /**
@@ -25,6 +26,7 @@ export interface UseViewportVideoOptions {
  * - Mirrors `muted`, `defaultMuted`, `autoplay`, `loop`, `playsinline`, and `webkit-playsinline`
  *   synchronously to DOM attributes via `useLayoutEffect`
  * - Uses `IntersectionObserver` to play when inside viewport and pause when scrolled off-screen
+ * - Invokes `onOutOfView` when scrolled out of view so callers can silence unmuted background audio
  * - Retries on `loadeddata`, `canplay`, `visibilitychange`, and first touch/pointer gesture
  */
 export function useViewportVideo({
@@ -39,8 +41,15 @@ export function useViewportVideo({
   initialInView = false,
   watchKey,
   onFallbackMuted,
+  onOutOfView,
 }: UseViewportVideoOptions): boolean {
   const [isInView, setIsInView] = useState(initialInView);
+  const onOutOfViewRef = useRef(onOutOfView);
+  const prevInViewRef = useRef(initialInView);
+  const mutedRef = useRef(muted);
+
+  onOutOfViewRef.current = onOutOfView;
+  mutedRef.current = muted;
 
   // Apply autoplay DOM attributes synchronously before paint whenever mounted/updated
   useLayoutEffect(() => {
@@ -51,19 +60,27 @@ export function useViewportVideo({
   useEffect(() => {
     if (!enabled) {
       setIsInView(false);
+      prevInViewRef.current = false;
       return;
     }
 
     const target = containerRef?.current ?? videoRef.current;
     if (!target || typeof IntersectionObserver === 'undefined') {
       setIsInView(true);
+      prevInViewRef.current = true;
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          setIsInView(entry.isIntersecting);
+          const nextInView = entry.isIntersecting;
+          if (!nextInView && (prevInViewRef.current || !mutedRef.current)) {
+            videoRef.current?.pause();
+            onOutOfViewRef.current?.();
+          }
+          prevInViewRef.current = nextInView;
+          setIsInView(nextInView);
         }
       },
       {
@@ -92,10 +109,14 @@ export function useViewportVideo({
     });
 
     if (action === 'pause') {
-      if (!vid.paused) {
+      vid.pause();
+      const preventResumeWhileOffscreen = () => {
         vid.pause();
-      }
-      return;
+      };
+      vid.addEventListener('play', preventResumeWhileOffscreen);
+      return () => {
+        vid.removeEventListener('play', preventResumeWhileOffscreen);
+      };
     }
 
     let cancelled = false;
@@ -111,7 +132,10 @@ export function useViewportVideo({
 
     const onVisibilityChange = () => {
       if (document.hidden) {
-        if (!vid.paused) vid.pause();
+        vid.pause();
+        if (!mutedRef.current) {
+          onOutOfViewRef.current?.();
+        }
       } else {
         tryPlay();
       }

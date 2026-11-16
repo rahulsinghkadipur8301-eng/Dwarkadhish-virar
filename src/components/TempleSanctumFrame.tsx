@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, MotionValue } from 'motion/react';
 import { Sparkles, Eye, EyeOff, Hand } from 'lucide-react';
 import { TempleBell } from './TempleBell';
@@ -63,6 +63,15 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
   reducedMotion = false,
 }) => {
   const { tDict } = useI18n();
+  const sanctumImgRef = useRef<HTMLImageElement | null>(null);
+  const [sanctumImageReady, setSanctumImageReady] = useState(false);
+
+  useEffect(() => {
+    const img = sanctumImgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setSanctumImageReady(true);
+    }
+  }, []);
 
   // Effective ceremony progress: if manualOpen is forced, use 0.50 (peak darshan)
   const effectiveCeremonyProgress = manualOpen ? 0.50 : ceremonyProgress;
@@ -266,15 +275,31 @@ export const TempleSanctumFrame: React.FC<TempleSanctumFrameProps> = React.memo(
                   height: 'min(100cqh, calc(100cqw / 0.75))',
                 }}
               >
+                {!sanctumImageReady && (
+                  <div
+                    aria-hidden="true"
+                    data-testid="sanctum-image-skeleton"
+                    className="absolute inset-0 z-10 bg-gradient-to-b from-[#2A170F] via-[#1D100A] to-[#120905] flex items-center justify-center pointer-events-none"
+                  >
+                    <div className="w-16 h-16 rounded-full border border-[#C29A54]/30 bg-[#351F14]/70 flex items-center justify-center animate-pulse">
+                      <span className="font-devanagari text-xl text-[#E8C784]/60">ॐ</span>
+                    </div>
+                  </div>
+                )}
                 <picture className="w-full h-full block">
                   <source
                     type="image/webp"
                     srcSet="/assets/aistudio/dwarkadhish_hero_enhanced_800.webp"
                   />
                   <img
+                    ref={sanctumImgRef}
                     src="/assets/aistudio/dwarkadhish_hero_enhanced_1600.webp"
                     alt="Shri Dwarkadhish Bhagwan seated in regal simhasana with golden crown, pitambar, and flower garlands at Shirgaon Mandir, Virar East"
-                    className="w-full h-full object-cover object-bottom block mx-auto drop-shadow-[0_16px_28px_rgba(0,0,0,0.95)]"
+                    onLoad={() => setSanctumImageReady(true)}
+                    onError={() => setSanctumImageReady(true)}
+                    className={`w-full h-full object-cover object-bottom block mx-auto drop-shadow-[0_16px_28px_rgba(0,0,0,0.95)] transition-opacity duration-300 ${
+                      sanctumImageReady ? 'opacity-100' : 'opacity-0'
+                    }`}
                     loading="eager"
                     decoding="sync"
                     referrerPolicy="no-referrer"

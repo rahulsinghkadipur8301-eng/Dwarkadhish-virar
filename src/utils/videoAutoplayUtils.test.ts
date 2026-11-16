@@ -6,6 +6,7 @@ import {
   shouldActivateEpisodeStream,
   quantizeVideoTime,
   resolveViewportPlaybackAction,
+  isTouchTapGesture,
 } from './videoAutoplayUtils.ts';
 
 function createMockVideo(overrides: Partial<HTMLVideoElement> = {}) {
@@ -121,4 +122,11 @@ test('quantizeVideoTime: clamps negatives and rounds cleanly to 0.25s steps', ()
   assert.equal(quantizeVideoTime(Number.NaN), 0);
   assert.equal(quantizeVideoTime(12.34), 12.25);
   assert.equal(quantizeVideoTime(12.41), 12.5);
+});
+
+test('isTouchTapGesture: distinguishes genuine stationary mobile taps from scroll swipes or long holds', () => {
+  assert.equal(isTouchTapGesture(100, 200, 104, 203, 140), true);
+  assert.equal(isTouchTapGesture(100, 200, 100, 235, 180), false); // vertical scroll swipe
+  assert.equal(isTouchTapGesture(100, 200, 125, 200, 120), false); // horizontal swipe
+  assert.equal(isTouchTapGesture(100, 200, 100, 200, 750), false); // long press / hold
 });

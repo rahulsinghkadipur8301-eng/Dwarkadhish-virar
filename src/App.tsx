@@ -9,6 +9,12 @@ import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { SacredAmbientBackground } from './components/SacredAmbientBackground';
 import { GoldenCursorTrail } from './components/GoldenCursorTrail';
+import { KnowTheStorySection } from './components/KnowTheStorySection';
+import { SectionErrorBoundary } from './components/ErrorBoundary';
+import {
+  DevotionalPresenceSkeleton,
+  GalleryVideoGridSkeleton,
+} from './components/VideoGridSkeleton';
 
 /**
  * Retries transient dynamic import failures (e.g., mobile network drops or edge cache rollover
@@ -44,11 +50,6 @@ const DevotionalPresenceSection = lazyWithRetry(() =>
 const VisionarySection = lazyWithRetry(() =>
   import('./components/VisionarySection').then((m) => ({
     default: m.VisionarySection,
-  }))
-);
-const KnowTheStorySection = lazyWithRetry(() =>
-  import('./components/KnowTheStorySection').then((m) => ({
-    default: m.KnowTheStorySection,
   }))
 );
 const TempleGallerySection = lazyWithRetry(() =>
@@ -130,7 +131,6 @@ export default function App() {
     const preloadNearbySections = () => {
       import('./components/DevotionalPresenceSection').catch(() => {});
       import('./components/VisionarySection').catch(() => {});
-      import('./components/KnowTheStorySection').catch(() => {});
       import('./components/DarshanSection').catch(() => {});
       import('./components/TempleLocationSection').catch(() => {});
     };
@@ -274,58 +274,74 @@ export default function App() {
         />
 
         {/* 2. In the Presence of Shri Dwarkadhish */}
-        <Suspense fallback={<SectionPlaceholder id="presence" />}>
-          <DevotionalPresenceSection reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="presence">
+          <Suspense fallback={<DevotionalPresenceSkeleton />}>
+            <DevotionalPresenceSection reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 3. The Vision Behind Shree Dwarkadhish Dham */}
-        <Suspense fallback={<SectionPlaceholder id="vision" />}>
-          <VisionarySection language={language} reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="vision">
+          <Suspense fallback={<SectionPlaceholder id="vision" />}>
+            <VisionarySection language={language} reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 4. A 14-Part Documentary Journey — Know the Story */}
-        <Suspense fallback={<SectionPlaceholder id="know-the-story" />}>
-          <KnowTheStorySection reducedMotion={reducedMotion} />
-        </Suspense>
+        <KnowTheStorySection reducedMotion={reducedMotion} />
 
         {/* 5. Darshan & Aarti Schedule */}
-        <Suspense fallback={<SectionPlaceholder id="darshan" />}>
-          <DarshanSection language={language} reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="darshan">
+          <Suspense fallback={<SectionPlaceholder id="darshan" />}>
+            <DarshanSection language={language} reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 6. Way to Mandir — Google Maps & Practical Location */}
-        <Suspense fallback={<SectionPlaceholder id="location" />}>
-          <TempleLocationSection language={language} reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="location">
+          <Suspense fallback={<SectionPlaceholder id="location" />}>
+            <TempleLocationSection language={language} reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 7. Festivals & Annual Celebrations */}
-        <Suspense fallback={<SectionPlaceholder id="festivals" />}>
-          <FestivalsSection language={language} reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="festivals">
+          <Suspense fallback={<SectionPlaceholder id="festivals" />}>
+            <FestivalsSection language={language} reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 8. Devotional Seva Offerings */}
-        <Suspense fallback={<SectionPlaceholder id="seva" />}>
-          <SevaSection
-            language={language}
-            reducedMotion={reducedMotion}
-            onRedirectToPortal={() => handleTabChange('donation')}
-          />
-        </Suspense>
+        <SectionErrorBoundary id="seva">
+          <Suspense fallback={<SectionPlaceholder id="seva" />}>
+            <SevaSection
+              language={language}
+              reducedMotion={reducedMotion}
+              onRedirectToPortal={() => handleTabChange('donation')}
+            />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 9. Official Contribution Portal */}
-        <Suspense fallback={<SectionPlaceholder id="donation" />}>
-          <TempleDonationSection language={language} reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="donation">
+          <Suspense fallback={<SectionPlaceholder id="donation" />}>
+            <TempleDonationSection language={language} reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 10. Sacred Ritual Videos / Gallery */}
-        <Suspense fallback={<SectionPlaceholder id="gallery" />}>
-          <TempleGallerySection language={language} reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="gallery">
+          <Suspense fallback={<GalleryVideoGridSkeleton />}>
+            <TempleGallerySection language={language} reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
 
         {/* 11. Official Temple Social Connect */}
-        <Suspense fallback={<SectionPlaceholder id="social" />}>
-          <TempleSocialConnectSection reducedMotion={reducedMotion} />
-        </Suspense>
+        <SectionErrorBoundary id="social">
+          <Suspense fallback={<SectionPlaceholder id="social" />}>
+            <TempleSocialConnectSection reducedMotion={reducedMotion} />
+          </Suspense>
+        </SectionErrorBoundary>
       </main>
 
       {/* Interactive Pilgrimage Planner Modal (loaded on demand when opened) */}

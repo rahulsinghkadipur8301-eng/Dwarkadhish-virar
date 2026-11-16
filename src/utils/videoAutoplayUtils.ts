@@ -138,6 +138,27 @@ export function quantizeVideoTime(seconds: number): number {
 }
 
 /**
+ * Determines whether a touch-start / touch-end pair represents a deliberate
+ * stationary tap rather than a scroll or swipe gesture on mobile screens.
+ */
+export function isTouchTapGesture(
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number,
+  durationMs: number,
+  maxMovePx = 12,
+  maxDurationMs = 500
+): boolean {
+  if (!Number.isFinite(durationMs) || durationMs < 0 || durationMs > maxDurationMs) {
+    return false;
+  }
+  const dx = Math.abs(endX - startX);
+  const dy = Math.abs(endY - startY);
+  return dx <= maxMovePx && dy <= maxMovePx;
+}
+
+/**
  * Tracks a single shared mobile/desktop interaction unlock signal so any paused
  * visible autoplay video automatically starts once the user taps or touches the page.
  */

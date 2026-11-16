@@ -13,7 +13,11 @@ import {
 import { PeacockFeather, LotusOrnament } from './KrishnaMotifs';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { useViewportVideo } from '../hooks/useViewportVideo';
+import { useTouchTap } from '../hooks/useTouchTap';
+import { useVideoMediaReady } from '../hooks/useVideoMediaReady';
 import { attemptSafeVideoPlay } from '../utils/videoAutoplayUtils';
+import { shouldShowVideoSkeleton } from '../utils/videoSkeletonUtils';
+import { VideoCardSkeletonOverlay } from './VideoGridSkeleton';
 import { StoryEpisodeCard } from './story/StoryEpisodeCard';
 import { StoryInlinePlayer } from './story/StoryInlinePlayer';
 
@@ -43,7 +47,10 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
     const isAnyPanelOpen = collectionOpen || activeEpisodeId !== null;
     const leadEffectiveMuted = leadMuted || isAnyPanelOpen;
 
-    // Viewport-gated mobile + desktop autoplay for featured lead vertical video
+    const handleLeadOutOfView = useCallback(() => {
+      setLeadMuted(true);
+    }, []);
+
     const isLeadInView = useViewportVideo({
       videoRef: leadVideoRef,
       containerRef: leadCardRef,
@@ -51,7 +58,20 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
       enabled: !isAnyPanelOpen,
       rootMargin: '150px 0px',
       initialInView: false,
+      onOutOfView: handleLeadOutOfView,
     });
+
+    const {
+      loadState: leadLoadState,
+      onLoadedData: onLeadLoadedData,
+      onCanPlay: onLeadCanPlay,
+      onPlaying: onLeadPlaying,
+      onError: onLeadError,
+    } = useVideoMediaReady({
+      videoRef: leadVideoRef,
+      watchKey: 'story-lead',
+    });
+    const showLeadSkeleton = shouldShowVideoSkeleton(leadLoadState, true);
 
     // Bring newly opened inline panel cleanly below the sticky navbar without locking page scroll
     const scrollPanelIntoView = useCallback(() => {
@@ -107,7 +127,7 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
     }, []);
 
     const handleToggleLeadMute = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
+      (e: React.SyntheticEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         const nextMuted = !leadMuted;
         if (leadVideoRef.current) {
@@ -116,6 +136,16 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
         setLeadMuted(nextMuted);
       },
       [leadMuted]
+    );
+
+    const leadCardTouchHandlers = useTouchTap<HTMLDivElement>(
+      () => handleSelectEpisode(featuredLead.id),
+      { stopPropagation: false }
+    );
+
+    const leadMuteTouchHandlers = useTouchTap<HTMLButtonElement>(
+      (e) => handleToggleLeadMute(e),
+      { stopPropagation: true }
     );
 
     const handlePrevEpisode = useCallback(() => {
@@ -304,7 +334,9 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                   role="button"
                   tabIndex={0}
                   data-testid="know-the-story-lead-poster"
-                  onClick={() => handleSelectEpisode(featuredLead.id)}
+                  onTouchStart={leadCardTouchHandlers.onTouchStart}
+                  onTouchEnd={leadCardTouchHandlers.onTouchEnd}
+                  onClick={leadCardTouchHandlers.onClick}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
@@ -312,9 +344,18 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                     }
                   }}
                   aria-label={`${s.watchEpisode}: ${featuredLead.title[language]}`}
-                  className="group relative z-20 w-[62%] sm:w-[56%] rounded-2xl p-1.5 sm:p-2 bg-[#FFFDF8] border-2 border-[#C29A54] shadow-[0_22px_50px_rgba(63,41,29,0.22)] hover:border-[#741C24] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  className="group relative z-20 w-[62%] sm:w-[56%] rounded-2xl p-1.5 sm:p-2 bg-[#FFFDF8] border-2 border-[#C29A54] shadow-[0_22px_50px_rgba(63,41,29,0.22)] hover:border-[#741C24] hover:-translate-y-1 transition-all duration-300 cursor-pointer touch-manipulation"
                 >
-                  <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]">
+                  <div
+                    data-media-state={leadLoadState}
+                    className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]"
+                  >
+                    <VideoCardSkeletonOverlay
+                      visible={showLeadSkeleton}
+                      index={0}
+                      variant="lead"
+                      reducedMotion={reducedMotion}
+                    />
                     <video
                       ref={leadVideoRef}
                       src={featuredLead.src}
@@ -325,6 +366,10 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                       playsInline
                       preload={isLeadInView ? 'auto' : 'metadata'}
                       aria-label={featuredLead.title[language]}
+                      onLoadedData={onLeadLoadedData}
+                      onCanPlay={onLeadCanPlay}
+                      onPlaying={onLeadPlaying}
+                      onError={onLeadError}
                       className="w-full h-full object-contain object-center block"
                     />
 
@@ -353,7 +398,9 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                       <button
                         type="button"
                         data-testid="story-lead-mute-btn"
-                        onClick={handleToggleLeadMute}
+                        onTouchStart={leadMuteTouchHandlers.onTouchStart}
+                        onTouchEnd={leadMuteTouchHandlers.onTouchEnd}
+                        onClick={leadMuteTouchHandlers.onClick}
                         aria-pressed={!leadMuted}
                         aria-label={!leadMuted ? s.muteAudio : s.unmuteAudio}
                         className={`relative z-20 shrink-0 min-h-[34px] px-2.5 py-1 rounded-full border text-[10px] sm:text-[11px] font-cinzel font-semibold tracking-wider flex items-center gap-1 shadow-md transition-all cursor-pointer touch-manipulation active:scale-95 ${
