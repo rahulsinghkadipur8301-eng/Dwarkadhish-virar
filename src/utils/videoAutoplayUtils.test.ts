@@ -8,10 +8,13 @@ import {
   quantizeVideoTime,
   resolveViewportPlaybackAction,
   isTouchTapGesture,
+  releaseVideoDecoderMemory,
+  shouldReleaseVideoOnViewportExit,
 } from './videoAutoplayUtils.ts';
 
 function createMockVideo(overrides: Partial<HTMLVideoElement> = {}) {
   const attrs = new Map<string, string>();
+  const state = { loadCalls: 0, pauseCalls: 0 };
   const mock = {
     playsInline: false,
     defaultMuted: false,
@@ -23,20 +26,34 @@ function createMockVideo(overrides: Partial<HTMLVideoElement> = {}) {
     currentSrc: 'episode-1.mp4',
     setAttribute(k: string, v: string) {
       attrs.set(k, v);
+      if (k === 'src') mock.src = v;
     },
     getAttribute(k: string) {
       return attrs.get(k) ?? null;
     },
     removeAttribute(k: string) {
       attrs.delete(k);
+      if (k === 'src') mock.src = '';
+    },
+    pause() {
+      state.pauseCalls += 1;
+      mock.paused = true;
+    },
+    load() {
+      state.loadCalls += 1;
+      mock.currentSrc = '';
     },
     async play() {
       mock.paused = false;
     },
     _attrs: attrs,
+    _state: state,
   };
   Object.defineProperties(mock, Object.getOwnPropertyDescriptors(overrides));
-  return mock as unknown as HTMLVideoElement & { _attrs: Map<string, string> };
+  return mock as unknown as HTMLVideoElement & {
+    _attrs: Map<string, string>;
+    _state: { loadCalls: number; pauseCalls: number };
+  };
 }
 
 test('syncVideoAutoplayAttributes: guarantees playsInline, webkit-playsinline, autoplay, defaultMuted, loop & muted attributes', () => {
@@ -137,4 +154,24 @@ test('isTouchTapGesture: distinguishes genuine stationary mobile taps from scrol
   assert.equal(isTouchTapGesture(100, 200, 100, 235, 180), false); // vertical scroll swipe
   assert.equal(isTouchTapGesture(100, 200, 125, 200, 120), false); // horizontal swipe
   assert.equal(isTouchTapGesture(100, 200, 100, 200, 750), false); // long press / hold
+});
+
+test('releaseVideoDecoderMemory & shouldReleaseVideoOnViewportExit: pause playback and clear src buffer off-screen', () => {
+  assert.equal(shouldReleaseVideoOnViewportExit(true, true), false);
+  assert.equal(shouldReleaseVideoOnViewportExit(false, false), false);
+  assert.equal(shouldReleaseVideoOnViewportExit(false, true), true);
+
+  const activeVid = createMockVideo({ paused: false });
+  activeVid.setAttribute('src', 'blob:https://example.com/123');
+  assert.equal(releaseVideoDecoderMemory(activeVid), true);
+  assert.equal(activeVid.paused, true);
+  assert.equal(activeVid._state.pauseCalls, 1);
+  assert.equal(activeVid.getAttribute('src'), null);
+  assert.equal(activeVid.src, '');
+  assert.equal(activeVid.currentSrc, '');
+  assert.equal(activeVid._state.loadCalls, 1);
+
+  // Calling again when already released is a safe no-op
+  assert.equal(releaseVideoDecoderMemory(activeVid), false);
+  assert.equal(releaseVideoDecoderMemory(null), false);
 });

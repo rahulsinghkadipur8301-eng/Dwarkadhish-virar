@@ -3,6 +3,7 @@ import {
   DEVOTIONAL_VIDEO_GRID_LAYOUT,
   getSkeletonStaggerDelayMs,
 } from '../utils/videoSkeletonUtils';
+import type { HlsLoadPhase } from '../utils/hlsStreamingUtils';
 
 export interface VideoCardSkeletonOverlayProps {
   visible: boolean;
@@ -11,12 +12,25 @@ export interface VideoCardSkeletonOverlayProps {
   reducedMotion?: boolean;
   showActionPill?: boolean;
   hasPoster?: boolean;
+  progressPct?: number;
+  loadPhase?: HlsLoadPhase;
+  isBuffering?: boolean;
+}
+
+function getProgressScaleClass(progressPct: number, isBuffering: boolean): string {
+  const effective = isBuffering ? Math.max(progressPct, 58) : progressPct;
+  if (effective >= 95) return '[transform:scaleX(1)]';
+  if (effective >= 80) return '[transform:scaleX(0.85)]';
+  if (effective >= 55) return '[transform:scaleX(0.65)]';
+  if (effective >= 35) return '[transform:scaleX(0.45)]';
+  if (effective >= 15) return '[transform:scaleX(0.25)]';
+  return '[transform:scaleX(0.18)]';
 }
 
 /**
- * Content-aware 9:16 skeleton shimmer overlay aligned to the exact video card anatomy.
- * When `hasPoster` is true, stays lightweight and transparent so the WebP first-frame
- * poster renders immediately on mobile with zero occlusion or GPU shimmer overhead.
+ * Content-aware 9:16 loading & skeleton overlay aligned to the exact video card anatomy.
+ * When `hasPoster` is true, keeps the blurred/WebP poster clearly visible underneath while
+ * surfacing a restrained top gold progress hairline and tiny spinner during manifest/segment fetch.
  */
 export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> = React.memo(
   ({
@@ -26,19 +40,62 @@ export const VideoCardSkeletonOverlay: React.FC<VideoCardSkeletonOverlayProps> =
     reducedMotion = false,
     showActionPill = false,
     hasPoster = false,
+    progressPct = 24,
+    loadPhase = 'manifest',
+    isBuffering = false,
   }) => {
     if (!visible) return null;
+
+    const scaleClass = getProgressScaleClass(progressPct, isBuffering);
+    const activeSpinClass = reducedMotion ? '' : 'animate-spin';
 
     if (hasPoster) {
       return (
         <div
           aria-hidden="true"
           data-testid="video-card-skeleton"
-          className="absolute inset-0 z-10 pointer-events-none flex items-start justify-start p-2 sm:p-2.5"
+          data-loading-phase={isBuffering ? 'buffering' : loadPhase}
+          className="absolute inset-0 z-10 pointer-events-none"
         >
-          <span className="px-2 py-0.5 rounded-full bg-black/55 border border-[#E8C784]/45 text-[9px] font-cinzel tracking-widest uppercase text-[#F5D77F]">
-            ॐ
-          </span>
+          {/* Compositor-only top antique-gold hairline progress bar (scaleX transform) */}
+          <div
+            data-testid="video-loading-progress"
+            className="absolute top-0 inset-x-0 h-[2.5px] bg-black/35 overflow-hidden"
+          >
+            <div
+              className={`w-full h-full origin-left bg-gradient-to-r from-[#C29A54] via-[#F5D77F] to-[#E8C784] transition-transform duration-300 ease-out ${scaleClass}`}
+            />
+          </div>
+
+          {variant === 'gallery' ? (
+            <div className="p-2 sm:p-2.5 flex items-start justify-start">
+              <span
+                data-testid="video-loading-spinner"
+                className="px-2 py-0.5 rounded-full bg-black/60 border border-[#E8C784]/50 inline-flex items-center gap-1.5 shadow-sm"
+              >
+                <span
+                  className={`w-2.5 h-2.5 rounded-full border-[1.5px] border-[#E8C784]/30 border-t-[#F5D77F] ${activeSpinClass}`}
+                />
+                <span className="text-[9px] font-cinzel tracking-widest uppercase text-[#F5D77F] leading-none">
+                  ॐ
+                </span>
+              </span>
+            </div>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span
+                data-testid="video-loading-spinner"
+                className="relative w-9 h-9 rounded-full bg-black/55 border border-[#E8C784]/50 flex items-center justify-center shadow-md"
+              >
+                <span
+                  className={`absolute inset-1 rounded-full border-[1.5px] border-[#E8C784]/25 border-t-[#F5D77F] ${activeSpinClass}`}
+                />
+                <span className="font-devanagari text-xs text-[#F5D77F] leading-none select-none">
+                  ॐ
+                </span>
+              </span>
+            </div>
+          )}
         </div>
       );
     }

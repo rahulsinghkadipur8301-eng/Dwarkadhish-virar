@@ -67,6 +67,60 @@ export function resolveViewportPlaybackAction(
   return 'play';
 }
 
+/**
+ * Pure predicate deciding when a video element should release its hardware decoder
+ * upon exiting the viewport.
+ */
+export function shouldReleaseVideoOnViewportExit(
+  isInView: boolean,
+  releaseOnExit: boolean
+): boolean {
+  return Boolean(releaseOnExit && !isInView);
+}
+
+/**
+ * Force-pauses playback and clears the `src` attribute + media load buffer so
+ * mobile browsers (iOS Safari / Chrome Android) immediately reclaim hardware video
+ * decoder pipelines (`VTDecompressionSession` / `MediaCodec`) when scrolled off-screen.
+ */
+export function releaseVideoDecoderMemory(
+  video: HTMLVideoElement | null | undefined
+): boolean {
+  if (!video) return false;
+
+  try {
+    if (!video.paused && typeof video.pause === 'function') {
+      video.pause();
+    }
+  } catch {
+    // Ignore pause errors during teardown
+  }
+
+  const hasAttrSrc =
+    typeof video.getAttribute === 'function' && video.getAttribute('src') !== null;
+  const hasPropSrc = Boolean(video.src || video.currentSrc);
+
+  if (!hasAttrSrc && !hasPropSrc) {
+    return false;
+  }
+
+  if (typeof video.removeAttribute === 'function') {
+    video.removeAttribute('src');
+  } else {
+    try {
+      (video as { src?: string }).src = '';
+    } catch {
+      // Read-only mock in unit tests
+    }
+  }
+
+  if (typeof video.load === 'function') {
+    video.load();
+  }
+
+  return true;
+}
+
 export interface SafePlayResult {
   started: boolean;
   fellBackToMuted: boolean;

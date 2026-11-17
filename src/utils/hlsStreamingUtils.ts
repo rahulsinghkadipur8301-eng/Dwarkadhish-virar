@@ -187,3 +187,71 @@ export function resolveLightboxMediaDuration(rawDuration: number): {
   }
   return { duration: 0, isKnown: false };
 }
+
+export type HlsLoadPhase =
+  | 'idle'
+  | 'manifest'
+  | 'segments'
+  | 'buffering'
+  | 'fallback'
+  | 'ready';
+
+export interface HlsLoadProgress {
+  phase: HlsLoadPhase;
+  progressPct: number;
+  isFetching: boolean;
+}
+
+export const IDLE_HLS_PROGRESS: HlsLoadProgress = {
+  phase: 'idle',
+  progressPct: 0,
+  isFetching: false,
+};
+
+/**
+ * Resolves bounded 0..100 progress state for subtle top loading bar & spinner feedback
+ * while HLS manifests and initial TS fragments fetch on mobile or throttled links.
+ */
+export function resolveHlsLoadProgress(
+  phase: HlsLoadPhase,
+  loadedSegments = 0,
+  totalSegments = 3
+): HlsLoadProgress {
+  switch (phase) {
+    case 'idle':
+      return IDLE_HLS_PROGRESS;
+    case 'manifest':
+      return { phase: 'manifest', progressPct: 24, isFetching: true };
+    case 'segments': {
+      const safeLoaded = Math.max(0, Number.isFinite(loadedSegments) ? loadedSegments : 0);
+      const safeTotal = Math.max(1, Number.isFinite(totalSegments) ? totalSegments : 3);
+      const ratio = Math.min(1, safeLoaded / safeTotal);
+      const pct = Math.min(90, Math.round(38 + ratio * 48));
+      return { phase: 'segments', progressPct: pct, isFetching: true };
+    }
+    case 'buffering':
+      return { phase: 'buffering', progressPct: 62, isFetching: true };
+    case 'fallback':
+      return { phase: 'fallback', progressPct: 48, isFetching: true };
+    case 'ready':
+      return { phase: 'ready', progressPct: 100, isFetching: false };
+  }
+}
+
+/**
+ * Determines whether the video container should show a subtle loading indicator
+ * (initial manifest/segment fetch, pre-frame load, or mid-stream mobile buffering stall).
+ */
+export function shouldShowVideoLoaderOverlay(input: {
+  shouldLoad: boolean;
+  hasDecodedFrame: boolean;
+  hasError: boolean;
+  isFetching?: boolean;
+  isBuffering?: boolean;
+}): boolean {
+  if (input.hasError) return false;
+  if (input.isBuffering) return true;
+  if (!input.hasDecodedFrame && (input.shouldLoad || input.isFetching)) return true;
+  return false;
+}
+

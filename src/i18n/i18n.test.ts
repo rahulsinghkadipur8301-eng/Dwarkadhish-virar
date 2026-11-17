@@ -122,3 +122,20 @@ test('typography: index.html and src/index.css configure multilingual fonts and 
   }
 });
 
+test('HeroSection: includes 10%-opacity bordered mobile top language toggle bar below header title', async () => {
+  const { readFileSync } = await import('node:fs');
+  const heroCode = readFileSync('src/components/HeroSection.tsx', 'utf8');
+  assert(
+    heroCode.includes('data-testid="mobile-top-language-bar"') &&
+      heroCode.includes('bg-[#160D08]/10 border border-[#FFFCF7]/35'),
+    'HeroSection must render the mobile-top-language-bar with 10% background opacity and border framing'
+  );
+  for (const lang of ['en', 'hi', 'mr', 'gu']) {
+    assert(
+      heroCode.includes(`mobile-lang-btn-\${langCode}`),
+      `HeroSection mobile language bar must wire buttons for all locales including ${lang}`
+    );
+  }
+});
+
+

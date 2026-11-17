@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Language, TEMPLE_LOCATION_RECORD, getGoogleMapsDirectionsUrl } from '../data/templeData';
-import { Clock, Navigation, MapPin, Sparkles, Compass } from 'lucide-react';
+import { Clock, Navigation, MapPin, Sparkles, Compass, Globe } from 'lucide-react';
 import { GoldenParticles } from './GoldenParticles';
 import { HeroBellAtmosphere } from './HeroBellAtmosphere';
 import { useI18n } from '../i18n/I18nContext';
@@ -17,7 +17,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
   onOpenPlanner,
   reducedMotion = false,
 }) => {
-  const { tDict } = useI18n();
+  const { language, setLanguage, tDict } = useI18n();
   const loc = TEMPLE_LOCATION_RECORD;
   const directionsUrl = getGoogleMapsDirectionsUrl(loc);
 
@@ -238,7 +238,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
            or shikhara, and only the essential heading, 2 quick buttons, and
            single-row 20% opacity schedule strip along the bottom edge.
            ========================================================================= */
-        <div className="relative flex-1 flex flex-col justify-end min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)] overflow-hidden">
+        <div className="relative flex-1 flex flex-col justify-between min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-5rem)] overflow-hidden">
           {/* Full-Bleed Borderless Mobile Background Photograph */}
           <div className="absolute inset-0 z-0 overflow-hidden">
             <picture className="block w-full h-full">
@@ -269,6 +269,47 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
 
           {/* Fine Luminous Floating Golden Dots over Morning Sky */}
           <GoldenParticles reducedMotion={reducedMotion} className="z-10 opacity-85" />
+
+          {/* Mobile Top 10%-Opacity Bordered Language Toggle Strip (directly below header title bar) */}
+          <div
+            data-testid="mobile-top-language-bar"
+            className="sm:hidden relative z-20 px-3 pt-2"
+          >
+            <div
+              role="group"
+              aria-label="Language Selector"
+              className="max-w-md mx-auto px-2 py-1 rounded-sm bg-[#160D08]/10 border border-[#FFFCF7]/35 flex items-center gap-1.5"
+            >
+              <Globe className="w-3.5 h-3.5 text-[#F5D77F] shrink-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)]" aria-hidden="true" />
+              <div className="grid grid-cols-4 gap-1 flex-1">
+                {(['en', 'hi', 'mr', 'gu'] as const).map((langCode) => {
+                  const labels = {
+                    en: 'EN',
+                    hi: 'हिंदी',
+                    mr: 'मराठी',
+                    gu: 'ગુજરાતી',
+                  };
+                  const isActive = language === langCode;
+                  return (
+                    <button
+                      key={langCode}
+                      type="button"
+                      data-testid={`mobile-lang-btn-${langCode}`}
+                      onClick={() => setLanguage(langCode)}
+                      aria-pressed={isActive}
+                      className={`min-h-[28px] px-1.5 py-0.5 rounded-xs text-[11px] tracking-wide bg-transparent transition-colors cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5D77F] [text-shadow:0_1px_4px_rgba(0,0,0,0.95)] ${
+                        isActive
+                          ? 'text-[#F5D77F] border border-[#F5D77F]/85 font-bold'
+                          : 'text-[#FFFCF7] border border-transparent hover:border-[#FFFCF7]/35 font-semibold'
+                      }`}
+                    >
+                      {labels[langCode]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
 
           {/* Clear Upper Temple Showcase Spacer — leaves Golden Temple unobstructed */}
           <div className="flex-1 min-h-[54svh]" aria-hidden="true" />

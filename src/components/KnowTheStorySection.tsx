@@ -15,9 +15,13 @@ import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { useViewportVideo } from '../hooks/useViewportVideo';
 import { useTouchTap } from '../hooks/useTouchTap';
 import { useVideoMediaReady } from '../hooks/useVideoMediaReady';
+import { usePosterBlurThumbnail } from '../hooks/usePosterBlurThumbnail';
 import { attemptSafeVideoPlay } from '../utils/videoAutoplayUtils';
-import { shouldLoadVideoSource } from '../utils/hlsStreamingUtils';
-import { shouldShowVideoSkeleton } from '../utils/videoSkeletonUtils';
+import {
+  isDecodedVideoFrameVisible,
+  shouldLoadVideoSource,
+  shouldShowVideoLoaderOverlay,
+} from '../utils/hlsStreamingUtils';
 import { VideoCardSkeletonOverlay } from './VideoGridSkeleton';
 import { StoryEpisodeCard } from './story/StoryEpisodeCard';
 import { StoryInlinePlayer } from './story/StoryInlinePlayer';
@@ -36,7 +40,6 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
     const [leadMuted, setLeadMuted] = useState(true);
     const [unmutedCardId, setUnmutedCardId] = useState<number | null>(null);
     const [playerMuted, setPlayerMuted] = useState(true);
-    const [leadEnteredViewport, setLeadEnteredViewport] = useState(false);
 
     const leadCardRef = useRef<HTMLDivElement | null>(null);
     const leadVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -58,31 +61,45 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
       containerRef: leadCardRef,
       muted: leadEffectiveMuted,
       enabled: !isAnyPanelOpen,
+      releaseSrcOnOutOfView: true,
       rootMargin: '150px 0px',
       initialInView: false,
-      watchKey: leadEnteredViewport ? 'lead-active' : 'lead-idle',
+      watchKey: isAnyPanelOpen ? 'lead-paused' : 'lead-active',
       onOutOfView: handleLeadOutOfView,
     });
 
-    useEffect(() => {
-      if (isLeadInView && !leadEnteredViewport) {
-        setLeadEnteredViewport(true);
-      }
-    }, [isLeadInView, leadEnteredViewport]);
+    const featuredLead = STORY_EPISODES[0];
+    const secondaryLeft = STORY_EPISODES[11]; // Part 12 architectural tour
+    const secondaryRight = STORY_EPISODES[13]; // Part 14 Pran Pratishtha
 
-    const shouldLoadLeadSource = shouldLoadVideoSource(leadEnteredViewport);
+    const shouldLoadLeadSource = shouldLoadVideoSource(isLeadInView && !isAnyPanelOpen);
 
     const {
       loadState: leadLoadState,
+      isBuffering: isLeadBuffering,
       onLoadedData: onLeadLoadedData,
       onCanPlay: onLeadCanPlay,
       onPlaying: onLeadPlaying,
+      onWaiting: onLeadWaiting,
       onError: onLeadError,
     } = useVideoMediaReady({
       videoRef: leadVideoRef,
       watchKey: shouldLoadLeadSource ? 'story-lead-active' : 'story-lead-idle',
     });
-    const showLeadSkeleton = shouldShowVideoSkeleton(leadLoadState, shouldLoadLeadSource);
+
+    const leadBlurThumb = usePosterBlurThumbnail(featuredLead.poster);
+    const leftBlurThumb = usePosterBlurThumbnail(secondaryLeft.poster);
+    const rightBlurThumb = usePosterBlurThumbnail(secondaryRight.poster);
+
+    const hasLeadDecodedFrame =
+      leadLoadState === 'ready' ||
+      isDecodedVideoFrameVisible(leadVideoRef.current?.readyState ?? 0, leadLoadState === 'error');
+    const showLeadLoader = shouldShowVideoLoaderOverlay({
+      shouldLoad: shouldLoadLeadSource,
+      hasDecodedFrame: hasLeadDecodedFrame,
+      hasError: leadLoadState === 'error',
+      isBuffering: isLeadBuffering,
+    });
 
     // Bring newly opened inline panel cleanly below the sticky navbar without locking page scroll
     const scrollPanelIntoView = useCallback(() => {
@@ -188,10 +205,6 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
       return () => window.removeEventListener('keydown', onKeyDown);
     }, [isAnyPanelOpen, handleCloseAll]);
 
-    const featuredLead = STORY_EPISODES[0];
-    const secondaryLeft = STORY_EPISODES[11]; // Part 12 architectural tour
-    const secondaryRight = STORY_EPISODES[13]; // Part 14 Pran Pratishtha
-
     const partNumberLabel = useCallback(
       (id: number) => `${s.partPrefix} ${String(id).padStart(2, '0')} / 14`,
       [s.partPrefix]
@@ -288,10 +301,25 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                   className="absolute left-0 sm:left-2 top-6 sm:top-8 w-[34%] sm:w-[38%] aspect-[9/16] rounded-xl sm:rounded-2xl overflow-hidden bg-[#FFFDF8] p-1 sm:p-1.5 border-2 border-[#C29A54]/70 shadow-[0_14px_34px_rgba(63,41,29,0.16)] opacity-90 hover:opacity-100 hover:border-[#741C24] sm:-translate-x-2 hover:-translate-y-1 transition-all duration-300 cursor-pointer z-10"
                 >
                   <div className="relative w-full h-full rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]">
+                    {leftBlurThumb.blurDataUri && (
+                      <img
+                        src={leftBlurThumb.blurDataUri}
+                        alt=""
+                        aria-hidden="true"
+                        decoding="sync"
+                        className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+                      />
+                    )}
                     <img
+                      ref={leftBlurThumb.posterImgRef}
                       src={secondaryLeft.poster}
                       alt={secondaryLeft.title[language]}
-                      className="w-full h-full object-contain object-center"
+                      onLoad={leftBlurThumb.onPosterLoad}
+                      className={`relative w-full h-full object-contain object-center transition-opacity duration-200 ${
+                        leftBlurThumb.blurDataUri && !leftBlurThumb.isPosterLoaded
+                          ? 'opacity-0'
+                          : 'opacity-100'
+                      }`}
                       loading="eager"
                       decoding="async"
                     />
@@ -318,10 +346,25 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                   className="absolute right-0 sm:right-2 bottom-4 sm:bottom-6 w-[34%] sm:w-[38%] aspect-[9/16] rounded-xl sm:rounded-2xl overflow-hidden bg-[#FFFDF8] p-1 sm:p-1.5 border-2 border-[#C29A54]/70 shadow-[0_14px_34px_rgba(63,41,29,0.16)] opacity-90 hover:opacity-100 hover:border-[#741C24] sm:translate-x-2 hover:-translate-y-1 transition-all duration-300 cursor-pointer z-10"
                 >
                   <div className="relative w-full h-full rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]">
+                    {rightBlurThumb.blurDataUri && (
+                      <img
+                        src={rightBlurThumb.blurDataUri}
+                        alt=""
+                        aria-hidden="true"
+                        decoding="sync"
+                        className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+                      />
+                    )}
                     <img
+                      ref={rightBlurThumb.posterImgRef}
                       src={secondaryRight.poster}
                       alt={secondaryRight.title[language]}
-                      className="w-full h-full object-contain object-center"
+                      onLoad={rightBlurThumb.onPosterLoad}
+                      className={`relative w-full h-full object-contain object-center transition-opacity duration-200 ${
+                        rightBlurThumb.blurDataUri && !rightBlurThumb.isPosterLoaded
+                          ? 'opacity-0'
+                          : 'opacity-100'
+                      }`}
                       loading="eager"
                       decoding="async"
                     />
@@ -359,30 +402,62 @@ export const KnowTheStorySection: React.FC<KnowTheStorySectionProps> = React.mem
                 >
                   <div
                     data-media-state={leadLoadState}
+                    data-load-phase={isLeadBuffering ? 'buffering' : leadLoadState}
                     data-source-loaded={String(shouldLoadLeadSource)}
                     className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-[#1D120C]"
                   >
+                    {leadBlurThumb.blurDataUri && (
+                      <img
+                        src={leadBlurThumb.blurDataUri}
+                        alt=""
+                        aria-hidden="true"
+                        decoding="sync"
+                        className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+                      />
+                    )}
+                    {featuredLead.poster && (
+                      <img
+                        ref={leadBlurThumb.posterImgRef}
+                        src={featuredLead.poster}
+                        alt=""
+                        aria-hidden="true"
+                        decoding="async"
+                        onLoad={leadBlurThumb.onPosterLoad}
+                        className={`absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none transition-opacity duration-200 ${
+                          leadBlurThumb.blurDataUri && !leadBlurThumb.isPosterLoaded
+                            ? 'opacity-0'
+                            : 'opacity-100'
+                        }`}
+                      />
+                    )}
                     <VideoCardSkeletonOverlay
-                      visible={showLeadSkeleton}
+                      visible={showLeadLoader}
                       index={0}
                       variant="lead"
                       reducedMotion={reducedMotion}
+                      hasPoster={Boolean(featuredLead.poster || leadBlurThumb.blurDataUri)}
+                      progressPct={hasLeadDecodedFrame ? 100 : isLeadBuffering ? 62 : 42}
+                      loadPhase={isLeadBuffering ? 'buffering' : hasLeadDecodedFrame ? 'ready' : 'segments'}
+                      isBuffering={isLeadBuffering}
                     />
                     <video
                       ref={leadVideoRef}
                       src={shouldLoadLeadSource ? featuredLead.src : undefined}
-                      poster={featuredLead.poster}
+                      poster={featuredLead.poster ?? leadBlurThumb.blurDataUri}
                       autoPlay
                       loop
                       muted={leadEffectiveMuted}
                       playsInline
-                      preload="metadata"
+                      preload="none"
                       aria-label={featuredLead.title[language]}
                       onLoadedData={onLeadLoadedData}
                       onCanPlay={onLeadCanPlay}
                       onPlaying={onLeadPlaying}
+                      onWaiting={onLeadWaiting}
                       onError={onLeadError}
-                      className="w-full h-full object-contain object-center block"
+                      className={`relative z-[1] w-full h-full object-contain object-center block transition-opacity duration-200 ${
+                        hasLeadDecodedFrame ? 'opacity-100' : 'opacity-0'
+                      }`}
                     />
 
                     {/* Top Part & Duration Header */}

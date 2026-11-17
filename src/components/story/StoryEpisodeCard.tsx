@@ -5,9 +5,13 @@ import { StoryEpisode, formatEpisodeDuration } from '../../data/storyEpisodes';
 import { useViewportVideo } from '../../hooks/useViewportVideo';
 import { useTouchTap } from '../../hooks/useTouchTap';
 import { useVideoMediaReady } from '../../hooks/useVideoMediaReady';
+import { usePosterBlurThumbnail } from '../../hooks/usePosterBlurThumbnail';
 import { attemptSafeVideoPlay } from '../../utils/videoAutoplayUtils';
-import { shouldLoadVideoSource } from '../../utils/hlsStreamingUtils';
-import { shouldShowVideoSkeleton } from '../../utils/videoSkeletonUtils';
+import {
+  isDecodedVideoFrameVisible,
+  shouldLoadVideoSource,
+  shouldShowVideoLoaderOverlay,
+} from '../../utils/hlsStreamingUtils';
 import { VideoCardSkeletonOverlay } from '../VideoGridSkeleton';
 
 export interface StoryEpisodeCardProps {
@@ -43,8 +47,6 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
 
     const effectiveMuted = !isUnmuted || isPlayerOpen;
 
-    const [hasActivated, setHasActivated] = React.useState(false);
-
     const handleCardOutOfView = useCallback(() => {
       if (isUnmuted) {
         onToggleMute(episode.id);
@@ -57,25 +59,34 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
       rootRef: scrollRootRef,
       muted: effectiveMuted,
       enabled: !isPlayerOpen,
+      releaseSrcOnOutOfView: true,
       rootMargin: '100px 0px',
       initialInView: false,
-      watchKey: hasActivated ? `active-${episode.id}` : `idle-${episode.id}`,
+      watchKey: `episode-${episode.id}`,
       onOutOfView: handleCardOutOfView,
     });
 
-    React.useEffect(() => {
-      if (isInView && !hasActivated) {
-        setHasActivated(true);
-      }
-    }, [isInView, hasActivated]);
+    const streamActive = shouldLoadVideoSource(isInView && !isPlayerOpen);
 
-    const streamActive = shouldLoadVideoSource(hasActivated || isInView);
+    const { loadState, isBuffering, onLoadedData, onCanPlay, onPlaying, onWaiting, onError } =
+      useVideoMediaReady({
+        videoRef,
+        watchKey: streamActive ? episode.id : `idle-${episode.id}`,
+      });
 
-    const { loadState, onLoadedData, onCanPlay, onPlaying, onError } = useVideoMediaReady({
-      videoRef,
-      watchKey: streamActive ? episode.id : `idle-${episode.id}`,
+    const { blurDataUri, isPosterLoaded, posterImgRef, onPosterLoad } = usePosterBlurThumbnail(
+      episode.poster
+    );
+
+    const hasDecodedFrame =
+      loadState === 'ready' ||
+      isDecodedVideoFrameVisible(videoRef.current?.readyState ?? 0, loadState === 'error');
+    const showLoaderOverlay = shouldShowVideoLoaderOverlay({
+      shouldLoad: streamActive,
+      hasDecodedFrame,
+      hasError: loadState === 'error',
+      isBuffering,
     });
-    const showSkeleton = shouldShowVideoSkeleton(loadState, streamActive);
 
     const handleCardKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -128,25 +139,60 @@ export const StoryEpisodeCard: React.FC<StoryEpisodeCardProps> = React.memo(
         {/* Exact 9:16 Uncropped Autoplaying Looping Video Frame */}
         <div
           data-media-state={loadState}
+          data-load-phase={isBuffering ? 'buffering' : loadState}
           data-source-loaded={String(streamActive)}
           className="relative w-full aspect-[9/16] rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]"
         >
-          <VideoCardSkeletonOverlay visible={showSkeleton} index={index} variant="episode" />
+          {blurDataUri && (
+            <img
+              src={blurDataUri}
+              alt=""
+              aria-hidden="true"
+              decoding="sync"
+              className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+            />
+          )}
+          {episode.poster && (
+            <img
+              ref={posterImgRef}
+              src={episode.poster}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              onLoad={onPosterLoad}
+              className={`absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none transition-opacity duration-200 ${
+                blurDataUri && !isPosterLoaded ? 'opacity-0' : 'opacity-100'
+              }`}
+            />
+          )}
+          <VideoCardSkeletonOverlay
+            visible={showLoaderOverlay}
+            index={index}
+            variant="episode"
+            hasPoster={Boolean(episode.poster || blurDataUri)}
+            progressPct={hasDecodedFrame ? 100 : isBuffering ? 62 : 42}
+            loadPhase={isBuffering ? 'buffering' : hasDecodedFrame ? 'ready' : 'segments'}
+            isBuffering={isBuffering}
+          />
           <video
             ref={videoRef}
             src={streamActive ? episode.src : undefined}
-            poster={episode.poster}
+            poster={episode.poster ?? blurDataUri}
             autoPlay
             loop
             muted={effectiveMuted}
             playsInline
-            preload="metadata"
+            preload="none"
             aria-label={title}
             onLoadedData={onLoadedData}
             onCanPlay={onCanPlay}
             onPlaying={onPlaying}
+            onWaiting={onWaiting}
             onError={onError}
-            className="w-full h-full object-contain object-center block"
+            className={`relative z-[1] w-full h-full object-contain object-center block transition-opacity duration-200 ${
+              hasDecodedFrame ? 'opacity-100' : 'opacity-0'
+            }`}
           />
 
           {/* Top Part Number & Inspect Trigger */}

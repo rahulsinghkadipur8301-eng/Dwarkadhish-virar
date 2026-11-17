@@ -6,21 +6,20 @@ import { PeacockFeather, LotusOrnament, DiyaAccent } from './KrishnaMotifs';
 import { SectionBackgroundChakra } from './SectionBackgroundChakra';
 import { useViewportVideo } from '../hooks/useViewportVideo';
 import { useVideoMediaReady } from '../hooks/useVideoMediaReady';
+import { usePosterBlurThumbnail } from '../hooks/usePosterBlurThumbnail';
 import { preloadHlsModule, useHlsVideoStream } from '../hooks/useHlsVideoStream';
 import {
   getMobileStreamStaggerMs,
   isDecodedVideoFrameVisible,
   shouldLoadVideoSource,
   shouldPauseGalleryCardOnPopup,
+  shouldShowVideoLoaderOverlay,
 } from '../utils/hlsStreamingUtils';
 import {
   attemptSafeVideoPlay,
   syncVideoAutoplayAttributes,
 } from '../utils/videoAutoplayUtils';
-import {
-  DEVOTIONAL_VIDEO_GRID_LAYOUT,
-  shouldShowVideoSkeleton,
-} from '../utils/videoSkeletonUtils';
+import { DEVOTIONAL_VIDEO_GRID_LAYOUT } from '../utils/videoSkeletonUtils';
 import { VideoCardSkeletonOverlay } from './VideoGridSkeleton';
 import {
   GalleryLightboxItem,
@@ -73,7 +72,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
     const cardRef = useRef<HTMLDivElement | null>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const effectiveMuted = !isUnmuted || isPopupOpen;
-    const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
+    const [isStaggerReady, setIsStaggerReady] = useState(false);
 
     const handleCardOutOfView = useCallback(() => {
       onSilenceOffscreen(item.id);
@@ -84,27 +83,31 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
       containerRef: cardRef,
       muted: effectiveMuted,
       enabled: !isInspected,
+      releaseSrcOnOutOfView: true,
       rootMargin: isMobileViewport ? '40px 0px' : '0px',
       threshold: 0.1,
       initialInView: false,
       onOutOfView: handleCardOutOfView,
     });
 
-    // Gate & stagger source attachment cleanly after IntersectionObserver detects entry
+    // Gate & stagger source attachment while visible; release immediately on viewport exit
     useEffect(() => {
-      if (!isInView || hasEnteredViewport) return;
+      if (!isInView || isInspected) {
+        setIsStaggerReady(false);
+        return;
+      }
       const delayMs = getMobileStreamStaggerMs(index, isMobileViewport);
       if (delayMs === 0) {
-        setHasEnteredViewport(true);
+        setIsStaggerReady(true);
         return;
       }
       const timer = window.setTimeout(() => {
-        setHasEnteredViewport(true);
+        setIsStaggerReady(true);
       }, delayMs);
       return () => window.clearTimeout(timer);
-    }, [isInView, hasEnteredViewport, index, isMobileViewport]);
+    }, [isInView, isInspected, index, isMobileViewport]);
 
-    const shouldLoad = shouldLoadVideoSource(hasEnteredViewport);
+    const shouldLoad = shouldLoadVideoSource(isInView && !isInspected && isStaggerReady);
 
     const handleStreamReady = useCallback(() => {
       const vid = videoRef.current;
@@ -113,7 +116,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
       }
     }, [effectiveMuted, isInView, isInspected]);
 
-    const streamStatus = useHlsVideoStream({
+    const { streamStatus, loadProgress } = useHlsVideoStream({
       videoRef,
       hlsSrc: item.hlsSrc,
       fallbackSrc: item.src,
@@ -124,14 +127,27 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
       onStreamReady: handleStreamReady,
     });
 
-    const { loadState, onLoadedData, onCanPlay, onPlaying, onError } = useVideoMediaReady({
-      videoRef,
-      watchKey: shouldLoad ? item.id : `idle-${item.id}`,
-    });
-    const showSkeleton = shouldShowVideoSkeleton(loadState, Boolean(item.hlsSrc || item.src));
+    const { loadState, isBuffering, onLoadedData, onCanPlay, onPlaying, onWaiting, onError } =
+      useVideoMediaReady({
+        videoRef,
+        watchKey: shouldLoad ? item.id : `idle-${item.id}`,
+      });
+
+    const { blurDataUri, isPosterLoaded, posterImgRef, onPosterLoad } = usePosterBlurThumbnail(
+      item.posterSrc
+    );
+
     const hasDecodedFrame =
       loadState === 'ready' ||
       isDecodedVideoFrameVisible(videoRef.current?.readyState ?? 0, loadState === 'error');
+
+    const showLoaderOverlay = shouldShowVideoLoaderOverlay({
+      shouldLoad: isInView && !isInspected,
+      hasDecodedFrame,
+      hasError: loadState === 'error',
+      isFetching: loadProgress.isFetching,
+      isBuffering,
+    });
 
     const handleInspectCard = useCallback(() => {
       onInspect(index);
@@ -177,31 +193,51 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
         <div
           data-media-state={loadState}
           data-stream-mode={streamStatus}
+          data-load-phase={isBuffering ? 'buffering' : loadProgress.phase}
           data-source-loaded={String(shouldLoad)}
           className="relative w-full aspect-[9/16] rounded-lg sm:rounded-xl overflow-hidden bg-[#1D120C]"
         >
-          {/* Persistent Crisp Poster Layer — cards NEVER turn black while HLS/video loads */}
+          {/* Layer 0: Instant 0ms base64 blur-grid micro-thumbnail (zero network wait) */}
+          {blurDataUri && (
+            <img
+              src={blurDataUri}
+              alt=""
+              aria-hidden="true"
+              decoding="sync"
+              data-testid={`gallery-blur-thumb-${item.id}`}
+              className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+            />
+          )}
+
+          {/* Layer 1: High-res WebP poster crossfading cleanly over the base64 preview */}
           {item.posterSrc && (
             <img
+              ref={posterImgRef}
               src={item.posterSrc}
               alt={item.title}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none"
+              onLoad={onPosterLoad}
+              className={`absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none transition-opacity duration-200 ${
+                blurDataUri && !isPosterLoaded ? 'opacity-0' : 'opacity-100'
+              }`}
             />
           )}
 
           <VideoCardSkeletonOverlay
-            visible={showSkeleton}
+            visible={showLoaderOverlay}
             index={index}
             variant="gallery"
             reducedMotion={reducedMotion}
-            hasPoster={Boolean(item.posterSrc)}
+            hasPoster={Boolean(item.posterSrc || blurDataUri)}
+            progressPct={loadProgress.progressPct}
+            loadPhase={loadProgress.phase}
+            isBuffering={isBuffering}
           />
 
           <video
             ref={handleSetRef}
-            poster={item.posterSrc}
+            poster={item.posterSrc ?? blurDataUri}
             autoPlay
             loop
             muted={effectiveMuted}
@@ -211,6 +247,7 @@ const GalleryVideoCard: React.FC<GalleryVideoCardProps> = React.memo(
             onLoadedData={onLoadedData}
             onCanPlay={onCanPlay}
             onPlaying={onPlaying}
+            onWaiting={onWaiting}
             onError={onError}
             className={`relative z-[1] w-full h-full object-contain object-center block transition-opacity duration-200 ${
               hasDecodedFrame ? 'opacity-100' : 'opacity-0'

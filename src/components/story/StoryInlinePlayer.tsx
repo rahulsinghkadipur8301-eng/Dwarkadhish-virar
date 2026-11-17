@@ -14,10 +14,17 @@ import {
 import { Language } from '../../data/templeData';
 import { StoryEpisode, formatEpisodeDuration } from '../../data/storyEpisodes';
 import { useViewportVideo } from '../../hooks/useViewportVideo';
+import { useVideoMediaReady } from '../../hooks/useVideoMediaReady';
+import { usePosterBlurThumbnail } from '../../hooks/usePosterBlurThumbnail';
 import {
   quantizeVideoTime,
   syncVideoAutoplayAttributes,
 } from '../../utils/videoAutoplayUtils';
+import {
+  isDecodedVideoFrameVisible,
+  shouldShowVideoLoaderOverlay,
+} from '../../utils/hlsStreamingUtils';
+import { VideoCardSkeletonOverlay } from '../VideoGridSkeleton';
 
 export interface StoryInlinePlayerLabels {
   backToEpisodes: string;
@@ -84,10 +91,31 @@ export const StoryInlinePlayer: React.FC<StoryInlinePlayerProps> = React.memo(
       muted: isMuted,
       enabled: true,
       userPaused,
+      releaseSrcOnOutOfView: true,
       rootMargin: '80px 0px',
       initialInView: true,
       watchKey: episode.id,
       onFallbackMuted,
+    });
+
+    const { loadState, isBuffering, onLoadedData, onCanPlay, onPlaying, onWaiting, onError } =
+      useVideoMediaReady({
+        videoRef,
+        watchKey: episode.id,
+      });
+
+    const { blurDataUri, isPosterLoaded, posterImgRef, onPosterLoad } = usePosterBlurThumbnail(
+      episode.poster
+    );
+
+    const hasDecodedFrame =
+      loadState === 'ready' ||
+      isDecodedVideoFrameVisible(videoRef.current?.readyState ?? 0, loadState === 'error');
+    const showLoaderOverlay = shouldShowVideoLoaderOverlay({
+      shouldLoad: true,
+      hasDecodedFrame,
+      hasError: loadState === 'error',
+      isBuffering,
     });
 
     useEffect(() => {
@@ -190,12 +218,43 @@ export const StoryInlinePlayer: React.FC<StoryInlinePlayerProps> = React.memo(
 
         {/* Uncropped 9:16 Video Viewport (Mounts ONLY episode.src, loops cleanly) */}
         <div className="relative shrink-0 md:flex-1 bg-[#1D120C] flex items-center justify-center p-2.5 sm:p-3 overflow-hidden">
-          <div className="relative h-[330px] sm:h-[400px] md:h-full md:max-h-[76vh] w-auto max-w-full aspect-[9/16] rounded-xl overflow-hidden border border-[#C29A54]/60 bg-black shadow-2xl flex items-center justify-center">
+          <div className="relative h-[330px] sm:h-[400px] md:h-full md:max-h-[76vh] w-auto max-w-full aspect-[9/16] rounded-xl overflow-hidden border border-[#C29A54]/60 bg-[#1D120C] shadow-2xl flex items-center justify-center">
+            {blurDataUri && (
+              <img
+                src={blurDataUri}
+                alt=""
+                aria-hidden="true"
+                decoding="sync"
+                className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+              />
+            )}
+            {episode.poster && (
+              <img
+                ref={posterImgRef}
+                src={episode.poster}
+                alt=""
+                aria-hidden="true"
+                decoding="async"
+                onLoad={onPosterLoad}
+                className={`absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none transition-opacity duration-200 ${
+                  blurDataUri && !isPosterLoaded ? 'opacity-0' : 'opacity-100'
+                }`}
+              />
+            )}
+            <VideoCardSkeletonOverlay
+              visible={showLoaderOverlay}
+              index={episode.id}
+              variant="episode"
+              hasPoster={Boolean(episode.poster || blurDataUri)}
+              progressPct={hasDecodedFrame ? 100 : isBuffering ? 62 : 45}
+              loadPhase={isBuffering ? 'buffering' : hasDecodedFrame ? 'ready' : 'segments'}
+              isBuffering={isBuffering}
+            />
             <video
               key={episode.id}
               ref={videoRef}
               src={episode.src}
-              poster={episode.poster}
+              poster={episode.poster ?? blurDataUri}
               autoPlay
               loop
               playsInline
@@ -204,7 +263,14 @@ export const StoryInlinePlayer: React.FC<StoryInlinePlayerProps> = React.memo(
               data-testid="story-active-video"
               aria-label={episode.title[language]}
               onClick={handleTogglePlay}
-              onPlay={() => setIsPlaying(true)}
+              onLoadedData={onLoadedData}
+              onCanPlay={onCanPlay}
+              onPlay={() => {
+                onPlaying();
+                setIsPlaying(true);
+              }}
+              onWaiting={onWaiting}
+              onError={onError}
               onPause={() => setIsPlaying(false)}
               onLoadedMetadata={(e) => {
                 const d = e.currentTarget.duration;
@@ -214,7 +280,9 @@ export const StoryInlinePlayer: React.FC<StoryInlinePlayerProps> = React.memo(
                 const q = quantizeVideoTime(e.currentTarget.currentTime);
                 setCurrentTime((prev) => (prev === q ? prev : q));
               }}
-              className="w-full h-full object-contain cursor-pointer"
+              className={`relative z-[1] w-full h-full object-contain cursor-pointer transition-opacity duration-200 ${
+                hasDecodedFrame ? 'opacity-100' : 'opacity-0'
+              }`}
             />
 
             {/* Bottom Mute / Unmute Toggle */}

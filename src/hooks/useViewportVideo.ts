@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, RefObject } from 'react';
 import {
   attemptSafeVideoPlay,
+  releaseVideoDecoderMemory,
   resolveViewportPlaybackAction,
+  shouldReleaseVideoOnViewportExit,
   subscribeAutoplayUnlock,
   syncVideoAutoplayAttributes,
 } from '../utils/videoAutoplayUtils';
@@ -13,6 +15,7 @@ export interface UseViewportVideoOptions {
   muted: boolean;
   enabled?: boolean;
   userPaused?: boolean;
+  releaseSrcOnOutOfView?: boolean;
   rootMargin?: string;
   threshold?: number;
   initialInView?: boolean;
@@ -26,8 +29,9 @@ export interface UseViewportVideoOptions {
  * - Mirrors `muted`, `defaultMuted`, `autoplay`, `loop`, `playsinline`, and `webkit-playsinline`
  *   synchronously to DOM attributes via `useLayoutEffect`
  * - Uses `IntersectionObserver` to play when inside viewport and pause when scrolled off-screen
+ * - Optionally force-resets `src` and invokes `load()` (`releaseSrcOnOutOfView`) on viewport exit
+ *   and unmount so mobile browsers reclaim hardware video decoders immediately
  * - Invokes `onOutOfView` when scrolled out of view so callers can silence unmuted background audio
- * - Retries on `loadeddata`, `canplay`, `visibilitychange`, and first touch/pointer gesture
  */
 export function useViewportVideo({
   videoRef,
@@ -36,6 +40,7 @@ export function useViewportVideo({
   muted,
   enabled = true,
   userPaused = false,
+  releaseSrcOnOutOfView = false,
   rootMargin = '120px 0px',
   threshold = 0.02,
   initialInView = false,
@@ -47,9 +52,11 @@ export function useViewportVideo({
   const onOutOfViewRef = useRef(onOutOfView);
   const prevInViewRef = useRef(initialInView);
   const mutedRef = useRef(muted);
+  const releaseRef = useRef(releaseSrcOnOutOfView);
 
   onOutOfViewRef.current = onOutOfView;
   mutedRef.current = muted;
+  releaseRef.current = releaseSrcOnOutOfView;
 
   // Apply autoplay DOM attributes synchronously before paint whenever mounted/updated
   useLayoutEffect(() => {
@@ -61,6 +68,11 @@ export function useViewportVideo({
     if (!enabled) {
       setIsInView(false);
       prevInViewRef.current = false;
+      if (releaseRef.current) {
+        releaseVideoDecoderMemory(videoRef.current);
+      } else {
+        videoRef.current?.pause();
+      }
       return;
     }
 
@@ -75,9 +87,15 @@ export function useViewportVideo({
       (entries) => {
         for (const entry of entries) {
           const nextInView = entry.isIntersecting;
-          if (!nextInView && (prevInViewRef.current || !mutedRef.current)) {
-            videoRef.current?.pause();
-            onOutOfViewRef.current?.();
+          if (!nextInView) {
+            if (prevInViewRef.current || !mutedRef.current) {
+              onOutOfViewRef.current?.();
+            }
+            if (shouldReleaseVideoOnViewportExit(nextInView, releaseRef.current)) {
+              releaseVideoDecoderMemory(videoRef.current);
+            } else {
+              videoRef.current?.pause();
+            }
           }
           prevInViewRef.current = nextInView;
           setIsInView(nextInView);
@@ -94,6 +112,17 @@ export function useViewportVideo({
     return () => observer.disconnect();
   }, [containerRef, videoRef, rootRef, enabled, rootMargin, threshold, watchKey]);
 
+  // Ensure unmount releases decoder memory when memory management is enabled
+  useEffect(() => {
+    return () => {
+      if (releaseRef.current) {
+        releaseVideoDecoderMemory(videoRef.current);
+      } else {
+        videoRef.current?.pause();
+      }
+    };
+  }, [videoRef]);
+
   // Play or pause strictly based on IntersectionObserver visibility, user pause state, and tab state
   useEffect(() => {
     const vid = videoRef.current;
@@ -109,7 +138,11 @@ export function useViewportVideo({
     });
 
     if (action === 'pause') {
-      vid.pause();
+      if (releaseSrcOnOutOfView && (!isInView || !enabled)) {
+        releaseVideoDecoderMemory(vid);
+      } else {
+        vid.pause();
+      }
       const preventResumeWhileOffscreen = () => {
         vid.pause();
       };
@@ -159,7 +192,7 @@ export function useViewportVideo({
       document.removeEventListener('visibilitychange', onVisibilityChange);
       unsubscribeUnlock();
     };
-  }, [videoRef, muted, enabled, userPaused, isInView, watchKey, onFallbackMuted]);
+  }, [videoRef, muted, enabled, userPaused, releaseSrcOnOutOfView, isInView, watchKey, onFallbackMuted]);
 
   return isInView;
 }

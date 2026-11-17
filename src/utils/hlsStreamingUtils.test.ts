@@ -4,12 +4,14 @@ import {
   getMobileStreamStaggerMs,
   isDecodedVideoFrameVisible,
   resolveHlsInitialBandwidthEstimate,
+  resolveHlsLoadProgress,
   resolveHlsPlayerConfig,
   resolveLightboxMediaDuration,
   selectStreamingPlaybackMode,
   shouldLoadVideoSource,
   shouldPauseGalleryCardOnPopup,
   shouldPreloadHlsModule,
+  shouldShowVideoLoaderOverlay,
 } from './hlsStreamingUtils.ts';
 
 test('resolveHlsInitialBandwidthEstimate: scales initial bitrate target based on network speed and Save-Data', () => {
@@ -99,3 +101,73 @@ test('isDecodedVideoFrameVisible & resolveLightboxMediaDuration: prevent black b
   assert.deepEqual(resolveLightboxMediaDuration(0), { duration: 0, isKnown: false });
   assert.deepEqual(resolveLightboxMediaDuration(24.7), { duration: 24.7, isKnown: true });
 });
+
+test('resolveHlsLoadProgress & shouldShowVideoLoaderOverlay: surface subtle fetch feedback during manifest/segment/buffering stages', () => {
+  assert.deepEqual(resolveHlsLoadProgress('idle'), {
+    phase: 'idle',
+    progressPct: 0,
+    isFetching: false,
+  });
+  assert.deepEqual(resolveHlsLoadProgress('manifest'), {
+    phase: 'manifest',
+    progressPct: 24,
+    isFetching: true,
+  });
+  assert.deepEqual(resolveHlsLoadProgress('segments', 1, 3), {
+    phase: 'segments',
+    progressPct: 54,
+    isFetching: true,
+  });
+  assert.deepEqual(resolveHlsLoadProgress('segments', 3, 3), {
+    phase: 'segments',
+    progressPct: 86,
+    isFetching: true,
+  });
+  assert.deepEqual(resolveHlsLoadProgress('ready'), {
+    phase: 'ready',
+    progressPct: 100,
+    isFetching: false,
+  });
+
+  assert.equal(
+    shouldShowVideoLoaderOverlay({ shouldLoad: false, hasDecodedFrame: false, hasError: false }),
+    false
+  );
+  assert.equal(
+    shouldShowVideoLoaderOverlay({
+      shouldLoad: true,
+      hasDecodedFrame: false,
+      hasError: false,
+      isFetching: true,
+    }),
+    true
+  );
+  assert.equal(
+    shouldShowVideoLoaderOverlay({
+      shouldLoad: true,
+      hasDecodedFrame: true,
+      hasError: false,
+      isFetching: false,
+    }),
+    false
+  );
+  assert.equal(
+    shouldShowVideoLoaderOverlay({
+      shouldLoad: true,
+      hasDecodedFrame: true,
+      hasError: false,
+      isBuffering: true,
+    }),
+    true
+  );
+  assert.equal(
+    shouldShowVideoLoaderOverlay({
+      shouldLoad: true,
+      hasDecodedFrame: false,
+      hasError: true,
+      isFetching: true,
+    }),
+    false
+  );
+});
+

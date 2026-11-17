@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useViewportVideo } from '../../hooks/useViewportVideo';
 import { useVideoMediaReady } from '../../hooks/useVideoMediaReady';
+import { usePosterBlurThumbnail } from '../../hooks/usePosterBlurThumbnail';
 import { useHlsVideoStream } from '../../hooks/useHlsVideoStream';
 import { formatEpisodeDuration } from '../../data/storyEpisodesMeta';
 import {
@@ -22,8 +23,8 @@ import {
 import {
   isDecodedVideoFrameVisible,
   resolveLightboxMediaDuration,
+  shouldShowVideoLoaderOverlay,
 } from '../../utils/hlsStreamingUtils';
-import { shouldShowVideoSkeleton } from '../../utils/videoSkeletonUtils';
 import { VideoCardSkeletonOverlay } from '../VideoGridSkeleton';
 
 export interface GalleryLightboxItem {
@@ -183,7 +184,7 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
       }
     }, [isUnmuted, userPaused, onFallbackMuted]);
 
-    const streamStatus = useHlsVideoStream({
+    const { streamStatus, loadProgress } = useHlsVideoStream({
       videoRef,
       hlsSrc: item.hlsSrc,
       fallbackSrc: item.src,
@@ -195,14 +196,26 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
       onStreamReady: handleStreamReady,
     });
 
-    const { loadState, onLoadedData, onCanPlay, onPlaying, onError } = useVideoMediaReady({
-      videoRef,
-      watchKey: item.id,
-    });
-    const showSkeleton = shouldShowVideoSkeleton(loadState, Boolean(item.hlsSrc || item.src));
+    const { loadState, isBuffering, onLoadedData, onCanPlay, onPlaying, onWaiting, onError } =
+      useVideoMediaReady({
+        videoRef,
+        watchKey: item.id,
+      });
+
+    const { blurDataUri, isPosterLoaded, posterImgRef, onPosterLoad } = usePosterBlurThumbnail(
+      item.posterSrc
+    );
+
     const hasDecodedFrame =
       loadState === 'ready' ||
       isDecodedVideoFrameVisible(videoRef.current?.readyState ?? 0, loadState === 'error');
+    const showLoaderOverlay = shouldShowVideoLoaderOverlay({
+      shouldLoad: true,
+      hasDecodedFrame,
+      hasError: loadState === 'error',
+      isFetching: loadProgress.isFetching,
+      isBuffering,
+    });
 
     useEffect(() => {
       const onFsChange = () => {
@@ -326,30 +339,49 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
             <div
               data-media-state={loadState}
               data-stream-mode={streamStatus}
+              data-load-phase={isBuffering ? 'buffering' : loadProgress.phase}
               className="relative h-[min(44dvh,350px)] sm:h-[390px] md:h-[min(70dvh,500px)] w-auto max-w-full aspect-[9/16] rounded-xl overflow-hidden border border-[#C29A54]/60 bg-[#1D120C] shadow-2xl flex items-center justify-center"
             >
+              {/* Layer 0: Instant 0ms base64 blur-grid micro-thumbnail */}
+              {blurDataUri && (
+                <img
+                  src={blurDataUri}
+                  alt=""
+                  aria-hidden="true"
+                  decoding="sync"
+                  className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none scale-[1.03]"
+                />
+              )}
+
               {/* Persistent Crisp Poster Underlay — eliminates black frames before video decodes */}
               {item.posterSrc && (
                 <img
+                  ref={posterImgRef}
                   src={item.posterSrc}
                   alt=""
                   aria-hidden="true"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none"
+                  onLoad={onPosterLoad}
+                  className={`absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none transition-opacity duration-200 ${
+                    blurDataUri && !isPosterLoaded ? 'opacity-0' : 'opacity-100'
+                  }`}
                 />
               )}
 
               <VideoCardSkeletonOverlay
-                visible={showSkeleton}
+                visible={showLoaderOverlay}
                 index={index}
                 variant="gallery"
-                hasPoster={Boolean(item.posterSrc)}
+                hasPoster={Boolean(item.posterSrc || blurDataUri)}
+                progressPct={loadProgress.progressPct}
+                loadPhase={loadProgress.phase}
+                isBuffering={isBuffering}
               />
 
               <video
                 ref={videoRef}
                 key={item.id}
-                poster={item.posterSrc}
+                poster={item.posterSrc ?? blurDataUri}
                 autoPlay
                 loop
                 muted={!isUnmuted}
@@ -382,6 +414,7 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
                   onPlaying();
                   setIsPlaying(true);
                 }}
+                onWaiting={onWaiting}
                 onError={onError}
                 onPause={() => setIsPlaying(false)}
                 className={`relative z-[1] w-full h-full object-contain cursor-pointer block touch-manipulation transition-opacity duration-200 ${
@@ -390,7 +423,7 @@ export const GalleryLightboxPlayer: React.FC<GalleryLightboxPlayerProps> = React
               />
 
               {/* Tactile Centered Play Badge when Paused */}
-              {!isPlaying && !showSkeleton && (
+              {!isPlaying && !showLoaderOverlay && (
                 <button
                   type="button"
                   onClick={handleTogglePlay}

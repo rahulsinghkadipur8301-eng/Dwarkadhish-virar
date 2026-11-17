@@ -2,12 +2,16 @@ import { useEffect, useRef, useState, RefObject } from 'react';
 import type HlsType from 'hls.js';
 import {
   HLS_STALL_FALLBACK_TIMEOUT_MS,
+  HlsLoadProgress,
+  IDLE_HLS_PROGRESS,
   resolveHlsInitialBandwidthEstimate,
+  resolveHlsLoadProgress,
   resolveHlsPlayerConfig,
   selectStreamingPlaybackMode,
   shouldPreloadHlsModule,
   StreamingPlaybackMode,
 } from '../utils/hlsStreamingUtils';
+import { releaseVideoDecoderMemory } from '../utils/videoAutoplayUtils';
 
 interface NetworkInformationLike extends EventTarget {
   effectiveType?: string;
@@ -83,10 +87,16 @@ export interface UseHlsVideoStreamOptions {
 
 export type StreamAttachStatus = 'idle' | StreamingPlaybackMode;
 
+export interface UseHlsVideoStreamResult {
+  streamStatus: StreamAttachStatus;
+  loadProgress: HlsLoadProgress;
+}
+
 /**
  * Attaches adaptive bitrate HLS streaming:
  * - iOS/Safari/WebKit: native hardware Apple HLS directly (no JS transmuxing or ManagedMediaSource stalls)
  * - Chromium/Firefox/Android: adaptive `hls.js` with network-tier bitrate & buffer limits
+ * - Live manifest & fragment progress telemetry (`loadProgress`) for subtle UI indicators
  * - Automatic MP4 fallback on fatal errors OR if no frame decodes within `HLS_STALL_FALLBACK_TIMEOUT_MS`
  * - Zero pipeline rebuilds when `startPosition` props fluctuate across renders
  */
@@ -100,8 +110,9 @@ export function useHlsVideoStream({
   startPosition,
   streamKey,
   onStreamReady,
-}: UseHlsVideoStreamOptions): StreamAttachStatus {
+}: UseHlsVideoStreamOptions): UseHlsVideoStreamResult {
   const [streamStatus, setStreamStatus] = useState<StreamAttachStatus>('idle');
+  const [loadProgress, setLoadProgress] = useState<HlsLoadProgress>(IDLE_HLS_PROGRESS);
   const hlsRef = useRef<HlsType | null>(null);
   const onStreamReadyRef = useRef(onStreamReady);
   const isInViewRef = useRef(isInView);
@@ -122,20 +133,30 @@ export function useHlsVideoStream({
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
-      if (vid.getAttribute('src')) {
-        vid.removeAttribute('src');
-        vid.load();
-      }
+      releaseVideoDecoderMemory(vid);
       setStreamStatus('idle');
+      setLoadProgress(IDLE_HLS_PROGRESS);
       return;
     }
 
     let cancelled = false;
     let cleanupConnectionListener: (() => void) | null = null;
-    let cleanupNativeErrorListener: (() => void) | null = null;
+    let cleanupMediaProgressListeners: (() => void) | null = null;
     let stallTimer: number | null = null;
     let localHls: HlsType | null = null;
     let fellBackToMp4 = false;
+
+    const updateProgress = (next: HlsLoadProgress) => {
+      if (!cancelled) {
+        setLoadProgress((prev) =>
+          prev.phase === next.phase &&
+          prev.progressPct === next.progressPct &&
+          prev.isFetching === next.isFetching
+            ? prev
+            : next
+        );
+      }
+    };
 
     const clearStallTimer = () => {
       if (stallTimer !== null) {
@@ -144,12 +165,42 @@ export function useHlsVideoStream({
       }
     };
 
+    const attachSharedMediaStateListeners = (targetVideo: HTMLVideoElement) => {
+      cleanupMediaProgressListeners?.();
+      const onMediaReady = () => {
+        clearStallTimer();
+        updateProgress(resolveHlsLoadProgress('ready'));
+      };
+      const onMediaWaiting = () => {
+        if (targetVideo.readyState < 3) {
+          updateProgress(resolveHlsLoadProgress('buffering'));
+        }
+      };
+      const onMediaProgress = () => {
+        if (targetVideo.readyState < 2 && !fellBackToMp4) {
+          updateProgress(resolveHlsLoadProgress('segments', 1, 3));
+        }
+      };
+
+      targetVideo.addEventListener('loadeddata', onMediaReady);
+      targetVideo.addEventListener('canplay', onMediaReady);
+      targetVideo.addEventListener('playing', onMediaReady);
+      targetVideo.addEventListener('waiting', onMediaWaiting);
+      targetVideo.addEventListener('progress', onMediaProgress);
+
+      cleanupMediaProgressListeners = () => {
+        targetVideo.removeEventListener('loadeddata', onMediaReady);
+        targetVideo.removeEventListener('canplay', onMediaReady);
+        targetVideo.removeEventListener('playing', onMediaReady);
+        targetVideo.removeEventListener('waiting', onMediaWaiting);
+        targetVideo.removeEventListener('progress', onMediaProgress);
+      };
+    };
+
     const activateMp4Fallback = () => {
       if (cancelled || fellBackToMp4) return;
       fellBackToMp4 = true;
       clearStallTimer();
-      cleanupNativeErrorListener?.();
-      cleanupNativeErrorListener = null;
 
       if (localHls) {
         if (hlsRef.current === localHls) {
@@ -160,9 +211,16 @@ export function useHlsVideoStream({
       }
 
       const target = videoRef.current;
-      if (target && target.getAttribute('src') !== fallbackSrc) {
-        target.src = fallbackSrc;
-        target.load();
+      if (target) {
+        attachSharedMediaStateListeners(target);
+        if (target.getAttribute('src') !== fallbackSrc) {
+          updateProgress(resolveHlsLoadProgress('fallback'));
+          target.src = fallbackSrc;
+          target.load();
+        }
+        if (target.readyState >= 2) {
+          updateProgress(resolveHlsLoadProgress('ready'));
+        }
       }
       setStreamStatus('mp4-fallback');
       onStreamReadyRef.current?.();
@@ -189,21 +247,24 @@ export function useHlsVideoStream({
 
     const attachNativeHls = (targetVideo: HTMLVideoElement) => {
       if (cancelled) return;
+      updateProgress(resolveHlsLoadProgress('manifest'));
+      attachSharedMediaStateListeners(targetVideo);
+
       if (targetVideo.getAttribute('src') !== hlsSrc && hlsSrc) {
         targetVideo.src = hlsSrc;
       }
-      const onNativeLoaded = () => clearStallTimer();
       const onNativeError = () => activateMp4Fallback();
-      targetVideo.addEventListener('loadeddata', onNativeLoaded, { once: true });
-      targetVideo.addEventListener('canplay', onNativeLoaded, { once: true });
       targetVideo.addEventListener('error', onNativeError, { once: true });
-      cleanupNativeErrorListener = () => {
-        targetVideo.removeEventListener('loadeddata', onNativeLoaded);
-        targetVideo.removeEventListener('canplay', onNativeLoaded);
+      const prevCleanup = cleanupMediaProgressListeners;
+      cleanupMediaProgressListeners = () => {
+        prevCleanup?.();
         targetVideo.removeEventListener('error', onNativeError);
       };
       armStallWatchdog();
       setStreamStatus('hls-native');
+      if (targetVideo.readyState >= 2) {
+        updateProgress(resolveHlsLoadProgress('ready'));
+      }
       onStreamReadyRef.current?.();
     };
 
@@ -212,6 +273,8 @@ export function useHlsVideoStream({
       return () => {
         cancelled = true;
         clearStallTimer();
+        cleanupMediaProgressListeners?.();
+        releaseVideoDecoderMemory(videoRef.current);
       };
     }
 
@@ -228,9 +291,12 @@ export function useHlsVideoStream({
       return () => {
         cancelled = true;
         clearStallTimer();
-        cleanupNativeErrorListener?.();
+        cleanupMediaProgressListeners?.();
+        releaseVideoDecoderMemory(videoRef.current);
       };
     }
+
+    updateProgress(resolveHlsLoadProgress('manifest'));
 
     const attachWithHls = (Hls: typeof HlsType | null) => {
       if (cancelled || !videoRef.current) return;
@@ -264,12 +330,17 @@ export function useHlsVideoStream({
         localHls = hls;
         hlsRef.current = hls;
 
-        const onDecodedFrame = () => clearStallTimer();
-        targetVideo.addEventListener('loadeddata', onDecodedFrame, { once: true });
-        targetVideo.addEventListener('canplay', onDecodedFrame, { once: true });
+        attachSharedMediaStateListeners(targetVideo);
+
+        let loadedSegmentsCount = 0;
+
+        hls.on(Hls.Events.MANIFEST_LOADING, () => {
+          updateProgress(resolveHlsLoadProgress('manifest'));
+        });
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           if (cancelled || fellBackToMp4) return;
+          updateProgress(resolveHlsLoadProgress('segments', 0, 3));
           if (isInViewRef.current && enabledRef.current) {
             hls.startLoad(initialLoadPos);
             armStallWatchdog();
@@ -281,6 +352,16 @@ export function useHlsVideoStream({
           }
           setStreamStatus('hls-js');
           onStreamReadyRef.current?.();
+        });
+
+        hls.on(Hls.Events.FRAG_LOADED, () => {
+          if (cancelled || fellBackToMp4) return;
+          loadedSegmentsCount += 1;
+          if (targetVideo.readyState >= 2) {
+            updateProgress(resolveHlsLoadProgress('ready'));
+          } else {
+            updateProgress(resolveHlsLoadProgress('segments', loadedSegmentsCount, 3));
+          }
         });
 
         let recoveredMediaError = false;
@@ -316,8 +397,6 @@ export function useHlsVideoStream({
         conn?.addEventListener('change', handleConnectionChange);
         cleanupConnectionListener = () => {
           conn?.removeEventListener('change', handleConnectionChange);
-          targetVideo.removeEventListener('loadeddata', onDecodedFrame);
-          targetVideo.removeEventListener('canplay', onDecodedFrame);
         };
         return;
       }
@@ -344,13 +423,14 @@ export function useHlsVideoStream({
       cancelled = true;
       clearStallTimer();
       cleanupConnectionListener?.();
-      cleanupNativeErrorListener?.();
+      cleanupMediaProgressListeners?.();
       if (localHls) {
         if (hlsRef.current === localHls) {
           hlsRef.current = null;
         }
         localHls.destroy();
       }
+      releaseVideoDecoderMemory(videoRef.current);
     };
   }, [videoRef, hlsSrc, fallbackSrc, shouldLoad, streamKey]);
 
@@ -366,5 +446,6 @@ export function useHlsVideoStream({
     }
   }, [shouldLoad, isInView, enabled]);
 
-  return streamStatus;
+  return { streamStatus, loadProgress };
 }
+
